@@ -1,0 +1,93 @@
+<html>
+
+<head>    
+    <script src='../../bundle/digilent-auth-js.js'></script>
+    
+    <style>
+        .label {
+            min-width: 128px;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .input {
+            min-width: 512px;
+        }
+    </style>
+
+    <script>        
+        console.log('DigilentAuthJS Basic Demo');
+
+        let digilentAuth = new DigilentAuthJs();
+
+        function onSignIn() {
+            //Get user specified values
+            let region = document.getElementById("region").value;
+            let identityPoolId = document.getElementById("identityPoolId").value;
+            let userPoolId = document.getElementById("userPoolId").value;
+            let clientId = document.getElementById("clientId").value;
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            digilentAuth.initialize(userPoolId, clientId, region, identityPoolId);
+
+            console.log('Signing in...');
+            digilentAuth.authenticateUser(username, password)
+                .then((success) => {
+                    console.log('Retrieving User Details...');
+                    digilentAuth.getAuthenticatedUserDetails().then((userDetails) => {
+                        console.log("Sign in successful.  User Details: ", userDetails);
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    </script>
+</head>
+
+<body>
+    <div style="text-align:center;">
+        <br /> This page demonstrates how to authenticate an existing user using a username and password and retrieve some
+        basic information about the authenticated user.
+        <br />
+        <br />
+        <h3 style="color: #62a945">Open the console to see output.</h3>
+    </div>
+    <br />
+    <br />
+    <div style="width: 50%; margin:auto; text-align: center">
+        <h3>AWS Cognito Credentials</h3>
+
+        <span class="label">Region</span>
+        <input id="region" type="text" value="" class="input"></input>
+        <br />
+
+        <span class="label">Identity Pool ID</span>
+        <input id="identityPoolId" type="text" value="" class="input"></input>
+        <br />
+
+        <span class="label"> User Pool ID</span>
+        <input id="userPoolId" type="text" value="" class="input"></input>
+        <br />
+
+        <span class="label">Client ID</span>
+        <input id="clientId" type="text" value="" class="input"></input>
+        <br />
+        <br />
+        <br />
+        <h3>User Credentials</h3>
+
+        <span class="label">Username</span>
+        <input id="username" type="text" value="" class="input"></input>
+        <br />
+
+        <span class="label">Password</span>
+        <input id="password" type="text" value="*" class="input"></input>
+        <br />
+        <br />
+        <br />
+        <input id="submit" type="button" onclick="onSignIn()" value="Sign In"></input>
+</body>
+
+</html>

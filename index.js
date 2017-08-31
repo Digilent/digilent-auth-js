@@ -1,0 +1,1 @@
+exports.DigilentAuthJs = require('./dist/digilent-auth-js').DigilentAuthJs;
