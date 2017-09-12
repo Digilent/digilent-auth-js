@@ -9,7 +9,7 @@ describe("Digilent-Auth-JS core", () => {
             expect(awsTestCredentials.userPoolId).toBeDefined();
             expect(awsTestCredentials.clientId).toBeDefined();
             expect(awsTestCredentials.region).toBeDefined();
-            expect(awsTestCredentials.identityPoolId).toBeDefined();            
+            expect(awsTestCredentials.identityPoolId).toBeDefined();
         });
 
         it('includes aws-sdk.', () => {
@@ -27,6 +27,11 @@ describe("Digilent-Auth-JS core", () => {
     });
 
     describe("object", () => {
+        let originalTimeout;
+        beforeEach(() => {
+            originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;           
+        });
+
         it('has a constructor that returns an instnace of the class', () => {
             let digilentAuthJs = new DigilentAuthJs();
             expect(digilentAuthJs).toBeDefined();
@@ -40,7 +45,7 @@ describe("Digilent-Auth-JS core", () => {
             expect(digilentAuthJs.authenticatedUser).toBeUndefined();
         });
 
-        it('can be initilized with AWS configuration settings ', () => {            
+        it('can be initilized with AWS configuration settings ', () => {
             let digilentAuthJs = new DigilentAuthJs();
             digilentAuthJs.initialize(awsTestCredentials.userPoolId, awsTestCredentials.clientId, awsTestCredentials.region, awsTestCredentials.identityPoolId);
             expect(digilentAuthJs.poolData).toBeDefined();
@@ -48,5 +53,27 @@ describe("Digilent-Auth-JS core", () => {
             expect(digilentAuthJs.identityPoolId).toBe(awsTestCredentials.identityPoolId);
             expect(digilentAuthJs.authenticatedUser).toBeUndefined();
         });
+
+        it('can succesfully authenticate a user', (done) => {
+
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+            let digilentAuthJs = new DigilentAuthJs();
+            digilentAuthJs.initialize(awsTestCredentials.userPoolId, awsTestCredentials.clientId, awsTestCredentials.region, awsTestCredentials.identityPoolId);
+            digilentAuthJs.authenticateUser(awsTestCredentials.username, awsTestCredentials.password)
+                .then((success) => {
+                    expect(true).toBe(true);
+                    done();
+                })
+                .catch((e) => {
+                    console.log(e);
+                    epxect(true).toBe(false);
+                })
+        });
+
+        afterEach(function () {
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
+        });
+
     });
 });
+
