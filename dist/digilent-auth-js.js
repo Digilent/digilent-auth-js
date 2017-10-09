@@ -28,10 +28,12 @@ var DigilentAuthJs = (function () {
     * Authenticate the specified username with the specified password.
     * @param username The username to authenticate with.
     * @param password The password associated with the specified username.
+    * @param getPasswordCallback
     * @return This function returns a Promise that resolves when the user has been authenticated or rejects on error.
     ********************************************************************************/
-    DigilentAuthJs.prototype.authenticateUser = function (username, password) {
+    DigilentAuthJs.prototype.authenticateUser = function (username, password, getPasswordCallback) {
         var _this = this;
+        if (getPasswordCallback === void 0) { getPasswordCallback = null; }
         return new Promise(function (resolve, reject) {
             var authenticationDetails = new amazon_cognito_identity_js_1.AuthenticationDetails({
                 Username: username,
@@ -41,7 +43,7 @@ var DigilentAuthJs = (function () {
                 Username: username,
                 Pool: _this.poolData
             });
-            cognitoUser.authenticateUser(authenticationDetails, {
+            var params = {
                 onSuccess: function (result) {
                     //console.log('access token + ' + result.getAccessToken().getJwtToken());
                     _this.setCredentialsAndRefresh(result.getIdToken().getJwtToken())
@@ -57,7 +59,18 @@ var DigilentAuthJs = (function () {
                 onFailure: function (err) {
                     reject(err);
                 },
-            });
+                newPasswordRequired: function (userAttributes, requiredAttributes) {
+                    // fixme(andrew): not happy with the code here, could probably be 'better'
+                    if (getPasswordCallback == null)
+                        throw 'getPasswordCallback callback not defined';
+                    var newPass = getPasswordCallback();
+                    if (!newPass)
+                        throw 'getPasswordCallback must return a string!';
+                    delete userAttributes.email_verified;
+                    cognitoUser.completeNewPasswordChallenge(newPass, userAttributes, params);
+                }
+            };
+            cognitoUser.authenticateUser(authenticationDetails, params);
         });
     };
     /********************************************************************************

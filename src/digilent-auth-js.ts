@@ -38,9 +38,10 @@ export class DigilentAuthJs {
     * Authenticate the specified username with the specified password. 
     * @param username The username to authenticate with.
     * @param password The password associated with the specified username.
+    * @param getPasswordCallback Callback that returns a password string when a new one is required.
     * @return This function returns a Promise that resolves when the user has been authenticated or rejects on error.
     ********************************************************************************/
-    public authenticateUser(username: string, password: string): Promise<any> {
+    public authenticateUser(username: string, password: string, getPasswordCallback: () => string = null): Promise<any> {
         return new Promise((resolve, reject) => {
             let authenticationDetails = new AuthenticationDetails({
                 Username: username,
@@ -50,7 +51,8 @@ export class DigilentAuthJs {
                 Username: username,
                 Pool: this.poolData
             });
-            cognitoUser.authenticateUser(authenticationDetails, {
+
+            let params =  {
                 onSuccess: (result) => {
                     //console.log('access token + ' + result.getAccessToken().getJwtToken());
                     this.setCredentialsAndRefresh(result.getIdToken().getJwtToken())
@@ -66,7 +68,19 @@ export class DigilentAuthJs {
                 onFailure: (err) => {
                     reject(err);
                 },
-            });
+                newPasswordRequired: (userAttributes, requiredAttributes) => {
+                    if (getPasswordCallback == null) throw 'getPasswordCallback not defined';
+
+                    let newPass = getPasswordCallback();
+                    if (newPass === "") throw 'getPasswordCallback must return something!';
+
+                    delete userAttributes.email_verified;
+
+                    cognitoUser.completeNewPasswordChallenge(newPass, userAttributes, params);
+                }
+            }
+
+            cognitoUser.authenticateUser(authenticationDetails, params);
         });
     }
 

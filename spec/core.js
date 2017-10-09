@@ -59,14 +59,16 @@ describe("Digilent-Auth-JS core", () => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
             let digilentAuthJs = new DigilentAuthJs();
             digilentAuthJs.initialize(awsTestCredentials.userPoolId, awsTestCredentials.clientId, awsTestCredentials.region, awsTestCredentials.identityPoolId);
-            digilentAuthJs.authenticateUser(awsTestCredentials.username, awsTestCredentials.password)
+            digilentAuthJs.authenticateUser(awsTestCredentials.username, awsTestCredentials.password, () => {
+                return 'new password';
+            })
                 .then((success) => {
                     expect(true).toBe(true);
                     done();
                 })
                 .catch((e) => {
                     console.log(e);
-                    epxect(true).toBe(false);
+                    expect(true).toBe(false);
                 })
         });
 
