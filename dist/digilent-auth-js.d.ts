@@ -19,7 +19,7 @@ export declare class DigilentAuthJs {
     * Authenticate the specified username with the specified password.
     * @param username The username to authenticate with.
     * @param password The password associated with the specified username.
-    * @param getPasswordCallback
+    * @param getPasswordCallback Callback that returns a password string when a new one is required.
     * @return This function returns a Promise that resolves when the user has been authenticated or rejects on error.
     ********************************************************************************/
     authenticateUser(username: string, password: string, getPasswordCallback?: () => string): Promise<any>;

@@ -28,7 +28,7 @@ var DigilentAuthJs = (function () {
     * Authenticate the specified username with the specified password.
     * @param username The username to authenticate with.
     * @param password The password associated with the specified username.
-    * @param getPasswordCallback
+    * @param getPasswordCallback Callback that returns a password string when a new one is required.
     * @return This function returns a Promise that resolves when the user has been authenticated or rejects on error.
     ********************************************************************************/
     DigilentAuthJs.prototype.authenticateUser = function (username, password, getPasswordCallback) {
@@ -60,12 +60,11 @@ var DigilentAuthJs = (function () {
                     reject(err);
                 },
                 newPasswordRequired: function (userAttributes, requiredAttributes) {
-                    // fixme(andrew): not happy with the code here, could probably be 'better'
                     if (getPasswordCallback == null)
-                        throw 'getPasswordCallback callback not defined';
+                        throw 'getPasswordCallback not defined';
                     var newPass = getPasswordCallback();
-                    if (!newPass)
-                        throw 'getPasswordCallback must return a string!';
+                    if (newPass === "")
+                        throw 'getPasswordCallback must return something!';
                     delete userAttributes.email_verified;
                     cognitoUser.completeNewPasswordChallenge(newPass, userAttributes, params);
                 }

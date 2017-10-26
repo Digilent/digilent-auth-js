@@ -86,7 +86,7 @@ AWS.util.update(AWS, {
   /**
    * @constant
    */
-  VERSION: '2.114.0',
+  VERSION: '2.132.0',
 
   /**
    * @api private
@@ -9874,7 +9874,7 @@ var rng;
 var crypto = global.crypto || global.msCrypto; // for IE 11
 if (crypto && crypto.getRandomValues) {
   // WHATWG crypto RNG - http://wiki.whatwg.org/wiki/Crypto
-  var rnds8 = new Uint8Array(16);
+  var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
   rng = function whatwgRNG() {
     crypto.getRandomValues(rnds8);
     return rnds8;
@@ -9886,7 +9886,7 @@ if (!rng) {
   //
   // If all else fails, use Math.random().  It's fast, but is of unspecified
   // quality.
-  var  rnds = new Array(16);
+  var rnds = new Array(16);
   rng = function() {
     for (var i = 0, r; i < 16; i++) {
       if ((i & 0x03) === 0) r = Math.random() * 0x100000000;
@@ -9907,7 +9907,7 @@ module.exports = rng;
 
 /**
  * Convert array of 16 byte values to UUID string format of the form:
- * XXXXXXXX-XXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
  */
 var byteToHex = [];
 for (var i = 0; i < 256; ++i) {
@@ -9917,7 +9917,7 @@ for (var i = 0; i < 256; ++i) {
 function bytesToUuid(buf, offset) {
   var i = offset || 0;
   var bth = byteToHex;
-  return  bth[buf[i++]] + bth[buf[i++]] +
+  return bth[buf[i++]] + bth[buf[i++]] +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
           bth[buf[i++]] + bth[buf[i++]] + '-' +
@@ -11089,6 +11089,46 @@ var CognitoUser = function () {
   };
 
   /**
+   * This is used for authenticating the user through the custom authentication flow.
+   * @param {AuthenticationDetails} authDetails Contains the authentication data
+   * @param {object} callback Result callback map.
+   * @param {onFailure} callback.onFailure Called on any error.
+   * @param {customChallenge} callback.customChallenge Custom challenge
+   *        response required to continue.
+   * @param {authSuccess} callback.onSuccess Called on success with the new session.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.initiateAuth = function initiateAuth(authDetails, callback) {
+    var _this = this;
+
+    var authParameters = authDetails.getAuthParameters();
+    authParameters.USERNAME = this.username;
+
+    this.client.makeUnauthenticatedRequest('initiateAuth', {
+      AuthFlow: 'CUSTOM_AUTH',
+      ClientId: this.pool.getClientId(),
+      AuthParameters: authParameters,
+      ClientMetadata: authDetails.getValidationData()
+    }, function (err, data) {
+      if (err) {
+        return callback.onFailure(err);
+      }
+      var challengeName = data.ChallengeName;
+      var challengeParameters = data.ChallengeParameters;
+
+      if (challengeName === 'CUSTOM_CHALLENGE') {
+        _this.Session = data.Session;
+        return callback.customChallenge(challengeParameters);
+      }
+      _this.signInUserSession = _this.getCognitoUserSession(data.AuthenticationResult);
+      _this.cacheTokens();
+      return callback.onSuccess(_this.signInUserSession);
+    });
+  };
+
+  /**
    * This is used for authenticating the user. it calls the AuthenticationHelper for SRP related
    * stuff
    * @param {AuthenticationDetails} authDetails Contains the authentication data
@@ -11106,7 +11146,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.authenticateUser = function authenticateUser(authDetails, callback) {
-    var _this = this;
+    var _this2 = this;
 
     var authenticationHelper = new __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__["a" /* default */](this.pool.getUserPoolId().split('_')[1]);
     var dateHelper = new __WEBPACK_IMPORTED_MODULE_7__DateHelper__["a" /* default */]();
@@ -11138,36 +11178,36 @@ var CognitoUser = function () {
 
       var challengeParameters = data.ChallengeParameters;
 
-      _this.username = challengeParameters.USER_ID_FOR_SRP;
+      _this2.username = challengeParameters.USER_ID_FOR_SRP;
       serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
       salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
-      _this.getCachedDeviceKeyAndPassword();
+      _this2.getCachedDeviceKeyAndPassword();
 
-      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this.username, authDetails.getPassword(), serverBValue, salt);
+      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this2.username, authDetails.getPassword(), serverBValue, salt);
 
       var dateNow = dateHelper.getNowString();
 
-      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this.pool.getUserPoolId().split('_')[1], 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this.username, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
+      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.username, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
 
       var challengeResponses = {};
 
-      challengeResponses.USERNAME = _this.username;
+      challengeResponses.USERNAME = _this2.username;
       challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
       challengeResponses.TIMESTAMP = dateNow;
       challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
 
-      if (_this.deviceKey != null) {
-        challengeResponses.DEVICE_KEY = _this.deviceKey;
+      if (_this2.deviceKey != null) {
+        challengeResponses.DEVICE_KEY = _this2.deviceKey;
       }
 
       var respondToAuthChallenge = function respondToAuthChallenge(challenge, challengeCallback) {
-        return _this.client.makeUnauthenticatedRequest('respondToAuthChallenge', challenge, function (errChallenge, dataChallenge) {
+        return _this2.client.makeUnauthenticatedRequest('respondToAuthChallenge', challenge, function (errChallenge, dataChallenge) {
           if (errChallenge && errChallenge.code === 'ResourceNotFoundException' && errChallenge.message.toLowerCase().indexOf('device') !== -1) {
             challengeResponses.DEVICE_KEY = null;
-            _this.deviceKey = null;
-            _this.randomPassword = null;
-            _this.deviceGroupKey = null;
-            _this.clearCachedDeviceKeyAndPassword();
+            _this2.deviceKey = null;
+            _this2.randomPassword = null;
+            _this2.deviceGroupKey = null;
+            _this2.clearCachedDeviceKeyAndPassword();
             return respondToAuthChallenge(challenge, challengeCallback);
           }
           return challengeCallback(errChallenge, dataChallenge);
@@ -11176,7 +11216,7 @@ var CognitoUser = function () {
 
       respondToAuthChallenge({
         ChallengeName: 'PASSWORD_VERIFIER',
-        ClientId: _this.pool.getClientId(),
+        ClientId: _this2.pool.getClientId(),
         ChallengeResponses: challengeResponses,
         Session: data.Session
       }, function (errAuthenticate, dataAuthenticate) {
@@ -11186,7 +11226,7 @@ var CognitoUser = function () {
 
         var challengeName = dataAuthenticate.ChallengeName;
         if (challengeName === 'NEW_PASSWORD_REQUIRED') {
-          _this.Session = dataAuthenticate.Session;
+          _this2.Session = dataAuthenticate.Session;
           var userAttributes = null;
           var rawRequiredAttributes = null;
           var requiredAttributes = [];
@@ -11204,7 +11244,7 @@ var CognitoUser = function () {
           }
           return callback.newPasswordRequired(userAttributes, requiredAttributes);
         }
-        return _this.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
+        return _this2.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
       });
       return undefined;
     });
@@ -11221,7 +11261,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.authenticateUserInternal = function authenticateUserInternal(dataAuthenticate, authenticationHelper, callback) {
-    var _this2 = this;
+    var _this3 = this;
 
     var challengeName = dataAuthenticate.ChallengeName;
     var challengeParameters = dataAuthenticate.ChallengeParameters;
@@ -11270,12 +11310,12 @@ var CognitoUser = function () {
         return callback.onFailure(errConfirm);
       }
 
-      _this2.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
-      _this2.cacheDeviceKeyAndPassword();
+      _this3.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+      _this3.cacheDeviceKeyAndPassword();
       if (dataConfirm.UserConfirmationNecessary === true) {
-        return callback.onSuccess(_this2.signInUserSession, dataConfirm.UserConfirmationNecessary);
+        return callback.onSuccess(_this3.signInUserSession, dataConfirm.UserConfirmationNecessary);
       }
-      return callback.onSuccess(_this2.signInUserSession);
+      return callback.onSuccess(_this3.signInUserSession);
     });
     return undefined;
   };
@@ -11297,7 +11337,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.completeNewPasswordChallenge = function completeNewPasswordChallenge(newPassword, requiredAttributeData, callback) {
-    var _this3 = this;
+    var _this4 = this;
 
     if (!newPassword) {
       return callback.onFailure(new Error('New password is required.'));
@@ -11323,7 +11363,7 @@ var CognitoUser = function () {
       if (errAuthenticate) {
         return callback.onFailure(errAuthenticate);
       }
-      return _this3.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
+      return _this4.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
     });
     return undefined;
   };
@@ -11341,7 +11381,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.getDeviceResponse = function getDeviceResponse(callback) {
-    var _this4 = this;
+    var _this5 = this;
 
     var authenticationHelper = new __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__["a" /* default */](this.deviceGroupKey);
     var dateHelper = new __WEBPACK_IMPORTED_MODULE_7__DateHelper__["a" /* default */]();
@@ -11366,23 +11406,23 @@ var CognitoUser = function () {
       var serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
       var salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
 
-      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this4.deviceKey, _this4.randomPassword, serverBValue, salt);
+      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this5.deviceKey, _this5.randomPassword, serverBValue, salt);
 
       var dateNow = dateHelper.getNowString();
 
-      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this4.deviceGroupKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this4.deviceKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
+      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceGroupKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
 
       var challengeResponses = {};
 
-      challengeResponses.USERNAME = _this4.username;
+      challengeResponses.USERNAME = _this5.username;
       challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
       challengeResponses.TIMESTAMP = dateNow;
       challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
-      challengeResponses.DEVICE_KEY = _this4.deviceKey;
+      challengeResponses.DEVICE_KEY = _this5.deviceKey;
 
-      _this4.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
+      _this5.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
         ChallengeName: 'DEVICE_PASSWORD_VERIFIER',
-        ClientId: _this4.pool.getClientId(),
+        ClientId: _this5.pool.getClientId(),
         ChallengeResponses: challengeResponses,
         Session: data.Session
       }, function (errAuthenticate, dataAuthenticate) {
@@ -11390,10 +11430,10 @@ var CognitoUser = function () {
           return callback.onFailure(errAuthenticate);
         }
 
-        _this4.signInUserSession = _this4.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
-        _this4.cacheTokens();
+        _this5.signInUserSession = _this5.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
+        _this5.cacheTokens();
 
-        return callback.onSuccess(_this4.signInUserSession);
+        return callback.onSuccess(_this5.signInUserSession);
       });
       return undefined;
     });
@@ -11435,7 +11475,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.sendCustomChallengeAnswer = function sendCustomChallengeAnswer(answerChallenge, callback) {
-    var _this5 = this;
+    var _this6 = this;
 
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
@@ -11454,13 +11494,13 @@ var CognitoUser = function () {
       var challengeName = data.ChallengeName;
 
       if (challengeName === 'CUSTOM_CHALLENGE') {
-        _this5.Session = data.Session;
+        _this6.Session = data.Session;
         return callback.customChallenge(data.ChallengeParameters);
       }
 
-      _this5.signInUserSession = _this5.getCognitoUserSession(data.AuthenticationResult);
-      _this5.cacheTokens();
-      return callback.onSuccess(_this5.signInUserSession);
+      _this6.signInUserSession = _this6.getCognitoUserSession(data.AuthenticationResult);
+      _this6.cacheTokens();
+      return callback.onSuccess(_this6.signInUserSession);
     });
   };
 
@@ -11475,7 +11515,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.sendMFACode = function sendMFACode(confirmationCode, callback) {
-    var _this6 = this;
+    var _this7 = this;
 
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
@@ -11498,18 +11538,18 @@ var CognitoUser = function () {
       var challengeName = dataAuthenticate.ChallengeName;
 
       if (challengeName === 'DEVICE_SRP_AUTH') {
-        _this6.getDeviceResponse(callback);
+        _this7.getDeviceResponse(callback);
         return undefined;
       }
 
-      _this6.signInUserSession = _this6.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
-      _this6.cacheTokens();
+      _this7.signInUserSession = _this7.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
+      _this7.cacheTokens();
 
       if (dataAuthenticate.AuthenticationResult.NewDeviceMetadata == null) {
-        return callback.onSuccess(_this6.signInUserSession);
+        return callback.onSuccess(_this7.signInUserSession);
       }
 
-      var authenticationHelper = new __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__["a" /* default */](_this6.pool.getUserPoolId().split('_')[1]);
+      var authenticationHelper = new __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__["a" /* default */](_this7.pool.getUserPoolId().split('_')[1]);
       authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey);
 
       var deviceSecretVerifierConfig = {
@@ -11517,13 +11557,13 @@ var CognitoUser = function () {
         PasswordVerifier: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
       };
 
-      _this6.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
-      _this6.deviceGroupKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey;
-      _this6.randomPassword = authenticationHelper.getRandomPassword();
+      _this7.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
+      _this7.deviceGroupKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey;
+      _this7.randomPassword = authenticationHelper.getRandomPassword();
 
-      _this6.client.makeUnauthenticatedRequest('confirmDevice', {
+      _this7.client.makeUnauthenticatedRequest('confirmDevice', {
         DeviceKey: dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey,
-        AccessToken: _this6.signInUserSession.getAccessToken().getJwtToken(),
+        AccessToken: _this7.signInUserSession.getAccessToken().getJwtToken(),
         DeviceSecretVerifierConfig: deviceSecretVerifierConfig,
         DeviceName: navigator.userAgent
       }, function (errConfirm, dataConfirm) {
@@ -11531,12 +11571,12 @@ var CognitoUser = function () {
           return callback.onFailure(errConfirm);
         }
 
-        _this6.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
-        _this6.cacheDeviceKeyAndPassword();
+        _this7.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+        _this7.cacheDeviceKeyAndPassword();
         if (dataConfirm.UserConfirmationNecessary === true) {
-          return callback.onSuccess(_this6.signInUserSession, dataConfirm.UserConfirmationNecessary);
+          return callback.onSuccess(_this7.signInUserSession, dataConfirm.UserConfirmationNecessary);
         }
-        return callback.onSuccess(_this6.signInUserSession);
+        return callback.onSuccess(_this7.signInUserSession);
       });
       return undefined;
     });
@@ -11634,7 +11674,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.deleteUser = function deleteUser(callback) {
-    var _this7 = this;
+    var _this8 = this;
 
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback(new Error('User is not authenticated'), null);
@@ -11646,7 +11686,7 @@ var CognitoUser = function () {
       if (err) {
         return callback(err, null);
       }
-      _this7.clearCachedTokens();
+      _this8.clearCachedTokens();
       return callback(null, 'SUCCESS');
     });
     return undefined;
@@ -11849,7 +11889,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.refreshSession = function refreshSession(refreshToken, callback) {
-    var _this8 = this;
+    var _this9 = this;
 
     var authParameters = {};
     authParameters.REFRESH_TOKEN = refreshToken.getToken();
@@ -11870,7 +11910,7 @@ var CognitoUser = function () {
     }, function (err, authResult) {
       if (err) {
         if (err.code === 'NotAuthorizedException') {
-          _this8.clearCachedTokens();
+          _this9.clearCachedTokens();
         }
         return callback(err, null);
       }
@@ -11879,9 +11919,9 @@ var CognitoUser = function () {
         if (!Object.prototype.hasOwnProperty.call(authenticationResult, 'RefreshToken')) {
           authenticationResult.RefreshToken = refreshToken.getToken();
         }
-        _this8.signInUserSession = _this8.getCognitoUserSession(authenticationResult);
-        _this8.cacheTokens();
-        return callback(null, _this8.signInUserSession);
+        _this9.signInUserSession = _this9.getCognitoUserSession(authenticationResult);
+        _this9.cacheTokens();
+        return callback(null, _this9.signInUserSession);
       }
       return undefined;
     });
@@ -12006,7 +12046,7 @@ var CognitoUser = function () {
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {inputVerificationCode?} callback.inputVerificationCode
    *    Optional callback raised instead of onSuccess with response data.
-   * @param {onSuccess<void>?} callback.onSuccess Called on success.
+   * @param {onSuccess} callback.onSuccess Called on success.
    * @returns {void}
    */
 
@@ -12022,7 +12062,7 @@ var CognitoUser = function () {
       if (typeof callback.inputVerificationCode === 'function') {
         return callback.inputVerificationCode(data);
       }
-      return callback.onSuccess();
+      return callback.onSuccess(data);
     });
   };
 
@@ -12173,15 +12213,15 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.forgetDevice = function forgetDevice(callback) {
-    var _this9 = this;
+    var _this10 = this;
 
     this.forgetSpecificDevice(this.deviceKey, {
       onFailure: callback.onFailure,
       onSuccess: function onSuccess(result) {
-        _this9.deviceKey = null;
-        _this9.deviceGroupKey = null;
-        _this9.randomPassword = null;
-        _this9.clearCachedDeviceKeyAndPassword();
+        _this10.deviceKey = null;
+        _this10.deviceGroupKey = null;
+        _this10.randomPassword = null;
+        _this10.clearCachedDeviceKeyAndPassword();
         return callback.onSuccess(result);
       }
     });
@@ -12281,7 +12321,7 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.globalSignOut = function globalSignOut(callback) {
-    var _this10 = this;
+    var _this11 = this;
 
     if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
       return callback.onFailure(new Error('User is not authenticated'));
@@ -12293,7 +12333,7 @@ var CognitoUser = function () {
       if (err) {
         return callback.onFailure(err);
       }
-      _this10.clearCachedTokens();
+      _this11.clearCachedTokens();
       return callback.onSuccess('SUCCESS');
     });
     return undefined;
@@ -12755,7 +12795,7 @@ var DigilentAuthJs = (function () {
     * Authenticate the specified username with the specified password.
     * @param username The username to authenticate with.
     * @param password The password associated with the specified username.
-    * @param getPasswordCallback
+    * @param getPasswordCallback Callback that returns a password string when a new one is required.
     * @return This function returns a Promise that resolves when the user has been authenticated or rejects on error.
     ********************************************************************************/
     DigilentAuthJs.prototype.authenticateUser = function (username, password, getPasswordCallback) {
@@ -12787,12 +12827,11 @@ var DigilentAuthJs = (function () {
                     reject(err);
                 },
                 newPasswordRequired: function (userAttributes, requiredAttributes) {
-                    // fixme(andrew): not happy with the code here, could probably be 'better'
                     if (getPasswordCallback == null)
-                        throw 'getPasswordCallback callback not defined';
+                        throw 'getPasswordCallback not defined';
                     var newPass = getPasswordCallback();
-                    if (!newPass)
-                        throw 'getPasswordCallback must return a string!';
+                    if (newPass === "")
+                        throw 'getPasswordCallback must return something!';
                     delete userAttributes.email_verified;
                     cognitoUser.completeNewPasswordChallenge(newPass, userAttributes, params);
                 }
@@ -13169,6 +13208,7 @@ var AuthenticationDetails = function () {
    * @param {string} data.Username User being authenticated.
    * @param {string} data.Password Plain-text password to authenticate with.
    * @param {(AttributeArg[])?} data.ValidationData Application extra metadata.
+   * @param {(AttributeArg[])?} data.AuthParamaters Authentication paramaters for custom auth.
    */
   function AuthenticationDetails(data) {
     _classCallCheck(this, AuthenticationDetails);
@@ -13176,9 +13216,11 @@ var AuthenticationDetails = function () {
     var _ref = data || {},
         ValidationData = _ref.ValidationData,
         Username = _ref.Username,
-        Password = _ref.Password;
+        Password = _ref.Password,
+        AuthParameters = _ref.AuthParameters;
 
     this.validationData = ValidationData || [];
+    this.authParameters = AuthParameters || [];
     this.username = Username;
     this.password = Password;
   }
@@ -13208,6 +13250,15 @@ var AuthenticationDetails = function () {
 
   AuthenticationDetails.prototype.getValidationData = function getValidationData() {
     return this.validationData;
+  };
+
+  /**
+   * @returns {Array} the record's authParameters
+   */
+
+
+  AuthenticationDetails.prototype.getAuthParameters = function getAuthParameters() {
+    return this.authParameters;
   };
 
   return AuthenticationDetails;
@@ -17921,6 +17972,31 @@ AWS.Service = inherit({
   /**
    * @api private
    */
+  getSkewCorrectedDate: function getSkewCorrectedDate() {
+    return new Date(Date.now() + this.config.systemClockOffset);
+  },
+
+  /**
+   * @api private
+   */
+  applyClockOffset: function applyClockOffset(newServerTime) {
+    if (newServerTime) {
+      this.config.systemClockOffset = newServerTime - Date.now();
+    }
+  },
+
+  /**
+   * @api private
+   */
+  isClockSkewed: function isClockSkewed(newServerTime) {
+    if (newServerTime) {
+      return Math.abs(this.getSkewCorrectedDate().getTime() - newServerTime) >= 30000;
+    }
+  },
+
+  /**
+   * @api private
+   */
   throttledError: function throttledError(error) {
     // this logic varies between services
     switch (error.code) {
@@ -18925,7 +19001,7 @@ AWS.EventListeners = {
         }
 
         try {
-          var date = AWS.util.date.getDate();
+          var date = service.getSkewCorrectedDate();
           var SignerClass = service.getSignerClass(req);
           var signer = new SignerClass(req.httpRequest,
             service.api.signingName || service.api.endpointPrefix,
@@ -19037,8 +19113,7 @@ AWS.EventListeners = {
           error(err);
         }
       }
-
-      var timeDiff = (AWS.util.date.getDate() - this.signedAt) / 1000;
+      var timeDiff = (resp.request.service.getSkewCorrectedDate() - this.signedAt) / 1000;
       if (timeDiff >= 60 * 10) { // if we signed 10min ago, re-sign
         this.emit('sign', [this], function(err) {
           if (err) done(err);
@@ -19058,11 +19133,12 @@ AWS.EventListeners = {
       resp.httpResponse.buffers = [];
       resp.httpResponse.numBytes = 0;
       var dateHeader = headers.date || headers.Date;
+      var service = resp.request.service;
       if (dateHeader) {
         var serverTime = Date.parse(dateHeader);
-        if (resp.request.service.config.correctClockSkew
-            && AWS.util.isClockSkewed(serverTime)) {
-          AWS.util.applyClockOffset(serverTime);
+        if (service.config.correctClockSkew
+            && service.isClockSkewed(serverTime)) {
+          service.applyClockOffset(serverTime);
         }
       }
     });
@@ -19124,8 +19200,7 @@ AWS.EventListeners = {
     add('CLOCK_SKEWED', 'retry', function CLOCK_SKEWED(resp) {
       if (!resp.error) return;
       if (this.service.clockSkewError(resp.error)
-          && this.service.config.correctClockSkew
-          && AWS.config.isClockSkewed) {
+          && this.service.config.correctClockSkew) {
         resp.error.retryable = true;
       }
     });
@@ -19201,7 +19276,7 @@ AWS.EventListeners = {
       if (!logger) return;
 
       function buildMessage() {
-        var time = AWS.util.date.getDate().getTime();
+        var time = resp.request.service.getSkewCorrectedDate().getTime();
         var delta = (time - req.startTime.getTime()) / 1000;
         var ansi = logger.isTTY ? true : false;
         var status = resp.httpResponse.statusCode;
@@ -20225,7 +20300,7 @@ AWS.Request = inherit({
     this.params = params || {};
     this.httpRequest = new AWS.HttpRequest(endpoint, region);
     this.httpRequest.appendToUserAgent(customUserAgent);
-    this.startTime = AWS.util.date.getDate();
+    this.startTime = service.getSkewCorrectedDate();
 
     this.response = new AWS.Response(this);
     this._asm = new AcceptorStateMachine(fsm.states, 'validate');
@@ -21827,8 +21902,9 @@ function signedUrlBuilder(request) {
     }
     request.httpRequest.headers[expiresHeader] = expires;
   } else if (signerClass === AWS.Signers.S3) {
+    var now = request.service ? request.service.getSkewCorrectedDate() : AWS.util.date.getDate();
     request.httpRequest.headers[expiresHeader] = parseInt(
-      AWS.util.date.unixTimestamp() + expires, 10).toString();
+      AWS.util.date.unixTimestamp(now) + expires, 10).toString();
   } else {
     throw AWS.util.error(new Error(), {
       message: 'Presigning only supports S3 or SigV4 signing.',
@@ -22204,9 +22280,6 @@ module.exports = uuid;
 /* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Unique ID creation requires a high quality random # generator.  We feature
-// detect to determine the best RNG source, normalizing to a function that
-// returns 128-bits of randomness, since that's what's usually required
 var rng = __webpack_require__(82);
 var bytesToUuid = __webpack_require__(83);
 
@@ -26081,7 +26154,8 @@ var CognitoUserPool = function () {
 
     var _ref = data || {},
         UserPoolId = _ref.UserPoolId,
-        ClientId = _ref.ClientId;
+        ClientId = _ref.ClientId,
+        endpoint = _ref.endpoint;
 
     if (!UserPoolId || !ClientId) {
       throw new Error('Both UserPoolId and ClientId are required.');
@@ -26094,7 +26168,7 @@ var CognitoUserPool = function () {
     this.userPoolId = UserPoolId;
     this.clientId = ClientId;
 
-    this.client = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider___default.a({ apiVersion: '2016-04-19', region: region });
+    this.client = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider___default.a({ apiVersion: '2016-04-19', region: region, endpoint: endpoint });
 
     this.storage = data.Storage || new __WEBPACK_IMPORTED_MODULE_2__StorageHelper__["a" /* default */]().getStorage();
   }
