@@ -4,6 +4,9 @@ awsTestCredentials.json
 # Dist
 dist/
 
+# VSCode
+.vscode/
+
 # Logs
 logs
 *.log
