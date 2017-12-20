@@ -1,5 +1,8 @@
-#App Specific
+# App Specific
 awsTestCredentials.json
+
+# Dist
+dist/
 
 # Logs
 logs

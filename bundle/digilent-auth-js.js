@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 94);
+/******/ 	return __webpack_require__(__webpack_require__.s = 95);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -86,7 +86,7 @@ AWS.util.update(AWS, {
   /**
    * @constant
    */
-  VERSION: '2.132.0',
+  VERSION: '2.172.0',
 
   /**
    * @api private
@@ -99,7 +99,7 @@ AWS.util.update(AWS, {
   Protocol: {
     Json: __webpack_require__(27),
     Query: __webpack_require__(47),
-    Rest: __webpack_require__(17),
+    Rest: __webpack_require__(16),
     RestJson: __webpack_require__(49),
     RestXml: __webpack_require__(50)
   },
@@ -108,7 +108,7 @@ AWS.util.update(AWS, {
    * @api private
    */
   XML: {
-    Builder: __webpack_require__(101),
+    Builder: __webpack_require__(102),
     Parser: null // conditionally set based on environment
   },
 
@@ -134,20 +134,20 @@ AWS.util.update(AWS, {
   /**
    * @api private
    */
-  apiLoader: __webpack_require__(208)
+  apiLoader: __webpack_require__(209)
 });
 
-__webpack_require__(209);
-__webpack_require__(212);
+__webpack_require__(210);
+__webpack_require__(213);
 
 __webpack_require__(79);
 __webpack_require__(80);
-__webpack_require__(213);
-__webpack_require__(217);
-__webpack_require__(219);
+__webpack_require__(214);
+__webpack_require__(218);
 __webpack_require__(220);
 __webpack_require__(221);
-__webpack_require__(228);
+__webpack_require__(222);
+__webpack_require__(229);
 
 /**
  * @readonly
@@ -983,7 +983,7 @@ var util = {
    */
   isDualstackAvailable: function isDualstackAvailable(service) {
     if (!service) return false;
-    var metadata = __webpack_require__(229);
+    var metadata = __webpack_require__(230);
     if (typeof service !== 'string') service = service.serviceIdentifier;
     if (typeof service !== 'string' || !metadata.hasOwnProperty(service)) return false;
     return !!metadata[service].dualstackAvailable;
@@ -1052,7 +1052,7 @@ var util = {
    */
   uuid: {
     v4: function uuidV4() {
-      return __webpack_require__(230).v4();
+      return __webpack_require__(231).v4();
     }
   },
 
@@ -1104,14 +1104,14 @@ var util = {
 
 module.exports = util;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(98).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(99).setImmediate))
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseAssign = __webpack_require__(129),
-    baseCreate = __webpack_require__(130);
+var baseAssign = __webpack_require__(130),
+    baseCreate = __webpack_require__(131);
 
 /**
  * Creates an object that inherits from the `prototype` object. If a
@@ -1243,8 +1243,8 @@ module.exports = root;
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsNative = __webpack_require__(104),
-    getValue = __webpack_require__(109);
+var baseIsNative = __webpack_require__(105),
+    getValue = __webpack_require__(110);
 
 /**
  * Gets the native function at `key` of `object`.
@@ -1300,9 +1300,9 @@ module.exports = g;
 
   isObject = __webpack_require__(3);
 
-  isFunction = __webpack_require__(18);
+  isFunction = __webpack_require__(17);
 
-  isEmpty = __webpack_require__(131);
+  isEmpty = __webpack_require__(132);
 
   XMLElement = null;
 
@@ -1329,8 +1329,8 @@ module.exports = g;
         XMLComment = __webpack_require__(71);
         XMLDeclaration = __webpack_require__(59);
         XMLDocType = __webpack_require__(72);
-        XMLRaw = __webpack_require__(206);
-        XMLText = __webpack_require__(207);
+        XMLRaw = __webpack_require__(207);
+        XMLText = __webpack_require__(208);
       }
     }
 
@@ -1856,6 +1856,7 @@ function Shape(shape, options, memberName) {
   property(this, 'isLocationName', Boolean(shape.locationName), false);
   property(this, 'isIdempotent', shape.idempotencyToken === true);
   property(this, 'isJsonValue', shape.jsonvalue === true);
+  property(this, 'isSensitive', shape.sensitive === true || shape.prototype && shape.prototype.sensitive === true);
 
   if (options.documentation) {
     property(this, 'documentation', shape.documentation);
@@ -2178,9 +2179,9 @@ module.exports = Shape;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19),
-    getRawTag = __webpack_require__(105),
-    objectToString = __webpack_require__(106);
+var Symbol = __webpack_require__(18),
+    getRawTag = __webpack_require__(106),
+    objectToString = __webpack_require__(107);
 
 /** `Object#toString` result references. */
 var nullTag = '[object Null]',
@@ -2212,7 +2213,7 @@ module.exports = baseGetTag;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(18),
+var isFunction = __webpack_require__(17),
     isLength = __webpack_require__(31);
 
 /**
@@ -2251,7 +2252,7 @@ module.exports = isArrayLike;
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayLikeKeys = __webpack_require__(118),
+var arrayLikeKeys = __webpack_require__(119),
     baseKeys = __webpack_require__(58),
     isArrayLike = __webpack_require__(12);
 
@@ -2329,23 +2330,12 @@ module.exports = isObjectLike;
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(16);
-
-var AWS = __webpack_require__(0);
-if (typeof window !== 'undefined') window.AWS = AWS;
-if (true) module.exports = AWS;
-if (typeof self !== 'undefined') self.AWS = AWS;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
 /* WEBPACK VAR INJECTION */(function(process) {var util = __webpack_require__(1);
 
 // browser specific modules
-util.crypto.lib = __webpack_require__(233);
+util.crypto.lib = __webpack_require__(234);
 util.Buffer = __webpack_require__(44).Buffer;
-util.url = __webpack_require__(241);
+util.url = __webpack_require__(242);
 util.querystring = __webpack_require__(84);
 util.environment = 'js';
 
@@ -2354,16 +2344,16 @@ module.exports = AWS;
 
 __webpack_require__(77);
 __webpack_require__(78);
-__webpack_require__(246);
-__webpack_require__(250);
+__webpack_require__(247);
 __webpack_require__(251);
-__webpack_require__(256);
+__webpack_require__(252);
+__webpack_require__(257);
 
 // Load the DOMParser XML parser
-AWS.XML.Parser = __webpack_require__(257);
+AWS.XML.Parser = __webpack_require__(258);
 
 // Load the XHR HttpClient
-__webpack_require__(258);
+__webpack_require__(259);
 
 if (typeof process === 'undefined') {
   process = {
@@ -2373,7 +2363,7 @@ if (typeof process === 'undefined') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
@@ -2522,7 +2512,7 @@ module.exports = {
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
@@ -2565,7 +2555,7 @@ module.exports = isFunction;
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(5);
@@ -2577,7 +2567,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /**
@@ -2620,14 +2610,14 @@ module.exports = eq;
 
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var listCacheClear = __webpack_require__(147),
-    listCacheDelete = __webpack_require__(148),
-    listCacheGet = __webpack_require__(149),
-    listCacheHas = __webpack_require__(150),
-    listCacheSet = __webpack_require__(151);
+var listCacheClear = __webpack_require__(148),
+    listCacheDelete = __webpack_require__(149),
+    listCacheGet = __webpack_require__(150),
+    listCacheHas = __webpack_require__(151),
+    listCacheSet = __webpack_require__(152);
 
 /**
  * Creates an list cache object.
@@ -2658,10 +2648,10 @@ module.exports = ListCache;
 
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var eq = __webpack_require__(20);
+var eq = __webpack_require__(19);
 
 /**
  * Gets the index at which the `key` is found in `array` of key-value pairs.
@@ -2685,7 +2675,7 @@ module.exports = assocIndexOf;
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(6);
@@ -2697,10 +2687,10 @@ module.exports = nativeCreate;
 
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isKeyable = __webpack_require__(165);
+var isKeyable = __webpack_require__(166);
 
 /**
  * Gets the data for `map`.
@@ -2721,7 +2711,7 @@ module.exports = getMapData;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isSymbol = __webpack_require__(41);
@@ -2748,21 +2738,21 @@ module.exports = toKey;
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(16);
+__webpack_require__(15);
 var AWS = __webpack_require__(0);
 var Service = AWS.Service;
 var apiLoader = AWS.apiLoader;
 
 apiLoader.services['sts'] = {};
 AWS.STS = Service.defineService('sts', ['2011-06-15']);
-__webpack_require__(247);
+__webpack_require__(248);
 Object.defineProperty(apiLoader.services['sts'], '2011-06-15', {
   get: function get() {
-    var model = __webpack_require__(248);
-    model.paginators = __webpack_require__(249).pagination;
+    var model = __webpack_require__(249);
+    model.paginators = __webpack_require__(250).pagination;
     return model;
   },
   enumerable: true,
@@ -2771,6 +2761,17 @@ Object.defineProperty(apiLoader.services['sts'], '2011-06-15', {
 
 module.exports = AWS.STS;
 
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(15);
+
+var AWS = __webpack_require__(0);
+if (typeof window !== 'undefined') window.AWS = AWS;
+if (true) module.exports = AWS;
+if (typeof self !== 'undefined') self.AWS = AWS;
 
 /***/ }),
 /* 27 */
@@ -3101,7 +3102,7 @@ module.exports = isPrototype;
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsArguments = __webpack_require__(120),
+var baseIsArguments = __webpack_require__(121),
     isObjectLike = __webpack_require__(14);
 
 /** Used for built-in method references. */
@@ -3144,7 +3145,7 @@ module.exports = isArguments;
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(5),
-    stubFalse = __webpack_require__(121);
+    stubFalse = __webpack_require__(122);
 
 /** Detect free variable `exports`. */
 var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -3216,9 +3217,9 @@ module.exports = function(module) {
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsTypedArray = __webpack_require__(122),
-    baseUnary = __webpack_require__(123),
-    nodeUtil = __webpack_require__(124);
+var baseIsTypedArray = __webpack_require__(123),
+    baseUnary = __webpack_require__(124),
+    nodeUtil = __webpack_require__(125);
 
 /* Node.js helper references. */
 var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -3262,11 +3263,11 @@ module.exports = Map;
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var mapCacheClear = __webpack_require__(157),
-    mapCacheDelete = __webpack_require__(164),
-    mapCacheGet = __webpack_require__(166),
-    mapCacheHas = __webpack_require__(167),
-    mapCacheSet = __webpack_require__(168);
+var mapCacheClear = __webpack_require__(158),
+    mapCacheDelete = __webpack_require__(165),
+    mapCacheGet = __webpack_require__(167),
+    mapCacheHas = __webpack_require__(168),
+    mapCacheSet = __webpack_require__(169);
 
 /**
  * Creates a map cache object to store key-value pairs.
@@ -5060,9 +5061,9 @@ module.exports = isSymbol;
 
 
 
-var base64 = __webpack_require__(234)
-var ieee754 = __webpack_require__(235)
-var isArray = __webpack_require__(236)
+var base64 = __webpack_require__(235)
+var ieee754 = __webpack_require__(236)
+var isArray = __webpack_require__(237)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -6888,7 +6889,7 @@ module.exports = { hash: hash };
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BigInteger__ = __webpack_require__(85);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6933,7 +6934,7 @@ var AuthenticationHelper = function () {
     this.k = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](this.hexHash('00' + this.N.toString(16) + '0' + this.g.toString(16)), 16);
 
     this.smallAValue = this.generateRandomSmallA();
-    this.largeAValue = this.calculateA(this.smallAValue);
+    this.getLargeAValue(function () {});
 
     this.infoBits = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer('Caldera Derived Key', 'utf8');
 
@@ -6950,12 +6951,26 @@ var AuthenticationHelper = function () {
   };
 
   /**
-   * @returns {BigInteger} large A, a value generated from small A
+   * @param {nodeCallback<BigInteger>} callback Called with (err, largeAValue)
+   * @returns {void}
    */
 
 
-  AuthenticationHelper.prototype.getLargeAValue = function getLargeAValue() {
-    return this.largeAValue;
+  AuthenticationHelper.prototype.getLargeAValue = function getLargeAValue(callback) {
+    var _this = this;
+
+    if (this.largeAValue) {
+      callback(null, this.largeAValue);
+    } else {
+      this.calculateA(this.smallAValue, function (err, largeAValue) {
+        if (err) {
+          callback(err, null);
+        }
+
+        _this.largeAValue = largeAValue;
+        callback(null, _this.largeAValue);
+      });
+    }
   };
 
   /**
@@ -7016,11 +7031,14 @@ var AuthenticationHelper = function () {
    * Generate salts and compute verifier.
    * @param {string} deviceGroupKey Devices to generate verifier for.
    * @param {string} username User to generate verifier for.
+   * @param {nodeCallback<null>} callback Called with (err, null)
    * @returns {void}
    */
 
 
-  AuthenticationHelper.prototype.generateHashDevice = function generateHashDevice(deviceGroupKey, username) {
+  AuthenticationHelper.prototype.generateHashDevice = function generateHashDevice(deviceGroupKey, username, callback) {
+    var _this2 = this;
+
     this.randomPassword = this.generateRandomString();
     var combinedString = '' + deviceGroupKey + username + ':' + this.randomPassword;
     var hashedString = this.hash(combinedString);
@@ -7028,27 +7046,40 @@ var AuthenticationHelper = function () {
     var hexRandom = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.lib.randomBytes(16).toString('hex');
     this.SaltToHashDevices = this.padHex(new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](hexRandom, 16));
 
-    var verifierDevicesNotPadded = this.g.modPow(new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](this.hexHash(this.SaltToHashDevices + hashedString), 16), this.N);
+    this.g.modPow(new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](this.hexHash(this.SaltToHashDevices + hashedString), 16), this.N, function (err, verifierDevicesNotPadded) {
+      if (err) {
+        callback(err, null);
+      }
 
-    this.verifierDevices = this.padHex(verifierDevicesNotPadded);
+      _this2.verifierDevices = _this2.padHex(verifierDevicesNotPadded);
+      callback(null, null);
+    });
   };
 
   /**
    * Calculate the client's public value A = g^a%N
    * with the generated random number a
    * @param {BigInteger} a Randomly generated small A.
-   * @returns {BigInteger} Computed large A.
+   * @param {nodeCallback<BigInteger>} callback Called with (err, largeAValue)
+   * @returns {void}
    * @private
    */
 
 
-  AuthenticationHelper.prototype.calculateA = function calculateA(a) {
-    var A = this.g.modPow(a, this.N);
+  AuthenticationHelper.prototype.calculateA = function calculateA(a, callback) {
+    var _this3 = this;
 
-    if (A.mod(this.N).equals(__WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */].ZERO)) {
-      throw new Error('Illegal paramater. A mod N cannot be 0.');
-    }
-    return A;
+    this.g.modPow(a, this.N, function (err, A) {
+      if (err) {
+        callback(err, null);
+      }
+
+      if (A.mod(_this3.N).equals(__WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */].ZERO)) {
+        callback(new Error('Illegal paramater. A mod N cannot be 0.'), null);
+      }
+
+      callback(null, A);
+    });
   };
 
   /**
@@ -7114,11 +7145,14 @@ var AuthenticationHelper = function () {
    * @param {String} password Password.
    * @param {BigInteger} serverBValue Server B value.
    * @param {BigInteger} salt Generated salt.
-   * @returns {Buffer} Computed HKDF value.
+   * @param {nodeCallback<Buffer>} callback Called with (err, hkdfValue)
+   * @returns {void}
    */
 
 
-  AuthenticationHelper.prototype.getPasswordAuthenticationKey = function getPasswordAuthenticationKey(username, password, serverBValue, salt) {
+  AuthenticationHelper.prototype.getPasswordAuthenticationKey = function getPasswordAuthenticationKey(username, password, serverBValue, salt, callback) {
+    var _this4 = this;
+
     if (serverBValue.mod(this.N).equals(__WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */].ZERO)) {
       throw new Error('B cannot be zero.');
     }
@@ -7133,14 +7167,43 @@ var AuthenticationHelper = function () {
     var usernamePasswordHash = this.hash(usernamePassword);
 
     var xValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](this.hexHash(this.padHex(salt) + usernamePasswordHash), 16);
+    this.calculateS(xValue, serverBValue, function (err, sValue) {
+      if (err) {
+        callback(err, null);
+      }
 
-    var gModPowXN = this.g.modPow(xValue, this.N);
-    var intValue2 = serverBValue.subtract(this.k.multiply(gModPowXN));
-    var sValue = intValue2.modPow(this.smallAValue.add(this.UValue.multiply(xValue)), this.N).mod(this.N);
+      var hkdf = _this4.computehkdf(new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this4.padHex(sValue), 'hex'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this4.padHex(_this4.UValue.toString(16)), 'hex'));
 
-    var hkdf = this.computehkdf(new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(this.padHex(sValue), 'hex'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(this.padHex(this.UValue.toString(16)), 'hex'));
+      callback(null, hkdf);
+    });
+  };
 
-    return hkdf;
+  /**
+   * Calculates the S value used in getPasswordAuthenticationKey
+   * @param {BigInteger} xValue Salted password hash value.
+   * @param {BigInteger} serverBValue Server B value.
+   * @param {nodeCallback<string>} callback Called on success or error.
+   * @returns {void}
+   */
+
+
+  AuthenticationHelper.prototype.calculateS = function calculateS(xValue, serverBValue, callback) {
+    var _this5 = this;
+
+    this.g.modPow(xValue, this.N, function (err, gModPowXN) {
+      if (err) {
+        callback(err, null);
+      }
+
+      var intValue2 = serverBValue.subtract(_this5.k.multiply(gModPowXN));
+      intValue2.modPow(_this5.smallAValue.add(_this5.UValue.multiply(xValue)), _this5.N, function (err2, result) {
+        if (err2) {
+          callback(err2, null);
+        }
+
+        callback(null, result.mod(_this5.N));
+      });
+    });
   };
 
   /**
@@ -7181,7 +7244,7 @@ var AuthenticationHelper = function () {
 
 var AWS = __webpack_require__(0);
 var util = __webpack_require__(1);
-var QueryParamSerializer = __webpack_require__(100);
+var QueryParamSerializer = __webpack_require__(101);
 var Shape = __webpack_require__(10);
 
 function buildRequest(req) {
@@ -7316,7 +7379,7 @@ module.exports = Collection;
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
-var Rest = __webpack_require__(17);
+var Rest = __webpack_require__(16);
 var Json = __webpack_require__(27);
 var JsonBuilder = __webpack_require__(28);
 var JsonParser = __webpack_require__(29);
@@ -7336,6 +7399,9 @@ function populateBody(req) {
       applyContentTypeHeader(req);
     } else { // non-JSON payload
       req.httpRequest.body = params;
+      if (payloadShape.type === 'binary' || payloadShape.isStreaming) {
+        applyContentTypeHeader(req, true);
+      }
     }
   } else {
     req.httpRequest.body = builder.build(req.params, input);
@@ -7343,9 +7409,13 @@ function populateBody(req) {
   }
 }
 
-function applyContentTypeHeader(req) {
+function applyContentTypeHeader(req, isBinary) {
+  var operation = req.service.api.operations[req.operation];
+  var input = operation.input;
+
   if (!req.httpRequest.headers['Content-Type']) {
-    req.httpRequest.headers['Content-Type'] = 'application/json';
+    var type = isBinary ? 'binary/octet-stream' : 'application/json';
+    req.httpRequest.headers['Content-Type'] = type;
   }
 }
 
@@ -7398,7 +7468,7 @@ module.exports = {
 
 var AWS = __webpack_require__(0);
 var util = __webpack_require__(1);
-var Rest = __webpack_require__(17);
+var Rest = __webpack_require__(16);
 
 function populateBody(req) {
   var input = req.service.api.operations[req.operation].input;
@@ -7499,7 +7569,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseAssignValue = __webpack_require__(52),
-    eq = __webpack_require__(20);
+    eq = __webpack_require__(19);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7669,7 +7739,7 @@ module.exports = copyObject;
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var eq = __webpack_require__(20),
+var eq = __webpack_require__(19),
     isArrayLike = __webpack_require__(12),
     isIndex = __webpack_require__(32),
     isObject = __webpack_require__(3);
@@ -7706,7 +7776,7 @@ module.exports = isIterateeCall;
 /***/ (function(module, exports, __webpack_require__) {
 
 var isPrototype = __webpack_require__(33),
-    nativeKeys = __webpack_require__(125);
+    nativeKeys = __webpack_require__(126);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7812,11 +7882,11 @@ module.exports = baseKeys;
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var DataView = __webpack_require__(132),
+var DataView = __webpack_require__(133),
     Map = __webpack_require__(38),
-    Promise = __webpack_require__(133),
-    Set = __webpack_require__(134),
-    WeakMap = __webpack_require__(135),
+    Promise = __webpack_require__(134),
+    Set = __webpack_require__(135),
+    WeakMap = __webpack_require__(136),
     baseGetTag = __webpack_require__(11),
     toSource = __webpack_require__(55);
 
@@ -7886,13 +7956,13 @@ module.exports = getTag;
 
   isObject = __webpack_require__(3);
 
-  isFunction = __webpack_require__(18);
+  isFunction = __webpack_require__(17);
 
-  every = __webpack_require__(136);
+  every = __webpack_require__(137);
 
   XMLNode = __webpack_require__(8);
 
-  XMLAttribute = __webpack_require__(201);
+  XMLAttribute = __webpack_require__(202);
 
   XMLProcessingInstruction = __webpack_require__(69);
 
@@ -8094,12 +8164,12 @@ module.exports = getTag;
 /* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(21),
-    stackClear = __webpack_require__(152),
-    stackDelete = __webpack_require__(153),
-    stackGet = __webpack_require__(154),
-    stackHas = __webpack_require__(155),
-    stackSet = __webpack_require__(156);
+var ListCache = __webpack_require__(20),
+    stackClear = __webpack_require__(153),
+    stackDelete = __webpack_require__(154),
+    stackGet = __webpack_require__(155),
+    stackHas = __webpack_require__(156),
+    stackSet = __webpack_require__(157);
 
 /**
  * Creates a stack cache object to store key-value pairs.
@@ -8127,7 +8197,7 @@ module.exports = Stack;
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsEqualDeep = __webpack_require__(169),
+var baseIsEqualDeep = __webpack_require__(170),
     isObjectLike = __webpack_require__(14);
 
 /**
@@ -8161,9 +8231,9 @@ module.exports = baseIsEqual;
 /* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var SetCache = __webpack_require__(170),
-    arraySome = __webpack_require__(173),
-    cacheHas = __webpack_require__(174);
+var SetCache = __webpack_require__(171),
+    arraySome = __webpack_require__(174),
+    cacheHas = __webpack_require__(175);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
@@ -8298,7 +8368,7 @@ module.exports = matchesStrictComparable;
 /***/ (function(module, exports, __webpack_require__) {
 
 var castPath = __webpack_require__(68),
-    toKey = __webpack_require__(25);
+    toKey = __webpack_require__(24);
 
 /**
  * The base implementation of `_.get` without support for default values.
@@ -8329,8 +8399,8 @@ module.exports = baseGet;
 
 var isArray = __webpack_require__(4),
     isKey = __webpack_require__(40),
-    stringToPath = __webpack_require__(189),
-    toString = __webpack_require__(192);
+    stringToPath = __webpack_require__(190),
+    toString = __webpack_require__(193);
 
 /**
  * Casts `value` to a path array if it's not one.
@@ -8533,13 +8603,13 @@ module.exports = castPath;
 
   XMLComment = __webpack_require__(71);
 
-  XMLDTDAttList = __webpack_require__(202);
+  XMLDTDAttList = __webpack_require__(203);
 
-  XMLDTDEntity = __webpack_require__(203);
+  XMLDTDEntity = __webpack_require__(204);
 
-  XMLDTDElement = __webpack_require__(204);
+  XMLDTDElement = __webpack_require__(205);
 
-  XMLDTDNotation = __webpack_require__(205);
+  XMLDTDNotation = __webpack_require__(206);
 
   XMLProcessingInstruction = __webpack_require__(69);
 
@@ -9937,8 +10007,8 @@ module.exports = bytesToUuid;
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(244);
-exports.encode = exports.stringify = __webpack_require__(245);
+exports.decode = exports.parse = __webpack_require__(245);
+exports.encode = exports.stringify = __webpack_require__(246);
 
 
 /***/ }),
@@ -10631,7 +10701,7 @@ Montgomery.prototype.mulTo = montMulTo;
 Montgomery.prototype.sqrTo = montSqrTo;
 
 // (public) this^e % m (HAC 14.85)
-function bnModPow(e, m) {
+function bnModPow(e, m, callback) {
   var i = e.bitLength(),
       k,
       r = nbv(1),
@@ -10704,7 +10774,9 @@ function bnModPow(e, m) {
       }
     }
   }
-  return z.revert(r);
+  var result = z.revert(r);
+  callback(null, result);
+  return result;
 }
 
 // protected
@@ -10746,9 +10818,12 @@ BigInteger.ONE = nbv(1);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CognitoJwtToken__ = __webpack_require__(87);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /*
  * Copyright 2016 Amazon.com,
@@ -10771,7 +10846,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /** @class */
 
-var CognitoAccessToken = function () {
+var CognitoAccessToken = function (_CognitoJwtToken) {
+  _inherits(CognitoAccessToken, _CognitoJwtToken);
+
   /**
    * Constructs a new CognitoAccessToken object
    * @param {string=} AccessToken The JWT access token.
@@ -10782,32 +10859,11 @@ var CognitoAccessToken = function () {
 
     _classCallCheck(this, CognitoAccessToken);
 
-    // Assign object
-    this.jwtToken = AccessToken || '';
+    return _possibleConstructorReturn(this, _CognitoJwtToken.call(this, AccessToken || ''));
   }
 
-  /**
-   * @returns {string} the record's token.
-   */
-
-
-  CognitoAccessToken.prototype.getJwtToken = function getJwtToken() {
-    return this.jwtToken;
-  };
-
-  /**
-   * @returns {int} the token's expiration (exp member).
-   */
-
-
-  CognitoAccessToken.prototype.getExpiration = function getExpiration() {
-    var payload = this.jwtToken.split('.')[1];
-    var expiration = JSON.parse(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].base64.decode(payload).toString('utf8'));
-    return expiration.exp;
-  };
-
   return CognitoAccessToken;
-}();
+}(__WEBPACK_IMPORTED_MODULE_0__CognitoJwtToken__["a" /* default */]);
 
 /* harmony default export */ __webpack_exports__["a"] = (CognitoAccessToken);
 
@@ -10816,7 +10872,7 @@ var CognitoAccessToken = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -10841,7 +10897,101 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /** @class */
 
-var CognitoIdToken = function () {
+var CognitoJwtToken = function () {
+  /**
+   * Constructs a new CognitoJwtToken object
+   * @param {string=} token The JWT token.
+   */
+  function CognitoJwtToken(token) {
+    _classCallCheck(this, CognitoJwtToken);
+
+    // Assign object
+    this.jwtToken = token || '';
+    this.payload = this.decodePayload();
+  }
+
+  /**
+   * @returns {string} the record's token.
+   */
+
+
+  CognitoJwtToken.prototype.getJwtToken = function getJwtToken() {
+    return this.jwtToken;
+  };
+
+  /**
+   * @returns {int} the token's expiration (exp member).
+   */
+
+
+  CognitoJwtToken.prototype.getExpiration = function getExpiration() {
+    return this.payload.exp;
+  };
+
+  /**
+   * @returns {int} the token's "issued at" (iat member).
+   */
+
+
+  CognitoJwtToken.prototype.getIssuedAt = function getIssuedAt() {
+    return this.payload.iat;
+  };
+
+  /**
+   * @returns {object} the token's payload.
+   */
+
+
+  CognitoJwtToken.prototype.decodePayload = function decodePayload() {
+    var payload = this.jwtToken.split('.')[1];
+    try {
+      return JSON.parse(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].base64.decode(payload).toString('utf8'));
+    } catch (err) {
+      return {};
+    }
+  };
+
+  return CognitoJwtToken;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (CognitoJwtToken);
+
+/***/ }),
+/* 88 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__CognitoJwtToken__ = __webpack_require__(87);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/*!
+ * Copyright 2016 Amazon.com,
+ * Inc. or its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Amazon Software License (the "License").
+ * You may not use this file except in compliance with the
+ * License. A copy of the License is located at
+ *
+ *     http://aws.amazon.com/asl/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, express or implied. See the License
+ * for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+
+/** @class */
+
+var CognitoIdToken = function (_CognitoJwtToken) {
+  _inherits(CognitoIdToken, _CognitoJwtToken);
+
   /**
    * Constructs a new CognitoIdToken object
    * @param {string=} IdToken The JWT Id token
@@ -10852,37 +11002,16 @@ var CognitoIdToken = function () {
 
     _classCallCheck(this, CognitoIdToken);
 
-    // Assign object
-    this.jwtToken = IdToken || '';
+    return _possibleConstructorReturn(this, _CognitoJwtToken.call(this, IdToken || ''));
   }
 
-  /**
-   * @returns {string} the record's token.
-   */
-
-
-  CognitoIdToken.prototype.getJwtToken = function getJwtToken() {
-    return this.jwtToken;
-  };
-
-  /**
-   * @returns {int} the token's expiration (exp member).
-   */
-
-
-  CognitoIdToken.prototype.getExpiration = function getExpiration() {
-    var payload = this.jwtToken.split('.')[1];
-    var expiration = JSON.parse(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].base64.decode(payload).toString('utf8'));
-    return expiration.exp;
-  };
-
   return CognitoIdToken;
-}();
+}(__WEBPACK_IMPORTED_MODULE_0__CognitoJwtToken__["a" /* default */]);
 
 /* harmony default export */ __webpack_exports__["a"] = (CognitoIdToken);
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10936,21 +11065,21 @@ var CognitoRefreshToken = function () {
 /* harmony default export */ __webpack_exports__["a"] = (CognitoRefreshToken);
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BigInteger__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__CognitoAccessToken__ = __webpack_require__(86);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__CognitoIdToken__ = __webpack_require__(87);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CognitoRefreshToken__ = __webpack_require__(88);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CognitoUserSession__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__DateHelper__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__CognitoUserAttribute__ = __webpack_require__(92);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__StorageHelper__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__CognitoIdToken__ = __webpack_require__(88);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CognitoRefreshToken__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CognitoUserSession__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__DateHelper__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__CognitoUserAttribute__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__StorageHelper__ = __webpack_require__(94);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
@@ -11051,6 +11180,19 @@ var CognitoUser = function () {
   }
 
   /**
+   * Sets the session for this user
+   * @param {CognitoUserSession} signInUserSession the session
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.setSignInUserSession = function setSignInUserSession(signInUserSession) {
+    this.clearCachedTokens();
+    this.signInUserSession = signInUserSession;
+    this.cacheTokens();
+  };
+
+  /**
    * @returns {CognitoUserSession} the current session for this user
    */
 
@@ -11106,12 +11248,17 @@ var CognitoUser = function () {
     var authParameters = authDetails.getAuthParameters();
     authParameters.USERNAME = this.username;
 
-    this.client.makeUnauthenticatedRequest('initiateAuth', {
+    var jsonReq = {
       AuthFlow: 'CUSTOM_AUTH',
       ClientId: this.pool.getClientId(),
       AuthParameters: authParameters,
       ClientMetadata: authDetails.getValidationData()
-    }, function (err, data) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+
+    this.client.makeUnauthenticatedRequest('initiateAuth', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
@@ -11160,93 +11307,117 @@ var CognitoUser = function () {
     }
 
     authParameters.USERNAME = this.username;
-    authParameters.SRP_A = authenticationHelper.getLargeAValue().toString(16);
-
-    if (this.authenticationFlowType === 'CUSTOM_AUTH') {
-      authParameters.CHALLENGE_NAME = 'SRP_A';
-    }
-
-    this.client.makeUnauthenticatedRequest('initiateAuth', {
-      AuthFlow: this.authenticationFlowType,
-      ClientId: this.pool.getClientId(),
-      AuthParameters: authParameters,
-      ClientMetadata: authDetails.getValidationData()
-    }, function (err, data) {
-      if (err) {
-        return callback.onFailure(err);
+    authenticationHelper.getLargeAValue(function (errOnAValue, aValue) {
+      // getLargeAValue callback start
+      if (errOnAValue) {
+        callback.onFailure(errOnAValue);
       }
 
-      var challengeParameters = data.ChallengeParameters;
+      authParameters.SRP_A = aValue.toString(16);
 
-      _this2.username = challengeParameters.USER_ID_FOR_SRP;
-      serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
-      salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
-      _this2.getCachedDeviceKeyAndPassword();
-
-      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this2.username, authDetails.getPassword(), serverBValue, salt);
-
-      var dateNow = dateHelper.getNowString();
-
-      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.username, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
-
-      var challengeResponses = {};
-
-      challengeResponses.USERNAME = _this2.username;
-      challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
-      challengeResponses.TIMESTAMP = dateNow;
-      challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
-
-      if (_this2.deviceKey != null) {
-        challengeResponses.DEVICE_KEY = _this2.deviceKey;
+      if (_this2.authenticationFlowType === 'CUSTOM_AUTH') {
+        authParameters.CHALLENGE_NAME = 'SRP_A';
       }
 
-      var respondToAuthChallenge = function respondToAuthChallenge(challenge, challengeCallback) {
-        return _this2.client.makeUnauthenticatedRequest('respondToAuthChallenge', challenge, function (errChallenge, dataChallenge) {
-          if (errChallenge && errChallenge.code === 'ResourceNotFoundException' && errChallenge.message.toLowerCase().indexOf('device') !== -1) {
-            challengeResponses.DEVICE_KEY = null;
-            _this2.deviceKey = null;
-            _this2.randomPassword = null;
-            _this2.deviceGroupKey = null;
-            _this2.clearCachedDeviceKeyAndPassword();
-            return respondToAuthChallenge(challenge, challengeCallback);
-          }
-          return challengeCallback(errChallenge, dataChallenge);
-        });
-      };
-
-      respondToAuthChallenge({
-        ChallengeName: 'PASSWORD_VERIFIER',
+      var jsonReq = {
+        AuthFlow: _this2.authenticationFlowType,
         ClientId: _this2.pool.getClientId(),
-        ChallengeResponses: challengeResponses,
-        Session: data.Session
-      }, function (errAuthenticate, dataAuthenticate) {
-        if (errAuthenticate) {
-          return callback.onFailure(errAuthenticate);
+        AuthParameters: authParameters,
+        ClientMetadata: authDetails.getValidationData()
+      };
+      if (_this2.getUserContextData(_this2.username)) {
+        jsonReq.UserContextData = _this2.getUserContextData(_this2.username);
+      }
+
+      _this2.client.makeUnauthenticatedRequest('initiateAuth', jsonReq, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
         }
 
-        var challengeName = dataAuthenticate.ChallengeName;
-        if (challengeName === 'NEW_PASSWORD_REQUIRED') {
-          _this2.Session = dataAuthenticate.Session;
-          var userAttributes = null;
-          var rawRequiredAttributes = null;
-          var requiredAttributes = [];
-          var userAttributesPrefix = authenticationHelper.getNewPasswordRequiredChallengeUserAttributePrefix();
+        var challengeParameters = data.ChallengeParameters;
 
-          if (dataAuthenticate.ChallengeParameters) {
-            userAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.userAttributes);
-            rawRequiredAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.requiredAttributes);
+        _this2.username = challengeParameters.USER_ID_FOR_SRP;
+        serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
+        salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
+        _this2.getCachedDeviceKeyAndPassword();
+
+        authenticationHelper.getPasswordAuthenticationKey(_this2.username, authDetails.getPassword(), serverBValue, salt, function (errOnHkdf, hkdf) {
+          // getPasswordAuthenticationKey callback start
+          if (errOnHkdf) {
+            callback.onFailure(errOnHkdf);
           }
 
-          if (rawRequiredAttributes) {
-            for (var i = 0; i < rawRequiredAttributes.length; i++) {
-              requiredAttributes[i] = rawRequiredAttributes[i].substr(userAttributesPrefix.length);
+          var dateNow = dateHelper.getNowString();
+
+          var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.pool.getUserPoolId().split('_')[1], 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this2.username, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
+
+          var challengeResponses = {};
+
+          challengeResponses.USERNAME = _this2.username;
+          challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
+          challengeResponses.TIMESTAMP = dateNow;
+          challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
+
+          if (_this2.deviceKey != null) {
+            challengeResponses.DEVICE_KEY = _this2.deviceKey;
+          }
+
+          var respondToAuthChallenge = function respondToAuthChallenge(challenge, challengeCallback) {
+            return _this2.client.makeUnauthenticatedRequest('respondToAuthChallenge', challenge, function (errChallenge, dataChallenge) {
+              if (errChallenge && errChallenge.code === 'ResourceNotFoundException' && errChallenge.message.toLowerCase().indexOf('device') !== -1) {
+                challengeResponses.DEVICE_KEY = null;
+                _this2.deviceKey = null;
+                _this2.randomPassword = null;
+                _this2.deviceGroupKey = null;
+                _this2.clearCachedDeviceKeyAndPassword();
+                return respondToAuthChallenge(challenge, challengeCallback);
+              }
+              return challengeCallback(errChallenge, dataChallenge);
+            });
+          };
+
+          var jsonReqResp = {
+            ChallengeName: 'PASSWORD_VERIFIER',
+            ClientId: _this2.pool.getClientId(),
+            ChallengeResponses: challengeResponses,
+            Session: data.Session
+          };
+          if (_this2.getUserContextData()) {
+            jsonReqResp.UserContextData = _this2.getUserContextData();
+          }
+          respondToAuthChallenge(jsonReqResp, function (errAuthenticate, dataAuthenticate) {
+            if (errAuthenticate) {
+              return callback.onFailure(errAuthenticate);
             }
-          }
-          return callback.newPasswordRequired(userAttributes, requiredAttributes);
-        }
-        return _this2.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
+
+            var challengeName = dataAuthenticate.ChallengeName;
+            if (challengeName === 'NEW_PASSWORD_REQUIRED') {
+              _this2.Session = dataAuthenticate.Session;
+              var userAttributes = null;
+              var rawRequiredAttributes = null;
+              var requiredAttributes = [];
+              var userAttributesPrefix = authenticationHelper.getNewPasswordRequiredChallengeUserAttributePrefix();
+
+              if (dataAuthenticate.ChallengeParameters) {
+                userAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.userAttributes);
+                rawRequiredAttributes = JSON.parse(dataAuthenticate.ChallengeParameters.requiredAttributes);
+              }
+
+              if (rawRequiredAttributes) {
+                for (var i = 0; i < rawRequiredAttributes.length; i++) {
+                  requiredAttributes[i] = rawRequiredAttributes[i].substr(userAttributesPrefix.length);
+                }
+              }
+              return callback.newPasswordRequired(userAttributes, requiredAttributes);
+            }
+            return _this2.authenticateUserInternal(dataAuthenticate, authenticationHelper, callback);
+          });
+          return undefined;
+          // getPasswordAuthenticationKey callback end
+        });
+        return undefined;
       });
-      return undefined;
+      // getLargeAValue callback end
     });
   };
 
@@ -11271,6 +11442,21 @@ var CognitoUser = function () {
       return callback.mfaRequired(challengeName, challengeParameters);
     }
 
+    if (challengeName === 'SELECT_MFA_TYPE') {
+      this.Session = dataAuthenticate.Session;
+      return callback.selectMFAType(challengeName, challengeParameters);
+    }
+
+    if (challengeName === 'MFA_SETUP') {
+      this.Session = dataAuthenticate.Session;
+      return callback.mfaSetup(challengeName, challengeParameters);
+    }
+
+    if (challengeName === 'SOFTWARE_TOKEN_MFA') {
+      this.Session = dataAuthenticate.Session;
+      return callback.totpRequired(challengeName, challengeParameters);
+    }
+
     if (challengeName === 'CUSTOM_CHALLENGE') {
       this.Session = dataAuthenticate.Session;
       return callback.customChallenge(challengeParameters);
@@ -11289,33 +11475,38 @@ var CognitoUser = function () {
       return callback.onSuccess(this.signInUserSession);
     }
 
-    authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey);
-
-    var deviceSecretVerifierConfig = {
-      Salt: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
-      PasswordVerifier: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
-    };
-
-    this.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
-    this.deviceGroupKey = newDeviceMetadata.DeviceGroupKey;
-    this.randomPassword = authenticationHelper.getRandomPassword();
-
-    this.client.makeUnauthenticatedRequest('confirmDevice', {
-      DeviceKey: newDeviceMetadata.DeviceKey,
-      AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
-      DeviceSecretVerifierConfig: deviceSecretVerifierConfig,
-      DeviceName: navigator.userAgent
-    }, function (errConfirm, dataConfirm) {
-      if (errConfirm) {
-        return callback.onFailure(errConfirm);
+    authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey, function (errGenHash) {
+      if (errGenHash) {
+        return callback.onFailure(errGenHash);
       }
 
-      _this3.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
-      _this3.cacheDeviceKeyAndPassword();
-      if (dataConfirm.UserConfirmationNecessary === true) {
-        return callback.onSuccess(_this3.signInUserSession, dataConfirm.UserConfirmationNecessary);
-      }
-      return callback.onSuccess(_this3.signInUserSession);
+      var deviceSecretVerifierConfig = {
+        Salt: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
+        PasswordVerifier: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
+      };
+
+      _this3.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
+      _this3.deviceGroupKey = newDeviceMetadata.DeviceGroupKey;
+      _this3.randomPassword = authenticationHelper.getRandomPassword();
+
+      _this3.client.makeUnauthenticatedRequest('confirmDevice', {
+        DeviceKey: newDeviceMetadata.DeviceKey,
+        AccessToken: _this3.signInUserSession.getAccessToken().getJwtToken(),
+        DeviceSecretVerifierConfig: deviceSecretVerifierConfig,
+        DeviceName: navigator.userAgent
+      }, function (errConfirm, dataConfirm) {
+        if (errConfirm) {
+          return callback.onFailure(errConfirm);
+        }
+
+        _this3.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+        _this3.cacheDeviceKeyAndPassword();
+        if (dataConfirm.UserConfirmationNecessary === true) {
+          return callback.onSuccess(_this3.signInUserSession, dataConfirm.UserConfirmationNecessary);
+        }
+        return callback.onSuccess(_this3.signInUserSession);
+      });
+      return undefined;
     });
     return undefined;
   };
@@ -11354,12 +11545,17 @@ var CognitoUser = function () {
 
     finalUserAttributes.NEW_PASSWORD = newPassword;
     finalUserAttributes.USERNAME = this.username;
-    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
+    var jsonReq = {
       ChallengeName: 'NEW_PASSWORD_REQUIRED',
       ClientId: this.pool.getClientId(),
       ChallengeResponses: finalUserAttributes,
       Session: this.Session
-    }, function (errAuthenticate, dataAuthenticate) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+
+    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (errAuthenticate, dataAuthenticate) {
       if (errAuthenticate) {
         return callback.onFailure(errAuthenticate);
       }
@@ -11390,52 +11586,76 @@ var CognitoUser = function () {
 
     authParameters.USERNAME = this.username;
     authParameters.DEVICE_KEY = this.deviceKey;
-    authParameters.SRP_A = authenticationHelper.getLargeAValue().toString(16);
-
-    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
-      ChallengeName: 'DEVICE_SRP_AUTH',
-      ClientId: this.pool.getClientId(),
-      ChallengeResponses: authParameters
-    }, function (err, data) {
-      if (err) {
-        return callback.onFailure(err);
+    authenticationHelper.getLargeAValue(function (errAValue, aValue) {
+      // getLargeAValue callback start
+      if (errAValue) {
+        callback.onFailure(errAValue);
       }
 
-      var challengeParameters = data.ChallengeParameters;
+      authParameters.SRP_A = aValue.toString(16);
 
-      var serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
-      var salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
-
-      var hkdf = authenticationHelper.getPasswordAuthenticationKey(_this5.deviceKey, _this5.randomPassword, serverBValue, salt);
-
-      var dateNow = dateHelper.getNowString();
-
-      var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceGroupKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
-
-      var challengeResponses = {};
-
-      challengeResponses.USERNAME = _this5.username;
-      challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
-      challengeResponses.TIMESTAMP = dateNow;
-      challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
-      challengeResponses.DEVICE_KEY = _this5.deviceKey;
-
-      _this5.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
-        ChallengeName: 'DEVICE_PASSWORD_VERIFIER',
+      var jsonReq = {
+        ChallengeName: 'DEVICE_SRP_AUTH',
         ClientId: _this5.pool.getClientId(),
-        ChallengeResponses: challengeResponses,
-        Session: data.Session
-      }, function (errAuthenticate, dataAuthenticate) {
-        if (errAuthenticate) {
-          return callback.onFailure(errAuthenticate);
+        ChallengeResponses: authParameters
+      };
+      if (_this5.getUserContextData()) {
+        jsonReq.UserContextData = _this5.getUserContextData();
+      }
+      _this5.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
         }
 
-        _this5.signInUserSession = _this5.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
-        _this5.cacheTokens();
+        var challengeParameters = data.ChallengeParameters;
 
-        return callback.onSuccess(_this5.signInUserSession);
+        var serverBValue = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SRP_B, 16);
+        var salt = new __WEBPACK_IMPORTED_MODULE_1__BigInteger__["a" /* default */](challengeParameters.SALT, 16);
+
+        authenticationHelper.getPasswordAuthenticationKey(_this5.deviceKey, _this5.randomPassword, serverBValue, salt, function (errHkdf, hkdf) {
+          // getPasswordAuthenticationKey callback start
+          if (errHkdf) {
+            return callback.onFailure(errHkdf);
+          }
+
+          var dateNow = dateHelper.getNowString();
+
+          var signatureString = __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].crypto.hmac(hkdf, __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].buffer.concat([new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceGroupKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(_this5.deviceKey, 'utf8'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(challengeParameters.SECRET_BLOCK, 'base64'), new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(dateNow, 'utf8')]), 'base64', 'sha256');
+
+          var challengeResponses = {};
+
+          challengeResponses.USERNAME = _this5.username;
+          challengeResponses.PASSWORD_CLAIM_SECRET_BLOCK = challengeParameters.SECRET_BLOCK;
+          challengeResponses.TIMESTAMP = dateNow;
+          challengeResponses.PASSWORD_CLAIM_SIGNATURE = signatureString;
+          challengeResponses.DEVICE_KEY = _this5.deviceKey;
+
+          var jsonReqResp = {
+            ChallengeName: 'DEVICE_PASSWORD_VERIFIER',
+            ClientId: _this5.pool.getClientId(),
+            ChallengeResponses: challengeResponses,
+            Session: data.Session
+          };
+          if (_this5.getUserContextData()) {
+            jsonReqResp.UserContextData = _this5.getUserContextData();
+          }
+
+          _this5.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReqResp, function (errAuthenticate, dataAuthenticate) {
+            if (errAuthenticate) {
+              return callback.onFailure(errAuthenticate);
+            }
+
+            _this5.signInUserSession = _this5.getCognitoUserSession(dataAuthenticate.AuthenticationResult);
+            _this5.cacheTokens();
+
+            return callback.onSuccess(_this5.signInUserSession);
+          });
+          return undefined;
+          // getPasswordAuthenticationKey callback end
+        });
+        return undefined;
       });
-      return undefined;
+      // getLargeAValue callback end
     });
   };
 
@@ -11449,12 +11669,16 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.confirmRegistration = function confirmRegistration(confirmationCode, forceAliasCreation, callback) {
-    this.client.makeUnauthenticatedRequest('confirmSignUp', {
+    var jsonReq = {
       ClientId: this.pool.getClientId(),
       ConfirmationCode: confirmationCode,
       Username: this.username,
       ForceAliasCreation: forceAliasCreation
-    }, function (err) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('confirmSignUp', jsonReq, function (err) {
       if (err) {
         return callback(err, null);
       }
@@ -11480,13 +11704,16 @@ var CognitoUser = function () {
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
     challengeResponses.ANSWER = answerChallenge;
-
-    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
+    var jsonReq = {
       ChallengeName: 'CUSTOM_CHALLENGE',
       ChallengeResponses: challengeResponses,
       ClientId: this.pool.getClientId(),
       Session: this.Session
-    }, function (err, data) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
@@ -11508,29 +11735,39 @@ var CognitoUser = function () {
    * This is used by the user once he has an MFA code
    * @param {string} confirmationCode The MFA code entered by the user.
    * @param {object} callback Result callback map.
+   * @param {string} mfaType The mfa we are replying to.
    * @param {onFailure} callback.onFailure Called on any error.
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
    */
 
 
-  CognitoUser.prototype.sendMFACode = function sendMFACode(confirmationCode, callback) {
+  CognitoUser.prototype.sendMFACode = function sendMFACode(confirmationCode, callback, mfaType) {
     var _this7 = this;
 
     var challengeResponses = {};
     challengeResponses.USERNAME = this.username;
     challengeResponses.SMS_MFA_CODE = confirmationCode;
+    var mfaTypeSelection = mfaType || 'SMS_MFA';
+    if (mfaTypeSelection === 'SOFTWARE_TOKEN_MFA') {
+      challengeResponses.SOFTWARE_TOKEN_MFA_CODE = confirmationCode;
+    }
 
     if (this.deviceKey != null) {
       challengeResponses.DEVICE_KEY = this.deviceKey;
     }
 
-    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', {
-      ChallengeName: 'SMS_MFA',
+    var jsonReq = {
+      ChallengeName: mfaTypeSelection,
       ChallengeResponses: challengeResponses,
       ClientId: this.pool.getClientId(),
       Session: this.Session
-    }, function (err, dataAuthenticate) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+
+    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (err, dataAuthenticate) {
       if (err) {
         return callback.onFailure(err);
       }
@@ -11550,33 +11787,38 @@ var CognitoUser = function () {
       }
 
       var authenticationHelper = new __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__["a" /* default */](_this7.pool.getUserPoolId().split('_')[1]);
-      authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey);
-
-      var deviceSecretVerifierConfig = {
-        Salt: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
-        PasswordVerifier: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
-      };
-
-      _this7.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
-      _this7.deviceGroupKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey;
-      _this7.randomPassword = authenticationHelper.getRandomPassword();
-
-      _this7.client.makeUnauthenticatedRequest('confirmDevice', {
-        DeviceKey: dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey,
-        AccessToken: _this7.signInUserSession.getAccessToken().getJwtToken(),
-        DeviceSecretVerifierConfig: deviceSecretVerifierConfig,
-        DeviceName: navigator.userAgent
-      }, function (errConfirm, dataConfirm) {
-        if (errConfirm) {
-          return callback.onFailure(errConfirm);
+      authenticationHelper.generateHashDevice(dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey, dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey, function (errGenHash) {
+        if (errGenHash) {
+          return callback.onFailure(errGenHash);
         }
 
-        _this7.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
-        _this7.cacheDeviceKeyAndPassword();
-        if (dataConfirm.UserConfirmationNecessary === true) {
-          return callback.onSuccess(_this7.signInUserSession, dataConfirm.UserConfirmationNecessary);
-        }
-        return callback.onSuccess(_this7.signInUserSession);
+        var deviceSecretVerifierConfig = {
+          Salt: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getSaltDevices(), 'hex').toString('base64'),
+          PasswordVerifier: new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__["util"].Buffer(authenticationHelper.getVerifierDevices(), 'hex').toString('base64')
+        };
+
+        _this7.verifierDevices = deviceSecretVerifierConfig.PasswordVerifier;
+        _this7.deviceGroupKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceGroupKey;
+        _this7.randomPassword = authenticationHelper.getRandomPassword();
+
+        _this7.client.makeUnauthenticatedRequest('confirmDevice', {
+          DeviceKey: dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey,
+          AccessToken: _this7.signInUserSession.getAccessToken().getJwtToken(),
+          DeviceSecretVerifierConfig: deviceSecretVerifierConfig,
+          DeviceName: navigator.userAgent
+        }, function (errConfirm, dataConfirm) {
+          if (errConfirm) {
+            return callback.onFailure(errConfirm);
+          }
+
+          _this7.deviceKey = dataAuthenticate.AuthenticationResult.NewDeviceMetadata.DeviceKey;
+          _this7.cacheDeviceKeyAndPassword();
+          if (dataConfirm.UserConfirmationNecessary === true) {
+            return callback.onSuccess(_this7.signInUserSession, dataConfirm.UserConfirmationNecessary);
+          }
+          return callback.onSuccess(_this7.signInUserSession);
+        });
+        return undefined;
       });
       return undefined;
     });
@@ -11630,6 +11872,33 @@ var CognitoUser = function () {
 
     this.client.makeUnauthenticatedRequest('setUserSettings', {
       MFAOptions: mfaOptions,
+      AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
+    }, function (err) {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, 'SUCCESS');
+    });
+    return undefined;
+  };
+
+  /**
+   * This is used by an authenticated user to enable MFA for himself
+   * @param {string[]} smsMfaSettings the sms mfa settings
+   * @param {string[]} softwareTokenMfaSettings the software token mfa settings
+   * @param {nodeCallback<string>} callback Called on success or error.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.setUserMfaPreference = function setUserMfaPreference(smsMfaSettings, softwareTokenMfaSettings, callback) {
+    if (this.signInUserSession == null || !this.signInUserSession.isValid()) {
+      return callback(new Error('User is not authenticated'), null);
+    }
+
+    this.client.makeUnauthenticatedRequest('setUserMFAPreference', {
+      SMSMfaSettings: smsMfaSettings,
+      SoftwareTokenMfaSettings: softwareTokenMfaSettings,
       AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
     }, function (err) {
       if (err) {
@@ -11812,10 +12081,12 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.resendConfirmationCode = function resendConfirmationCode(callback) {
-    this.client.makeUnauthenticatedRequest('resendConfirmationCode', {
+    var jsonReq = {
       ClientId: this.pool.getClientId(),
       Username: this.username
-    }, function (err, result) {
+    };
+
+    this.client.makeUnauthenticatedRequest('resendConfirmationCode', jsonReq, function (err, result) {
       if (err) {
         return callback(err, null);
       }
@@ -11845,6 +12116,7 @@ var CognitoUser = function () {
     var idTokenKey = keyPrefix + '.idToken';
     var accessTokenKey = keyPrefix + '.accessToken';
     var refreshTokenKey = keyPrefix + '.refreshToken';
+    var clockDriftKey = keyPrefix + '.clockDrift';
 
     if (this.storage.getItem(idTokenKey)) {
       var idToken = new __WEBPACK_IMPORTED_MODULE_4__CognitoIdToken__["a" /* default */]({
@@ -11856,11 +12128,13 @@ var CognitoUser = function () {
       var refreshToken = new __WEBPACK_IMPORTED_MODULE_5__CognitoRefreshToken__["a" /* default */]({
         RefreshToken: this.storage.getItem(refreshTokenKey)
       });
+      var clockDrift = parseInt(this.storage.getItem(clockDriftKey), 0) || 0;
 
       var sessionData = {
         IdToken: idToken,
         AccessToken: accessToken,
-        RefreshToken: refreshToken
+        RefreshToken: refreshToken,
+        ClockDrift: clockDrift
       };
       var cachedSession = new __WEBPACK_IMPORTED_MODULE_6__CognitoUserSession__["a" /* default */](sessionData);
       if (cachedSession.isValid()) {
@@ -11903,11 +12177,15 @@ var CognitoUser = function () {
       authParameters.DEVICE_KEY = this.deviceKey;
     }
 
-    this.client.makeUnauthenticatedRequest('initiateAuth', {
+    var jsonReq = {
       ClientId: this.pool.getClientId(),
       AuthFlow: 'REFRESH_TOKEN_AUTH',
       AuthParameters: authParameters
-    }, function (err, authResult) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('initiateAuth', jsonReq, function (err, authResult) {
       if (err) {
         if (err.code === 'NotAuthorizedException') {
           _this9.clearCachedTokens();
@@ -11938,11 +12216,13 @@ var CognitoUser = function () {
     var idTokenKey = keyPrefix + '.' + this.username + '.idToken';
     var accessTokenKey = keyPrefix + '.' + this.username + '.accessToken';
     var refreshTokenKey = keyPrefix + '.' + this.username + '.refreshToken';
+    var clockDriftKey = keyPrefix + '.' + this.username + '.clockDrift';
     var lastUserKey = keyPrefix + '.LastAuthUser';
 
     this.storage.setItem(idTokenKey, this.signInUserSession.getIdToken().getJwtToken());
     this.storage.setItem(accessTokenKey, this.signInUserSession.getAccessToken().getJwtToken());
     this.storage.setItem(refreshTokenKey, this.signInUserSession.getRefreshToken().getToken());
+    this.storage.setItem(clockDriftKey, '' + this.signInUserSession.getClockDrift());
     this.storage.setItem(lastUserKey, this.username);
   };
 
@@ -12052,10 +12332,14 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.forgotPassword = function forgotPassword(callback) {
-    this.client.makeUnauthenticatedRequest('forgotPassword', {
+    var jsonReq = {
       ClientId: this.pool.getClientId(),
       Username: this.username
-    }, function (err, data) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('forgotPassword', jsonReq, function (err, data) {
       if (err) {
         return callback.onFailure(err);
       }
@@ -12078,12 +12362,16 @@ var CognitoUser = function () {
 
 
   CognitoUser.prototype.confirmPassword = function confirmPassword(confirmationCode, newPassword, callback) {
-    this.client.makeUnauthenticatedRequest('confirmForgotPassword', {
+    var jsonReq = {
       ClientId: this.pool.getClientId(),
       Username: this.username,
       ConfirmationCode: confirmationCode,
       Password: newPassword
-    }, function (err) {
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('confirmForgotPassword', jsonReq, function (err) {
       if (err) {
         return callback.onFailure(err);
       }
@@ -12350,13 +12638,152 @@ var CognitoUser = function () {
     this.clearCachedTokens();
   };
 
+  /**
+   * This is used by a user trying to select a given MFA
+   * @param {string} answerChallenge the mfa the user wants
+   * @param {nodeCallback<string>} callback Called on success or error.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.sendMFASelectionAnswer = function sendMFASelectionAnswer(answerChallenge, callback) {
+    var _this12 = this;
+
+    var challengeResponses = {};
+    challengeResponses.USERNAME = this.username;
+    challengeResponses.ANSWER = answerChallenge;
+
+    var jsonReq = {
+      ChallengeName: 'SELECT_MFA_TYPE',
+      ChallengeResponses: challengeResponses,
+      ClientId: this.pool.getClientId(),
+      Session: this.Session
+    };
+    if (this.getUserContextData()) {
+      jsonReq.UserContextData = this.getUserContextData();
+    }
+    this.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (err, data) {
+      if (err) {
+        return callback.onFailure(err);
+      }
+      _this12.Session = data.Session;
+      if (answerChallenge === 'SMS_MFA') {
+        return callback.mfaRequired(data.challengeName, data.challengeParameters);
+      }
+      if (answerChallenge === 'SOFTWARE_TOKEN_MFA') {
+        return callback.totpRequired(data.challengeName, data.challengeParameters);
+      }
+      return undefined;
+    });
+  };
+
+  /**
+   * This returns the user context data for advanced security feature.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.getUserContextData = function getUserContextData() {
+    var pool = this.pool;
+    return pool.getUserContextData(this.username);
+  };
+
+  /**
+   * This is used by an authenticated or a user trying to authenticate to associate a TOTP MFA
+   * @param {nodeCallback<string>} callback Called on success or error.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.associateSoftwareToken = function associateSoftwareToken(callback) {
+    var _this13 = this;
+
+    if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
+      this.client.makeUnauthenticatedRequest('associateSoftwareToken', {
+        Session: this.Session
+      }, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
+        }
+        _this13.Session = data.Session;
+        return callback.associateSecretCode(data.SecretCode);
+      });
+    } else {
+      this.client.makeUnauthenticatedRequest('associateSoftwareToken', {
+        AccessToken: this.signInUserSession.getAccessToken().getJwtToken()
+      }, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
+        }
+        return callback.associateSecretCode(data.SecretCode);
+      });
+    }
+  };
+
+  /**
+   * This is used by an authenticated or a user trying to authenticate to associate a TOTP MFA
+   * @param {string} totpCode The MFA code entered by the user.
+   * @param {string} friendlyDeviceName The device name we are assigning to the device.
+   * @param {nodeCallback<string>} callback Called on success or error.
+   * @returns {void}
+   */
+
+
+  CognitoUser.prototype.verifySoftwareToken = function verifySoftwareToken(totpCode, friendlyDeviceName, callback) {
+    var _this14 = this;
+
+    if (!(this.signInUserSession != null && this.signInUserSession.isValid())) {
+      this.client.makeUnauthenticatedRequest('verifySoftwareToken', {
+        Session: this.Session,
+        UserCode: totpCode,
+        FriendlyDeviceName: friendlyDeviceName
+      }, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
+        }
+        _this14.Session = data.Session;
+        var challengeResponses = {};
+        challengeResponses.USERNAME = _this14.username;
+        var jsonReq = {
+          ChallengeName: 'MFA_SETUP',
+          ClientId: _this14.pool.getClientId(),
+          ChallengeResponses: challengeResponses,
+          Session: _this14.Session
+        };
+        if (_this14.getUserContextData()) {
+          jsonReq.UserContextData = _this14.getUserContextData();
+        }
+        _this14.client.makeUnauthenticatedRequest('respondToAuthChallenge', jsonReq, function (errRespond, dataRespond) {
+          if (errRespond) {
+            return callback.onFailure(errRespond);
+          }
+          _this14.signInUserSession = _this14.getCognitoUserSession(dataRespond.AuthenticationResult);
+          _this14.cacheTokens();
+          return callback.onSuccess(_this14.signInUserSession);
+        });
+        return undefined;
+      });
+    } else {
+      this.client.makeUnauthenticatedRequest('verifySoftwareToken', {
+        AccessToken: this.signInUserSession.getAccessToken().getJwtToken(),
+        UserCode: totpCode,
+        FriendlyDeviceName: friendlyDeviceName
+      }, function (err, data) {
+        if (err) {
+          return callback.onFailure(err);
+        }
+        return callback(null, data);
+      });
+    }
+  };
+
   return CognitoUser;
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (CognitoUser);
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12383,15 +12810,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var CognitoUserSession = function () {
   /**
    * Constructs a new CognitoUserSession object
-   * @param {string} IdToken The session's Id token.
-   * @param {string=} RefreshToken The session's refresh token.
-   * @param {string} AccessToken The session's access token.
+   * @param {CognitoIdToken} IdToken The session's Id token.
+   * @param {CognitoRefreshToken=} RefreshToken The session's refresh token.
+   * @param {CognitoAccessToken} AccessToken The session's access token.
+   * @param {int} ClockDrift The saved computer's clock drift or undefined to force calculation.
    */
   function CognitoUserSession() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         IdToken = _ref.IdToken,
         RefreshToken = _ref.RefreshToken,
-        AccessToken = _ref.AccessToken;
+        AccessToken = _ref.AccessToken,
+        ClockDrift = _ref.ClockDrift;
 
     _classCallCheck(this, CognitoUserSession);
 
@@ -12402,6 +12831,7 @@ var CognitoUserSession = function () {
     this.idToken = IdToken;
     this.refreshToken = RefreshToken;
     this.accessToken = AccessToken;
+    this.clockDrift = ClockDrift === undefined ? this.calculateClockDrift() : ClockDrift;
   }
 
   /**
@@ -12432,16 +12862,38 @@ var CognitoUserSession = function () {
   };
 
   /**
+   * @returns {int} the session's clock drift
+   */
+
+
+  CognitoUserSession.prototype.getClockDrift = function getClockDrift() {
+    return this.clockDrift;
+  };
+
+  /**
+   * @returns {int} the computer's clock drift
+   */
+
+
+  CognitoUserSession.prototype.calculateClockDrift = function calculateClockDrift() {
+    var now = Math.floor(new Date() / 1000);
+    var iat = Math.min(this.accessToken.getIssuedAt(), this.idToken.getIssuedAt());
+
+    return now - iat;
+  };
+
+  /**
    * Checks to see if the session is still valid based on session expiry information found
-   * in tokens and the current time
+   * in tokens and the current time (adjusted with clock drift)
    * @returns {boolean} if the session is still valid
    */
 
 
   CognitoUserSession.prototype.isValid = function isValid() {
     var now = Math.floor(new Date() / 1000);
+    var adjusted = now - this.clockDrift;
 
-    return now < this.accessToken.getExpiration() && now < this.idToken.getExpiration();
+    return adjusted < this.accessToken.getExpiration() && adjusted < this.idToken.getExpiration();
   };
 
   return CognitoUserSession;
@@ -12450,7 +12902,7 @@ var CognitoUserSession = function () {
 /* harmony default export */ __webpack_exports__["a"] = (CognitoUserSession);
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12522,7 +12974,7 @@ var DateHelper = function () {
 /* harmony default export */ __webpack_exports__["a"] = (DateHelper);
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12632,7 +13084,7 @@ var CognitoUserAttribute = function () {
 /* harmony default export */ __webpack_exports__["a"] = (CognitoUserAttribute);
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12749,24 +13201,24 @@ var StorageHelper = function () {
 /* harmony default export */ __webpack_exports__["a"] = (StorageHelper);
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__);
 
 window.DigilentAuthJs = __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__["DigilentAuthJs"];
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var amazon_cognito_identity_js_1 = __webpack_require__(96);
+var amazon_cognito_identity_js_1 = __webpack_require__(97);
 var DigilentAuthJs = (function () {
     /********************************************************************************
      * Construct a DigilentAuthJs Object
@@ -13123,31 +13575,33 @@ exports.DigilentAuthJs = DigilentAuthJs;
 //# sourceMappingURL=digilent-auth-js.js.map
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AuthenticationDetails__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__AuthenticationDetails__ = __webpack_require__(98);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "AuthenticationDetails", function() { return __WEBPACK_IMPORTED_MODULE_0__AuthenticationDetails__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__AuthenticationHelper__ = __webpack_require__(46);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "AuthenticationHelper", function() { return __WEBPACK_IMPORTED_MODULE_1__AuthenticationHelper__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__CognitoAccessToken__ = __webpack_require__(86);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoAccessToken", function() { return __WEBPACK_IMPORTED_MODULE_2__CognitoAccessToken__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__CognitoIdToken__ = __webpack_require__(87);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__CognitoIdToken__ = __webpack_require__(88);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoIdToken", function() { return __WEBPACK_IMPORTED_MODULE_3__CognitoIdToken__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__CognitoRefreshToken__ = __webpack_require__(88);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__CognitoRefreshToken__ = __webpack_require__(89);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoRefreshToken", function() { return __WEBPACK_IMPORTED_MODULE_4__CognitoRefreshToken__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CognitoUser__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CognitoUser__ = __webpack_require__(90);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoUser", function() { return __WEBPACK_IMPORTED_MODULE_5__CognitoUser__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CognitoUserAttribute__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__CognitoUserAttribute__ = __webpack_require__(93);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoUserAttribute", function() { return __WEBPACK_IMPORTED_MODULE_6__CognitoUserAttribute__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CognitoUserPool__ = __webpack_require__(260);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__CognitoUserPool__ = __webpack_require__(261);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoUserPool", function() { return __WEBPACK_IMPORTED_MODULE_7__CognitoUserPool__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__CognitoUserSession__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__CognitoUserSession__ = __webpack_require__(91);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CognitoUserSession", function() { return __WEBPACK_IMPORTED_MODULE_8__CognitoUserSession__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__DateHelper__ = __webpack_require__(91);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DateHelper", function() { return __WEBPACK_IMPORTED_MODULE_9__DateHelper__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__CookieStorage__ = __webpack_require__(265);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "CookieStorage", function() { return __WEBPACK_IMPORTED_MODULE_9__CookieStorage__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__DateHelper__ = __webpack_require__(92);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "DateHelper", function() { return __WEBPACK_IMPORTED_MODULE_10__DateHelper__["a"]; });
 /*!
  * Copyright 2016 Amazon.com,
  * Inc. or its affiliates. All Rights Reserved.
@@ -13176,8 +13630,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+// The version of crypto-browserify included by aws-sdk only
+// checks for window.crypto, not window.msCrypto as used by
+// IE 11 – so we set it explicitly here
+if (typeof window !== 'undefined' && !window.crypto && window.msCrypto) {
+  window.crypto = window.msCrypto;
+}
+
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13267,7 +13729,7 @@ var AuthenticationDetails = function () {
 /* harmony default export */ __webpack_exports__["a"] = (AuthenticationDetails);
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -13320,13 +13782,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(99);
+__webpack_require__(100);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -13519,7 +13981,7 @@ exports.clearImmediate = clearImmediate;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
@@ -13606,11 +14068,11 @@ module.exports = QueryParamSerializer;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
-var builder = __webpack_require__(102);
+var builder = __webpack_require__(103);
 
 function XmlBuilder() { }
 
@@ -13698,16 +14160,16 @@ module.exports = XmlBuilder;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
 (function() {
   var XMLBuilder, assign;
 
-  assign = __webpack_require__(103);
+  assign = __webpack_require__(104);
 
-  XMLBuilder = __webpack_require__(127);
+  XMLBuilder = __webpack_require__(128);
 
   module.exports.create = function(name, xmldec, doctype, options) {
     options = assign({}, xmldec, doctype, options);
@@ -13718,12 +14180,12 @@ module.exports = XmlBuilder;
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assignValue = __webpack_require__(51),
     copyObject = __webpack_require__(56),
-    createAssigner = __webpack_require__(110),
+    createAssigner = __webpack_require__(111),
     isArrayLike = __webpack_require__(12),
     isPrototype = __webpack_require__(33),
     keys = __webpack_require__(13);
@@ -13782,11 +14244,11 @@ module.exports = assign;
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(18),
-    isMasked = __webpack_require__(107),
+var isFunction = __webpack_require__(17),
+    isMasked = __webpack_require__(108),
     isObject = __webpack_require__(3),
     toSource = __webpack_require__(55);
 
@@ -13835,10 +14297,10 @@ module.exports = baseIsNative;
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19);
+var Symbol = __webpack_require__(18);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -13887,7 +14349,7 @@ module.exports = getRawTag;
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 /** Used for built-in method references. */
@@ -13915,10 +14377,10 @@ module.exports = objectToString;
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var coreJsData = __webpack_require__(108);
+var coreJsData = __webpack_require__(109);
 
 /** Used to detect methods masquerading as native. */
 var maskSrcKey = (function() {
@@ -13941,7 +14403,7 @@ module.exports = isMasked;
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(5);
@@ -13953,7 +14415,7 @@ module.exports = coreJsData;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports) {
 
 /**
@@ -13972,10 +14434,10 @@ module.exports = getValue;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseRest = __webpack_require__(111),
+var baseRest = __webpack_require__(112),
     isIterateeCall = __webpack_require__(57);
 
 /**
@@ -14015,12 +14477,12 @@ module.exports = createAssigner;
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var identity = __webpack_require__(30),
-    overRest = __webpack_require__(112),
-    setToString = __webpack_require__(114);
+    overRest = __webpack_require__(113),
+    setToString = __webpack_require__(115);
 
 /**
  * The base implementation of `_.rest` which doesn't validate or coerce arguments.
@@ -14038,10 +14500,10 @@ module.exports = baseRest;
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = __webpack_require__(113);
+var apply = __webpack_require__(114);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeMax = Math.max;
@@ -14080,7 +14542,7 @@ module.exports = overRest;
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports) {
 
 /**
@@ -14107,11 +14569,11 @@ module.exports = apply;
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseSetToString = __webpack_require__(115),
-    shortOut = __webpack_require__(117);
+var baseSetToString = __webpack_require__(116),
+    shortOut = __webpack_require__(118);
 
 /**
  * Sets the `toString` method of `func` to return `string`.
@@ -14127,10 +14589,10 @@ module.exports = setToString;
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var constant = __webpack_require__(116),
+var constant = __webpack_require__(117),
     defineProperty = __webpack_require__(53),
     identity = __webpack_require__(30);
 
@@ -14155,7 +14617,7 @@ module.exports = baseSetToString;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports) {
 
 /**
@@ -14187,7 +14649,7 @@ module.exports = constant;
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports) {
 
 /** Used to detect hot functions by number of calls within a span of milliseconds. */
@@ -14230,10 +14692,10 @@ module.exports = shortOut;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseTimes = __webpack_require__(119),
+var baseTimes = __webpack_require__(120),
     isArguments = __webpack_require__(34),
     isArray = __webpack_require__(4),
     isBuffer = __webpack_require__(35),
@@ -14285,7 +14747,7 @@ module.exports = arrayLikeKeys;
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 /**
@@ -14311,7 +14773,7 @@ module.exports = baseTimes;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
@@ -14335,7 +14797,7 @@ module.exports = baseIsArguments;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports) {
 
 /**
@@ -14359,7 +14821,7 @@ module.exports = stubFalse;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
@@ -14425,7 +14887,7 @@ module.exports = baseIsTypedArray;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports) {
 
 /**
@@ -14445,7 +14907,7 @@ module.exports = baseUnary;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(54);
@@ -14474,10 +14936,10 @@ module.exports = nodeUtil;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module)))
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var overArg = __webpack_require__(126);
+var overArg = __webpack_require__(127);
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
 var nativeKeys = overArg(Object.keys, Object);
@@ -14486,7 +14948,7 @@ module.exports = nativeKeys;
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 /**
@@ -14507,14 +14969,14 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
 (function() {
   var XMLBuilder, XMLDeclaration, XMLDocType, XMLElement, XMLStringifier;
 
-  XMLStringifier = __webpack_require__(128);
+  XMLStringifier = __webpack_require__(129);
 
   XMLDeclaration = __webpack_require__(59);
 
@@ -14582,7 +15044,7 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports) {
 
 // Generated by CoffeeScript 1.9.1
@@ -14758,7 +15220,7 @@ module.exports = overArg;
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var copyObject = __webpack_require__(56),
@@ -14781,7 +15243,7 @@ module.exports = baseAssign;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(3);
@@ -14817,7 +15279,7 @@ module.exports = baseCreate;
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseKeys = __webpack_require__(58),
@@ -14900,7 +15362,7 @@ module.exports = isEmpty;
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(6),
@@ -14913,7 +15375,7 @@ module.exports = DataView;
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(6),
@@ -14926,7 +15388,7 @@ module.exports = Promise;
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(6),
@@ -14939,7 +15401,7 @@ module.exports = Set;
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getNative = __webpack_require__(6),
@@ -14952,12 +15414,12 @@ module.exports = WeakMap;
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayEvery = __webpack_require__(137),
-    baseEvery = __webpack_require__(138),
-    baseIteratee = __webpack_require__(144),
+var arrayEvery = __webpack_require__(138),
+    baseEvery = __webpack_require__(139),
+    baseIteratee = __webpack_require__(145),
     isArray = __webpack_require__(4),
     isIterateeCall = __webpack_require__(57);
 
@@ -15014,7 +15476,7 @@ module.exports = every;
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports) {
 
 /**
@@ -15043,10 +15505,10 @@ module.exports = arrayEvery;
 
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseEach = __webpack_require__(139);
+var baseEach = __webpack_require__(140);
 
 /**
  * The base implementation of `_.every` without support for iteratee shorthands.
@@ -15070,11 +15532,11 @@ module.exports = baseEvery;
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseForOwn = __webpack_require__(140),
-    createBaseEach = __webpack_require__(143);
+var baseForOwn = __webpack_require__(141),
+    createBaseEach = __webpack_require__(144);
 
 /**
  * The base implementation of `_.forEach` without support for iteratee shorthands.
@@ -15090,10 +15552,10 @@ module.exports = baseEach;
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseFor = __webpack_require__(141),
+var baseFor = __webpack_require__(142),
     keys = __webpack_require__(13);
 
 /**
@@ -15112,10 +15574,10 @@ module.exports = baseForOwn;
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var createBaseFor = __webpack_require__(142);
+var createBaseFor = __webpack_require__(143);
 
 /**
  * The base implementation of `baseForOwn` which iterates over `object`
@@ -15134,7 +15596,7 @@ module.exports = baseFor;
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports) {
 
 /**
@@ -15165,7 +15627,7 @@ module.exports = createBaseFor;
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isArrayLike = __webpack_require__(12);
@@ -15203,14 +15665,14 @@ module.exports = createBaseEach;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseMatches = __webpack_require__(145),
-    baseMatchesProperty = __webpack_require__(187),
+var baseMatches = __webpack_require__(146),
+    baseMatchesProperty = __webpack_require__(188),
     identity = __webpack_require__(30),
     isArray = __webpack_require__(4),
-    property = __webpack_require__(198);
+    property = __webpack_require__(199);
 
 /**
  * The base implementation of `_.iteratee`.
@@ -15240,11 +15702,11 @@ module.exports = baseIteratee;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseIsMatch = __webpack_require__(146),
-    getMatchData = __webpack_require__(186),
+var baseIsMatch = __webpack_require__(147),
+    getMatchData = __webpack_require__(187),
     matchesStrictComparable = __webpack_require__(66);
 
 /**
@@ -15268,7 +15730,7 @@ module.exports = baseMatches;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(62),
@@ -15336,7 +15798,7 @@ module.exports = baseIsMatch;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports) {
 
 /**
@@ -15355,10 +15817,10 @@ module.exports = listCacheClear;
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(22);
+var assocIndexOf = __webpack_require__(21);
 
 /** Used for built-in method references. */
 var arrayProto = Array.prototype;
@@ -15396,10 +15858,10 @@ module.exports = listCacheDelete;
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(22);
+var assocIndexOf = __webpack_require__(21);
 
 /**
  * Gets the list cache value for `key`.
@@ -15421,10 +15883,10 @@ module.exports = listCacheGet;
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(22);
+var assocIndexOf = __webpack_require__(21);
 
 /**
  * Checks if a list cache value for `key` exists.
@@ -15443,10 +15905,10 @@ module.exports = listCacheHas;
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(22);
+var assocIndexOf = __webpack_require__(21);
 
 /**
  * Sets the list cache `key` to `value`.
@@ -15475,10 +15937,10 @@ module.exports = listCacheSet;
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(21);
+var ListCache = __webpack_require__(20);
 
 /**
  * Removes all key-value entries from the stack.
@@ -15496,7 +15958,7 @@ module.exports = stackClear;
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports) {
 
 /**
@@ -15520,7 +15982,7 @@ module.exports = stackDelete;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports) {
 
 /**
@@ -15540,7 +16002,7 @@ module.exports = stackGet;
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports) {
 
 /**
@@ -15560,10 +16022,10 @@ module.exports = stackHas;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(21),
+var ListCache = __webpack_require__(20),
     Map = __webpack_require__(38),
     MapCache = __webpack_require__(39);
 
@@ -15600,11 +16062,11 @@ module.exports = stackSet;
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Hash = __webpack_require__(158),
-    ListCache = __webpack_require__(21),
+var Hash = __webpack_require__(159),
+    ListCache = __webpack_require__(20),
     Map = __webpack_require__(38);
 
 /**
@@ -15627,14 +16089,14 @@ module.exports = mapCacheClear;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var hashClear = __webpack_require__(159),
-    hashDelete = __webpack_require__(160),
-    hashGet = __webpack_require__(161),
-    hashHas = __webpack_require__(162),
-    hashSet = __webpack_require__(163);
+var hashClear = __webpack_require__(160),
+    hashDelete = __webpack_require__(161),
+    hashGet = __webpack_require__(162),
+    hashHas = __webpack_require__(163),
+    hashSet = __webpack_require__(164);
 
 /**
  * Creates a hash object.
@@ -15665,10 +16127,10 @@ module.exports = Hash;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(23);
+var nativeCreate = __webpack_require__(22);
 
 /**
  * Removes all key-value entries from the hash.
@@ -15686,7 +16148,7 @@ module.exports = hashClear;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports) {
 
 /**
@@ -15709,10 +16171,10 @@ module.exports = hashDelete;
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(23);
+var nativeCreate = __webpack_require__(22);
 
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -15745,10 +16207,10 @@ module.exports = hashGet;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(23);
+var nativeCreate = __webpack_require__(22);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -15774,10 +16236,10 @@ module.exports = hashHas;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(23);
+var nativeCreate = __webpack_require__(22);
 
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -15803,10 +16265,10 @@ module.exports = hashSet;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(24);
+var getMapData = __webpack_require__(23);
 
 /**
  * Removes `key` and its value from the map.
@@ -15827,7 +16289,7 @@ module.exports = mapCacheDelete;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports) {
 
 /**
@@ -15848,10 +16310,10 @@ module.exports = isKeyable;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(24);
+var getMapData = __webpack_require__(23);
 
 /**
  * Gets the map value for `key`.
@@ -15870,10 +16332,10 @@ module.exports = mapCacheGet;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(24);
+var getMapData = __webpack_require__(23);
 
 /**
  * Checks if a map value for `key` exists.
@@ -15892,10 +16354,10 @@ module.exports = mapCacheHas;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(24);
+var getMapData = __webpack_require__(23);
 
 /**
  * Sets the map `key` to `value`.
@@ -15920,13 +16382,13 @@ module.exports = mapCacheSet;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Stack = __webpack_require__(62),
     equalArrays = __webpack_require__(64),
-    equalByTag = __webpack_require__(175),
-    equalObjects = __webpack_require__(179),
+    equalByTag = __webpack_require__(176),
+    equalObjects = __webpack_require__(180),
     getTag = __webpack_require__(60),
     isArray = __webpack_require__(4),
     isBuffer = __webpack_require__(35),
@@ -16009,12 +16471,12 @@ module.exports = baseIsEqualDeep;
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var MapCache = __webpack_require__(39),
-    setCacheAdd = __webpack_require__(171),
-    setCacheHas = __webpack_require__(172);
+    setCacheAdd = __webpack_require__(172),
+    setCacheHas = __webpack_require__(173);
 
 /**
  *
@@ -16042,7 +16504,7 @@ module.exports = SetCache;
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports) {
 
 /** Used to stand-in for `undefined` hash values. */
@@ -16067,7 +16529,7 @@ module.exports = setCacheAdd;
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 /**
@@ -16087,7 +16549,7 @@ module.exports = setCacheHas;
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports) {
 
 /**
@@ -16116,7 +16578,7 @@ module.exports = arraySome;
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports) {
 
 /**
@@ -16135,15 +16597,15 @@ module.exports = cacheHas;
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19),
-    Uint8Array = __webpack_require__(176),
-    eq = __webpack_require__(20),
+var Symbol = __webpack_require__(18),
+    Uint8Array = __webpack_require__(177),
+    eq = __webpack_require__(19),
     equalArrays = __webpack_require__(64),
-    mapToArray = __webpack_require__(177),
-    setToArray = __webpack_require__(178);
+    mapToArray = __webpack_require__(178),
+    setToArray = __webpack_require__(179);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
@@ -16253,7 +16715,7 @@ module.exports = equalByTag;
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(5);
@@ -16265,7 +16727,7 @@ module.exports = Uint8Array;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports) {
 
 /**
@@ -16289,7 +16751,7 @@ module.exports = mapToArray;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports) {
 
 /**
@@ -16313,10 +16775,10 @@ module.exports = setToArray;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getAllKeys = __webpack_require__(180);
+var getAllKeys = __webpack_require__(181);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1;
@@ -16408,11 +16870,11 @@ module.exports = equalObjects;
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseGetAllKeys = __webpack_require__(181),
-    getSymbols = __webpack_require__(183),
+var baseGetAllKeys = __webpack_require__(182),
+    getSymbols = __webpack_require__(184),
     keys = __webpack_require__(13);
 
 /**
@@ -16430,10 +16892,10 @@ module.exports = getAllKeys;
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayPush = __webpack_require__(182),
+var arrayPush = __webpack_require__(183),
     isArray = __webpack_require__(4);
 
 /**
@@ -16456,7 +16918,7 @@ module.exports = baseGetAllKeys;
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports) {
 
 /**
@@ -16482,11 +16944,11 @@ module.exports = arrayPush;
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayFilter = __webpack_require__(184),
-    stubArray = __webpack_require__(185);
+var arrayFilter = __webpack_require__(185),
+    stubArray = __webpack_require__(186);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -16518,7 +16980,7 @@ module.exports = getSymbols;
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports) {
 
 /**
@@ -16549,7 +17011,7 @@ module.exports = arrayFilter;
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports) {
 
 /**
@@ -16578,7 +17040,7 @@ module.exports = stubArray;
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isStrictComparable = __webpack_require__(65),
@@ -16608,16 +17070,16 @@ module.exports = getMatchData;
 
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIsEqual = __webpack_require__(63),
-    get = __webpack_require__(188),
-    hasIn = __webpack_require__(195),
+    get = __webpack_require__(189),
+    hasIn = __webpack_require__(196),
     isKey = __webpack_require__(40),
     isStrictComparable = __webpack_require__(65),
     matchesStrictComparable = __webpack_require__(66),
-    toKey = __webpack_require__(25);
+    toKey = __webpack_require__(24);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
@@ -16647,7 +17109,7 @@ module.exports = baseMatchesProperty;
 
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGet = __webpack_require__(67);
@@ -16686,10 +17148,10 @@ module.exports = get;
 
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var memoizeCapped = __webpack_require__(190);
+var memoizeCapped = __webpack_require__(191);
 
 /** Used to match property names within property paths. */
 var reLeadingDot = /^\./,
@@ -16720,10 +17182,10 @@ module.exports = stringToPath;
 
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var memoize = __webpack_require__(191);
+var memoize = __webpack_require__(192);
 
 /** Used as the maximum memoize cache size. */
 var MAX_MEMOIZE_SIZE = 500;
@@ -16752,7 +17214,7 @@ module.exports = memoizeCapped;
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var MapCache = __webpack_require__(39);
@@ -16831,10 +17293,10 @@ module.exports = memoize;
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseToString = __webpack_require__(193);
+var baseToString = __webpack_require__(194);
 
 /**
  * Converts `value` to a string. An empty string is returned for `null`
@@ -16865,11 +17327,11 @@ module.exports = toString;
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(19),
-    arrayMap = __webpack_require__(194),
+var Symbol = __webpack_require__(18),
+    arrayMap = __webpack_require__(195),
     isArray = __webpack_require__(4),
     isSymbol = __webpack_require__(41);
 
@@ -16908,7 +17370,7 @@ module.exports = baseToString;
 
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports) {
 
 /**
@@ -16935,11 +17397,11 @@ module.exports = arrayMap;
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseHasIn = __webpack_require__(196),
-    hasPath = __webpack_require__(197);
+var baseHasIn = __webpack_require__(197),
+    hasPath = __webpack_require__(198);
 
 /**
  * Checks if `path` is a direct or inherited property of `object`.
@@ -16975,7 +17437,7 @@ module.exports = hasIn;
 
 
 /***/ }),
-/* 196 */
+/* 197 */
 /***/ (function(module, exports) {
 
 /**
@@ -16994,7 +17456,7 @@ module.exports = baseHasIn;
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var castPath = __webpack_require__(68),
@@ -17002,7 +17464,7 @@ var castPath = __webpack_require__(68),
     isArray = __webpack_require__(4),
     isIndex = __webpack_require__(32),
     isLength = __webpack_require__(31),
-    toKey = __webpack_require__(25);
+    toKey = __webpack_require__(24);
 
 /**
  * Checks if `path` exists on `object`.
@@ -17039,13 +17501,13 @@ module.exports = hasPath;
 
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var baseProperty = __webpack_require__(199),
-    basePropertyDeep = __webpack_require__(200),
+var baseProperty = __webpack_require__(200),
+    basePropertyDeep = __webpack_require__(201),
     isKey = __webpack_require__(40),
-    toKey = __webpack_require__(25);
+    toKey = __webpack_require__(24);
 
 /**
  * Creates a function that returns the value at `path` of a given object.
@@ -17077,7 +17539,7 @@ module.exports = property;
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 /**
@@ -17097,7 +17559,7 @@ module.exports = baseProperty;
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGet = __webpack_require__(67);
@@ -17119,7 +17581,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17157,7 +17619,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17231,7 +17693,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17321,7 +17783,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17373,7 +17835,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17435,7 +17897,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17490,7 +17952,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Generated by CoffeeScript 1.9.1
@@ -17545,7 +18007,7 @@ module.exports = basePropertyDeep;
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports) {
 
 function apiLoader(svc, version) {
@@ -17564,12 +18026,12 @@ module.exports = apiLoader;
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
 var Api = __webpack_require__(73);
-var regionConfig = __webpack_require__(210);
+var regionConfig = __webpack_require__(211);
 var inherit = AWS.util.inherit;
 var clientCount = 0;
 
@@ -18178,11 +18640,11 @@ module.exports = AWS.Service;
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
-var regionConfig = __webpack_require__(211);
+var regionConfig = __webpack_require__(212);
 
 function generateRegionPrefix(region) {
   if (!region) return null;
@@ -18253,13 +18715,13 @@ module.exports = configureEndpoint;
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports) {
 
-module.exports = {"rules":{"*/*":{"endpoint":"{service}.{region}.amazonaws.com"},"cn-*/*":{"endpoint":"{service}.{region}.amazonaws.com.cn"},"*/budgets":"globalSSL","*/cloudfront":"globalSSL","*/iam":"globalSSL","*/sts":"globalSSL","*/importexport":{"endpoint":"{service}.amazonaws.com","signatureVersion":"v2","globalEndpoint":true},"*/route53":{"endpoint":"https://{service}.amazonaws.com","signatureVersion":"v3https","globalEndpoint":true},"*/waf":"globalSSL","us-gov-*/iam":"globalGovCloud","us-gov-*/sts":{"endpoint":"{service}.{region}.amazonaws.com"},"us-gov-west-1/s3":"s3dash","us-west-1/s3":"s3dash","us-west-2/s3":"s3dash","eu-west-1/s3":"s3dash","ap-southeast-1/s3":"s3dash","ap-southeast-2/s3":"s3dash","ap-northeast-1/s3":"s3dash","sa-east-1/s3":"s3dash","us-east-1/s3":{"endpoint":"{service}.amazonaws.com","signatureVersion":"s3"},"us-east-1/sdb":{"endpoint":"{service}.amazonaws.com","signatureVersion":"v2"},"*/sdb":{"endpoint":"{service}.{region}.amazonaws.com","signatureVersion":"v2"}},"patterns":{"globalSSL":{"endpoint":"https://{service}.amazonaws.com","globalEndpoint":true},"globalGovCloud":{"endpoint":"{service}.us-gov.amazonaws.com"},"s3dash":{"endpoint":"{service}-{region}.amazonaws.com","signatureVersion":"s3"}}}
+module.exports = {"rules":{"*/*":{"endpoint":"{service}.{region}.amazonaws.com"},"cn-*/*":{"endpoint":"{service}.{region}.amazonaws.com.cn"},"*/budgets":"globalSSL","*/cloudfront":"globalSSL","*/iam":"globalSSL","*/sts":"globalSSL","*/importexport":{"endpoint":"{service}.amazonaws.com","signatureVersion":"v2","globalEndpoint":true},"*/route53":{"endpoint":"https://{service}.amazonaws.com","signatureVersion":"v3https","globalEndpoint":true},"*/waf":"globalSSL","us-gov-*/iam":"globalGovCloud","us-gov-*/sts":{"endpoint":"{service}.{region}.amazonaws.com"},"us-gov-west-1/s3":"s3signature","us-west-1/s3":"s3signature","us-west-2/s3":"s3signature","eu-west-1/s3":"s3signature","ap-southeast-1/s3":"s3signature","ap-southeast-2/s3":"s3signature","ap-northeast-1/s3":"s3signature","sa-east-1/s3":"s3signature","us-east-1/s3":{"endpoint":"{service}.amazonaws.com","signatureVersion":"s3"},"us-east-1/sdb":{"endpoint":"{service}.amazonaws.com","signatureVersion":"v2"},"*/sdb":{"endpoint":"{service}.{region}.amazonaws.com","signatureVersion":"v2"}},"patterns":{"globalSSL":{"endpoint":"https://{service}.amazonaws.com","globalEndpoint":true},"globalGovCloud":{"endpoint":"{service}.us-gov.amazonaws.com"},"s3signature":{"endpoint":"{service}.{region}.amazonaws.com","signatureVersion":"s3"}}}
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -18381,8 +18843,13 @@ var PromisesDependency;
  *       SSL connections, a special Agent object is used in order to enable
  *       peer certificate verification. This feature is only supported in the
  *       Node.js environment.
- *     * **timeout** [Integer] &mdash; The number of milliseconds to wait before
- *       giving up on a connection attempt. Defaults to two minutes (120000).
+ *     * **connectTimeout** [Integer] &mdash; Sets the socket to timeout after
+ *       failing to establish a connection with the server after
+ *       `connectTimeout` milliseconds. This timeout has no effect once a socket
+ *       connection has been established.
+ *     * **timeout** [Integer] &mdash; Sets the socket to timeout after timeout
+ *       milliseconds of inactivity on the socket. Defaults to two minutes
+ *       (120000)
  *     * **xhrAsync** [Boolean] &mdash; Whether the SDK will send asynchronous
  *       HTTP requests. Used in the browser environment only. Set to false to
  *       send requests synchronously. Defaults to true (async on).
@@ -18800,7 +19267,7 @@ AWS.config = new AWS.Config();
 
 
 /***/ }),
-/* 213 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -19274,14 +19741,57 @@ AWS.EventListeners = {
       var req = resp.request;
       var logger = req.service.config.logger;
       if (!logger) return;
+      function filterSensitiveLog(inputShape, shape) {
+        if (!shape) {
+          return shape;
+        }
+        switch (inputShape.type) {
+          case 'structure':
+            var struct = {};
+            AWS.util.each(shape, function(subShapeName, subShape) {
+              if (Object.prototype.hasOwnProperty.call(inputShape.members, subShapeName)) {
+                struct[subShapeName] = filterSensitiveLog(inputShape.members[subShapeName], subShape);
+              } else {
+                struct[subShapeName] = subShape;
+              }
+            })
+            return struct
+          case 'list':
+            var list = [];
+            AWS.util.arrayEach(shape, function(subShape, index) {
+              list.push(filterSensitiveLog(inputShape.member, subShape));
+            })
+            return list;
+          case 'map':
+            var map = {};
+            AWS.util.each(shape, function(key, value) {
+              map[key] = filterSensitiveLog(inputShape.value, value);
+            })
+            return map;
+          default:
+            if (inputShape.isSensitive) {
+              return '***SensitiveInformation***'
+            } else {
+              return shape;
+            }
+        }
+      }
 
       function buildMessage() {
         var time = resp.request.service.getSkewCorrectedDate().getTime();
         var delta = (time - req.startTime.getTime()) / 1000;
         var ansi = logger.isTTY ? true : false;
         var status = resp.httpResponse.statusCode;
-        var params = __webpack_require__(214).inspect(req.params, true, null);
-
+        var censoredParams = req.params;
+        if (
+          req.service.api.operations &&
+              req.service.api.operations[req.operation] &&
+              req.service.api.operations[req.operation].input
+        ) {
+          var inputShape = req.service.api.operations[req.operation].input;
+          censoredParams = filterSensitiveLog(inputShape, req.params);
+        }
+        var params = __webpack_require__(215).inspect(censoredParams, true, null);
         var message = '';
         if (ansi) message += '\x1B[33m';
         message += '[AWS ' + req.service.serviceIdentifier + ' ' + status;
@@ -19310,7 +19820,7 @@ AWS.EventListeners = {
   }),
 
   Rest: new SequentialExecutor().addNamedListeners(function(add) {
-    var svc = __webpack_require__(17);
+    var svc = __webpack_require__(16);
     add('BUILD', 'build', svc.buildRequest);
     add('EXTRACT_DATA', 'extractData', svc.extractData);
     add('EXTRACT_ERROR', 'extractError', svc.extractError);
@@ -19340,7 +19850,7 @@ AWS.EventListeners = {
 
 
 /***/ }),
-/* 214 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -19868,7 +20378,7 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-exports.isBuffer = __webpack_require__(215);
+exports.isBuffer = __webpack_require__(216);
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
@@ -19912,7 +20422,7 @@ exports.log = function() {
  *     prototype.
  * @param {function} superCtor Constructor function to inherit prototype from.
  */
-exports.inherits = __webpack_require__(216);
+exports.inherits = __webpack_require__(217);
 
 exports._extend = function(origin, add) {
   // Don't do anything if add isn't an object
@@ -19933,7 +20443,7 @@ function hasOwnProperty(obj, prop) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
 
 /***/ }),
-/* 215 */
+/* 216 */
 /***/ (function(module, exports) {
 
 module.exports = function isBuffer(arg) {
@@ -19944,7 +20454,7 @@ module.exports = function isBuffer(arg) {
 }
 
 /***/ }),
-/* 216 */
+/* 217 */
 /***/ (function(module, exports) {
 
 if (typeof Object.create === 'function') {
@@ -19973,11 +20483,11 @@ if (typeof Object.create === 'function') {
 
 
 /***/ }),
-/* 217 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {var AWS = __webpack_require__(0);
-var AcceptorStateMachine = __webpack_require__(218);
+var AcceptorStateMachine = __webpack_require__(219);
 var inherit = AWS.util.inherit;
 var domain = AWS.util.domain;
 var jmespath = __webpack_require__(42);
@@ -20785,7 +21295,7 @@ AWS.util.mixin(AWS.Request, AWS.SequentialExecutor);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
 
 /***/ }),
-/* 218 */
+/* 219 */
 /***/ (function(module, exports) {
 
 function AcceptorStateMachine(states, state) {
@@ -20833,7 +21343,7 @@ module.exports = AcceptorStateMachine;
 
 
 /***/ }),
-/* 219 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21040,7 +21550,7 @@ AWS.Response = inherit({
 
 
 /***/ }),
-/* 220 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21250,7 +21760,7 @@ AWS.ResourceWaiter = inherit({
 
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21285,16 +21795,16 @@ AWS.Signers.RequestSigner.getVersion = function getVersion(version) {
   throw new Error('Unknown signing version ' + version);
 };
 
-__webpack_require__(222);
-__webpack_require__(81);
 __webpack_require__(223);
+__webpack_require__(81);
 __webpack_require__(224);
-__webpack_require__(226);
+__webpack_require__(225);
 __webpack_require__(227);
+__webpack_require__(228);
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21345,7 +21855,7 @@ module.exports = AWS.Signers.V2;
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21373,11 +21883,11 @@ module.exports = AWS.Signers.V3Https;
 
 
 /***/ }),
-/* 224 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var v4Credentials = __webpack_require__(225);
+var v4Credentials = __webpack_require__(226);
 var inherit = AWS.util.inherit;
 
 /**
@@ -21590,7 +22100,7 @@ module.exports = AWS.Signers.V4;
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21693,7 +22203,7 @@ module.exports = {
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21871,7 +22381,7 @@ module.exports = AWS.Signers.S3;
 
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -21925,22 +22435,24 @@ function signedUrlSigner(request) {
     queryParams = AWS.util.queryStringParse(parsedUrl.search.substr(1));
   }
 
-  AWS.util.each(request.httpRequest.headers, function (key, value) {
-    if (key === expiresHeader) key = 'Expires';
-    if (key.indexOf('x-amz-meta-') === 0) {
-      // Delete existing, potentially not normalized key
-      delete queryParams[key];
-      key = key.toLowerCase();
-    }
-    queryParams[key] = value;
-  });
-  delete request.httpRequest.headers[expiresHeader];
-
-  var auth = queryParams['Authorization'].split(' ');
+  var auth = request.httpRequest.headers['Authorization'].split(' ');
   if (auth[0] === 'AWS') {
     auth = auth[1].split(':');
     queryParams['AWSAccessKeyId'] = auth[0];
     queryParams['Signature'] = auth[1];
+
+    AWS.util.each(request.httpRequest.headers, function (key, value) {
+      if (key === expiresHeader) key = 'Expires';
+      if (key.indexOf('x-amz-meta-') === 0) {
+        // Delete existing, potentially not normalized key
+        delete queryParams[key];
+        key = key.toLowerCase();
+      }
+      queryParams[key] = value;
+    });
+    delete request.httpRequest.headers[expiresHeader];
+    delete queryParams['Authorization'];
+    delete queryParams['Host'];
   } else if (auth[0] === 'AWS4-HMAC-SHA256') { // SigV4 signing
     auth.shift();
     var rest = auth.join(' ');
@@ -21948,8 +22460,6 @@ function signedUrlSigner(request) {
     queryParams['X-Amz-Signature'] = signature;
     delete queryParams['Expires'];
   }
-  delete queryParams['Authorization'];
-  delete queryParams['Host'];
 
   // build URL
   endpoint.pathname = parsedUrl.pathname;
@@ -21993,7 +22503,7 @@ module.exports = AWS.Signers.Presign;
 
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -22257,17 +22767,17 @@ AWS.ParamValidator = AWS.util.inherit({
 
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports) {
 
-module.exports = {"acm":{"name":"ACM","cors":true},"apigateway":{"name":"APIGateway","cors":true},"applicationautoscaling":{"prefix":"application-autoscaling","name":"ApplicationAutoScaling","cors":true},"appstream":{"name":"AppStream"},"autoscaling":{"name":"AutoScaling","cors":true},"batch":{"name":"Batch"},"budgets":{"name":"Budgets"},"clouddirectory":{"name":"CloudDirectory"},"cloudformation":{"name":"CloudFormation","cors":true},"cloudfront":{"name":"CloudFront","versions":["2013-05-12*","2013-11-11*","2014-05-31*","2014-10-21*","2014-11-06*","2015-04-17*","2015-07-27*","2015-09-17*","2016-01-13*","2016-01-28*","2016-08-01*","2016-08-20*","2016-09-07*","2016-09-29*","2016-11-25*"],"cors":true},"cloudhsm":{"name":"CloudHSM","cors":true},"cloudsearch":{"name":"CloudSearch"},"cloudsearchdomain":{"name":"CloudSearchDomain"},"cloudtrail":{"name":"CloudTrail","cors":true},"cloudwatch":{"prefix":"monitoring","name":"CloudWatch","cors":true},"cloudwatchevents":{"prefix":"events","name":"CloudWatchEvents","versions":["2014-02-03*"],"cors":true},"cloudwatchlogs":{"prefix":"logs","name":"CloudWatchLogs","cors":true},"codebuild":{"name":"CodeBuild"},"codecommit":{"name":"CodeCommit","cors":true},"codedeploy":{"name":"CodeDeploy","cors":true},"codepipeline":{"name":"CodePipeline","cors":true},"cognitoidentity":{"prefix":"cognito-identity","name":"CognitoIdentity","cors":true},"cognitoidentityserviceprovider":{"prefix":"cognito-idp","name":"CognitoIdentityServiceProvider","cors":true},"cognitosync":{"prefix":"cognito-sync","name":"CognitoSync","cors":true},"configservice":{"prefix":"config","name":"ConfigService","cors":true},"cur":{"name":"CUR","cors":true},"datapipeline":{"name":"DataPipeline"},"devicefarm":{"name":"DeviceFarm","cors":true},"directconnect":{"name":"DirectConnect","cors":true},"directoryservice":{"prefix":"ds","name":"DirectoryService"},"discovery":{"name":"Discovery"},"dms":{"name":"DMS"},"dynamodb":{"name":"DynamoDB","cors":true},"dynamodbstreams":{"prefix":"streams.dynamodb","name":"DynamoDBStreams","cors":true},"ec2":{"name":"EC2","versions":["2013-06-15*","2013-10-15*","2014-02-01*","2014-05-01*","2014-06-15*","2014-09-01*","2014-10-01*","2015-03-01*","2015-04-15*","2015-10-01*","2016-04-01*","2016-09-15*"],"cors":true},"ecr":{"name":"ECR","cors":true},"ecs":{"name":"ECS","cors":true},"efs":{"prefix":"elasticfilesystem","name":"EFS","cors":true},"elasticache":{"name":"ElastiCache","versions":["2012-11-15*","2014-03-24*","2014-07-15*","2014-09-30*"],"cors":true},"elasticbeanstalk":{"name":"ElasticBeanstalk","cors":true},"elb":{"prefix":"elasticloadbalancing","name":"ELB","cors":true},"elbv2":{"prefix":"elasticloadbalancingv2","name":"ELBv2","cors":true},"emr":{"prefix":"elasticmapreduce","name":"EMR","cors":true},"es":{"name":"ES"},"elastictranscoder":{"name":"ElasticTranscoder","cors":true},"firehose":{"name":"Firehose","cors":true},"gamelift":{"name":"GameLift","cors":true},"glacier":{"name":"Glacier"},"health":{"name":"Health"},"iam":{"name":"IAM"},"importexport":{"name":"ImportExport"},"inspector":{"name":"Inspector","versions":["2015-08-18*"],"cors":true},"iot":{"name":"Iot","cors":true},"iotdata":{"prefix":"iot-data","name":"IotData","cors":true},"kinesis":{"name":"Kinesis","cors":true},"kinesisanalytics":{"name":"KinesisAnalytics"},"kms":{"name":"KMS","cors":true},"lambda":{"name":"Lambda","cors":true},"lexruntime":{"prefix":"runtime.lex","name":"LexRuntime","cors":true},"lightsail":{"name":"Lightsail"},"machinelearning":{"name":"MachineLearning","cors":true},"marketplacecommerceanalytics":{"name":"MarketplaceCommerceAnalytics","cors":true},"marketplacemetering":{"prefix":"meteringmarketplace","name":"MarketplaceMetering"},"mturk":{"prefix":"mturk-requester","name":"MTurk","cors":true},"mobileanalytics":{"name":"MobileAnalytics","cors":true},"opsworks":{"name":"OpsWorks","cors":true},"opsworkscm":{"name":"OpsWorksCM"},"organizations":{"name":"Organizations"},"pinpoint":{"name":"Pinpoint"},"polly":{"name":"Polly","cors":true},"rds":{"name":"RDS","versions":["2014-09-01*"],"cors":true},"redshift":{"name":"Redshift","cors":true},"rekognition":{"name":"Rekognition","cors":true},"resourcegroupstaggingapi":{"name":"ResourceGroupsTaggingAPI"},"route53":{"name":"Route53","cors":true},"route53domains":{"name":"Route53Domains","cors":true},"s3":{"name":"S3","dualstackAvailable":true,"cors":true},"servicecatalog":{"name":"ServiceCatalog","cors":true},"ses":{"prefix":"email","name":"SES","cors":true},"shield":{"name":"Shield"},"simpledb":{"prefix":"sdb","name":"SimpleDB"},"sms":{"name":"SMS"},"snowball":{"name":"Snowball"},"sns":{"name":"SNS","cors":true},"sqs":{"name":"SQS","cors":true},"ssm":{"name":"SSM","cors":true},"storagegateway":{"name":"StorageGateway","cors":true},"stepfunctions":{"prefix":"states","name":"StepFunctions"},"sts":{"name":"STS","cors":true},"support":{"name":"Support"},"swf":{"name":"SWF"},"xray":{"name":"XRay"},"waf":{"name":"WAF","cors":true},"wafregional":{"prefix":"waf-regional","name":"WAFRegional"},"workdocs":{"name":"WorkDocs","cors":true},"workspaces":{"name":"WorkSpaces"},"codestar":{"name":"CodeStar"},"lexmodelbuildingservice":{"prefix":"lex-models","name":"LexModelBuildingService"},"marketplaceentitlementservice":{"prefix":"entitlement.marketplace","name":"MarketplaceEntitlementService"},"athena":{"name":"Athena"},"greengrass":{"name":"Greengrass"},"dax":{"name":"DAX"},"migrationhub":{"prefix":"AWSMigrationHub","name":"MigrationHub"},"cloudhsmv2":{"name":"CloudHSMV2"},"glue":{"name":"Glue"},"mobile":{"name":"Mobile"}}
+module.exports = {"acm":{"name":"ACM","cors":true},"apigateway":{"name":"APIGateway","cors":true},"applicationautoscaling":{"prefix":"application-autoscaling","name":"ApplicationAutoScaling","cors":true},"appstream":{"name":"AppStream"},"autoscaling":{"name":"AutoScaling","cors":true},"batch":{"name":"Batch"},"budgets":{"name":"Budgets"},"clouddirectory":{"name":"CloudDirectory"},"cloudformation":{"name":"CloudFormation","cors":true},"cloudfront":{"name":"CloudFront","versions":["2013-05-12*","2013-11-11*","2014-05-31*","2014-10-21*","2014-11-06*","2015-04-17*","2015-07-27*","2015-09-17*","2016-01-13*","2016-01-28*","2016-08-01*","2016-08-20*","2016-09-07*","2016-09-29*","2016-11-25*"],"cors":true},"cloudhsm":{"name":"CloudHSM","cors":true},"cloudsearch":{"name":"CloudSearch"},"cloudsearchdomain":{"name":"CloudSearchDomain"},"cloudtrail":{"name":"CloudTrail","cors":true},"cloudwatch":{"prefix":"monitoring","name":"CloudWatch","cors":true},"cloudwatchevents":{"prefix":"events","name":"CloudWatchEvents","versions":["2014-02-03*"],"cors":true},"cloudwatchlogs":{"prefix":"logs","name":"CloudWatchLogs","cors":true},"codebuild":{"name":"CodeBuild"},"codecommit":{"name":"CodeCommit","cors":true},"codedeploy":{"name":"CodeDeploy","cors":true},"codepipeline":{"name":"CodePipeline","cors":true},"cognitoidentity":{"prefix":"cognito-identity","name":"CognitoIdentity","cors":true},"cognitoidentityserviceprovider":{"prefix":"cognito-idp","name":"CognitoIdentityServiceProvider","cors":true},"cognitosync":{"prefix":"cognito-sync","name":"CognitoSync","cors":true},"configservice":{"prefix":"config","name":"ConfigService","cors":true},"cur":{"name":"CUR","cors":true},"datapipeline":{"name":"DataPipeline"},"devicefarm":{"name":"DeviceFarm","cors":true},"directconnect":{"name":"DirectConnect","cors":true},"directoryservice":{"prefix":"ds","name":"DirectoryService"},"discovery":{"name":"Discovery"},"dms":{"name":"DMS"},"dynamodb":{"name":"DynamoDB","cors":true},"dynamodbstreams":{"prefix":"streams.dynamodb","name":"DynamoDBStreams","cors":true},"ec2":{"name":"EC2","versions":["2013-06-15*","2013-10-15*","2014-02-01*","2014-05-01*","2014-06-15*","2014-09-01*","2014-10-01*","2015-03-01*","2015-04-15*","2015-10-01*","2016-04-01*","2016-09-15*"],"cors":true},"ecr":{"name":"ECR","cors":true},"ecs":{"name":"ECS","cors":true},"efs":{"prefix":"elasticfilesystem","name":"EFS","cors":true},"elasticache":{"name":"ElastiCache","versions":["2012-11-15*","2014-03-24*","2014-07-15*","2014-09-30*"],"cors":true},"elasticbeanstalk":{"name":"ElasticBeanstalk","cors":true},"elb":{"prefix":"elasticloadbalancing","name":"ELB","cors":true},"elbv2":{"prefix":"elasticloadbalancingv2","name":"ELBv2","cors":true},"emr":{"prefix":"elasticmapreduce","name":"EMR","cors":true},"es":{"name":"ES"},"elastictranscoder":{"name":"ElasticTranscoder","cors":true},"firehose":{"name":"Firehose","cors":true},"gamelift":{"name":"GameLift","cors":true},"glacier":{"name":"Glacier"},"health":{"name":"Health"},"iam":{"name":"IAM"},"importexport":{"name":"ImportExport"},"inspector":{"name":"Inspector","versions":["2015-08-18*"],"cors":true},"iot":{"name":"Iot","cors":true},"iotdata":{"prefix":"iot-data","name":"IotData","cors":true},"kinesis":{"name":"Kinesis","cors":true},"kinesisanalytics":{"name":"KinesisAnalytics"},"kms":{"name":"KMS","cors":true},"lambda":{"name":"Lambda","cors":true},"lexruntime":{"prefix":"runtime.lex","name":"LexRuntime","cors":true},"lightsail":{"name":"Lightsail"},"machinelearning":{"name":"MachineLearning","cors":true},"marketplacecommerceanalytics":{"name":"MarketplaceCommerceAnalytics","cors":true},"marketplacemetering":{"prefix":"meteringmarketplace","name":"MarketplaceMetering"},"mturk":{"prefix":"mturk-requester","name":"MTurk","cors":true},"mobileanalytics":{"name":"MobileAnalytics","cors":true},"opsworks":{"name":"OpsWorks","cors":true},"opsworkscm":{"name":"OpsWorksCM"},"organizations":{"name":"Organizations"},"pinpoint":{"name":"Pinpoint"},"polly":{"name":"Polly","cors":true},"rds":{"name":"RDS","versions":["2014-09-01*"],"cors":true},"redshift":{"name":"Redshift","cors":true},"rekognition":{"name":"Rekognition","cors":true},"resourcegroupstaggingapi":{"name":"ResourceGroupsTaggingAPI"},"route53":{"name":"Route53","cors":true},"route53domains":{"name":"Route53Domains","cors":true},"s3":{"name":"S3","dualstackAvailable":true,"cors":true},"servicecatalog":{"name":"ServiceCatalog","cors":true},"ses":{"prefix":"email","name":"SES","cors":true},"shield":{"name":"Shield"},"simpledb":{"prefix":"sdb","name":"SimpleDB"},"sms":{"name":"SMS"},"snowball":{"name":"Snowball"},"sns":{"name":"SNS","cors":true},"sqs":{"name":"SQS","cors":true},"ssm":{"name":"SSM","cors":true},"storagegateway":{"name":"StorageGateway","cors":true},"stepfunctions":{"prefix":"states","name":"StepFunctions"},"sts":{"name":"STS","cors":true},"support":{"name":"Support"},"swf":{"name":"SWF"},"xray":{"name":"XRay"},"waf":{"name":"WAF","cors":true},"wafregional":{"prefix":"waf-regional","name":"WAFRegional"},"workdocs":{"name":"WorkDocs","cors":true},"workspaces":{"name":"WorkSpaces"},"codestar":{"name":"CodeStar"},"lexmodelbuildingservice":{"prefix":"lex-models","name":"LexModelBuildingService","cors":true},"marketplaceentitlementservice":{"prefix":"entitlement.marketplace","name":"MarketplaceEntitlementService"},"athena":{"name":"Athena"},"greengrass":{"name":"Greengrass"},"dax":{"name":"DAX"},"migrationhub":{"prefix":"AWSMigrationHub","name":"MigrationHub"},"cloudhsmv2":{"name":"CloudHSMV2"},"glue":{"name":"Glue"},"mobile":{"name":"Mobile"},"pricing":{"name":"Pricing"},"costexplorer":{"prefix":"ce","name":"CostExplorer"},"mediaconvert":{"name":"MediaConvert"},"medialive":{"name":"MediaLive"},"mediapackage":{"name":"MediaPackage"},"mediastore":{"name":"MediaStore"},"mediastoredata":{"prefix":"mediastore-data","name":"MediaStoreData"},"appsync":{"name":"AppSync"},"guardduty":{"name":"GuardDuty"},"mq":{"name":"MQ"},"comprehend":{"name":"Comprehend"},"iotjobsdataplane":{"prefix":"iot-jobs-data","name":"IoTJobsDataPlane"},"kinesisvideoarchivedmedia":{"prefix":"kinesis-video-archived-media","name":"KinesisVideoArchivedMedia"},"kinesisvideomedia":{"prefix":"kinesis-video-media","name":"KinesisVideoMedia"},"kinesisvideo":{"name":"KinesisVideo"},"sagemakerruntime":{"prefix":"runtime.sagemaker","name":"SageMakerRuntime"},"sagemaker":{"name":"SageMaker"},"translate":{"name":"Translate"},"resourcegroups":{"prefix":"resource-groups","name":"ResourceGroups"},"alexaforbusiness":{"name":"AlexaForBusiness"},"cloud9":{"name":"Cloud9"},"serverlessapplicationrepository":{"prefix":"serverlessrepo","name":"ServerlessApplicationRepository"},"servicediscovery":{"name":"ServiceDiscovery"},"workmail":{"name":"WorkMail"}}
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var v1 = __webpack_require__(231);
-var v4 = __webpack_require__(232);
+var v1 = __webpack_require__(232);
+var v4 = __webpack_require__(233);
 
 var uuid = v4;
 uuid.v1 = v1;
@@ -22277,7 +22787,7 @@ module.exports = uuid;
 
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(82);
@@ -22383,7 +22893,7 @@ module.exports = v1;
 
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var rng = __webpack_require__(82);
@@ -22418,14 +22928,14 @@ module.exports = v4;
 
 
 /***/ }),
-/* 233 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Buffer = __webpack_require__(44).Buffer
-var sha = __webpack_require__(237)
-var sha256 = __webpack_require__(238)
-var rng = __webpack_require__(239)
-var md5 = __webpack_require__(240)
+var sha = __webpack_require__(238)
+var sha256 = __webpack_require__(239)
+var rng = __webpack_require__(240)
+var md5 = __webpack_require__(241)
 
 var algorithms = {
   sha1: sha,
@@ -22521,7 +23031,7 @@ each(['createCredentials'
 
 
 /***/ }),
-/* 234 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22642,7 +23152,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -22732,7 +23242,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -22743,7 +23253,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 237 */
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -22850,7 +23360,7 @@ module.exports = function sha1(buf) {
 
 
 /***/ }),
-/* 238 */
+/* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -22935,7 +23445,7 @@ module.exports = function sha256(buf) {
 
 
 /***/ }),
-/* 239 */
+/* 240 */
 /***/ (function(module, exports) {
 
 // Original code adapted from Robert Kieffer.
@@ -22972,7 +23482,7 @@ module.exports = function sha256(buf) {
 
 
 /***/ }),
-/* 240 */
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -23141,7 +23651,7 @@ module.exports = function md5(buf) {
 
 
 /***/ }),
-/* 241 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23168,8 +23678,8 @@ module.exports = function md5(buf) {
 
 
 
-var punycode = __webpack_require__(242);
-var util = __webpack_require__(243);
+var punycode = __webpack_require__(243);
+var util = __webpack_require__(244);
 
 exports.parse = urlParse;
 exports.resolve = urlResolve;
@@ -23880,7 +24390,7 @@ Url.prototype.parseHost = function() {
 
 
 /***/ }),
-/* 242 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.3.2 by @mathias */
@@ -24395,9 +24905,9 @@ Url.prototype.parseHost = function() {
 	if (
 		true
 	) {
-		!(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+		!(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
 			return punycode;
-		}.call(exports, __webpack_require__, exports, module),
+		}).call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	} else if (freeExports && freeModule) {
 		if (module.exports == freeExports) { // in Node.js or RingoJS v0.8.0+
@@ -24416,7 +24926,7 @@ Url.prototype.parseHost = function() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module), __webpack_require__(7)))
 
 /***/ }),
-/* 243 */
+/* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24439,7 +24949,7 @@ module.exports = {
 
 
 /***/ }),
-/* 244 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24530,7 +25040,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 245 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24622,11 +25132,11 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 246 */
+/* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(26);
+var STS = __webpack_require__(25);
 
 /**
  * Represents temporary credentials retrieved from {AWS.STS}. Without any
@@ -24748,7 +25258,7 @@ AWS.TemporaryCredentials = AWS.util.inherit(AWS.Credentials, {
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -24801,23 +25311,23 @@ AWS.util.update(AWS.STS.prototype, {
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(module, exports) {
 
 module.exports = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","protocol":"query","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","uid":"sts-2011-06-15","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}}},"GetCallerIdentity":{"input":{"type":"structure","members":{}},"output":{"resultWrapper":"GetCallerIdentityResult","type":"structure","members":{"UserId":{},"Account":{},"Arn":{}}}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}}
 
 /***/ }),
-/* 249 */
+/* 250 */
 /***/ (function(module, exports) {
 
 module.exports = {"pagination":{}}
 
 /***/ }),
-/* 250 */
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(26);
+var STS = __webpack_require__(25);
 
 /**
  * Represents credentials retrieved from STS Web Identity Federation support.
@@ -24929,12 +25439,12 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 
 /***/ }),
-/* 251 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var CognitoIdentity = __webpack_require__(252);
-var STS = __webpack_require__(26);
+var CognitoIdentity = __webpack_require__(253);
+var STS = __webpack_require__(25);
 
 /**
  * Represents credentials retrieved from STS Web Identity Federation using
@@ -25312,21 +25822,21 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 
 /***/ }),
-/* 252 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(16);
+__webpack_require__(15);
 var AWS = __webpack_require__(0);
 var Service = AWS.Service;
 var apiLoader = AWS.apiLoader;
 
 apiLoader.services['cognitoidentity'] = {};
 AWS.CognitoIdentity = Service.defineService('cognitoidentity', ['2014-06-30']);
-__webpack_require__(253);
+__webpack_require__(254);
 Object.defineProperty(apiLoader.services['cognitoidentity'], '2014-06-30', {
   get: function get() {
-    var model = __webpack_require__(254);
-    model.paginators = __webpack_require__(255).pagination;
+    var model = __webpack_require__(255);
+    model.paginators = __webpack_require__(256).pagination;
     return model;
   },
   enumerable: true,
@@ -25337,7 +25847,7 @@ module.exports = AWS.CognitoIdentity;
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
@@ -25358,23 +25868,23 @@ AWS.util.update(AWS.CognitoIdentity.prototype, {
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, exports) {
 
 module.exports = {"version":"2.0","metadata":{"apiVersion":"2014-06-30","endpointPrefix":"cognito-identity","jsonVersion":"1.1","protocol":"json","serviceFullName":"Amazon Cognito Identity","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityService","uid":"cognito-identity-2014-06-30"},"operations":{"CreateIdentityPool":{"input":{"type":"structure","required":["IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"},"CognitoIdentityProviders":{"shape":"Sa"},"SamlProviderARNs":{"shape":"Sf"}}},"output":{"shape":"Sg"}},"DeleteIdentities":{"input":{"type":"structure","required":["IdentityIdsToDelete"],"members":{"IdentityIdsToDelete":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"UnprocessedIdentityIds":{"type":"list","member":{"type":"structure","members":{"IdentityId":{},"ErrorCode":{}}}}}}},"DeleteIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}}},"DescribeIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{}}},"output":{"shape":"Sr"}},"DescribeIdentityPool":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"output":{"shape":"Sg"}},"GetCredentialsForIdentity":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sw"},"CustomRoleArn":{}}},"output":{"type":"structure","members":{"IdentityId":{},"Credentials":{"type":"structure","members":{"AccessKeyId":{},"SecretKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}}}}},"GetId":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"AccountId":{},"IdentityPoolId":{},"Logins":{"shape":"Sw"}}},"output":{"type":"structure","members":{"IdentityId":{}}}},"GetIdentityPoolRoles":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Roles":{"shape":"S18"},"RoleMappings":{"shape":"S1a"}}}},"GetOpenIdToken":{"input":{"type":"structure","required":["IdentityId"],"members":{"IdentityId":{},"Logins":{"shape":"Sw"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}}},"GetOpenIdTokenForDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId","Logins"],"members":{"IdentityPoolId":{},"IdentityId":{},"Logins":{"shape":"Sw"},"TokenDuration":{"type":"long"}}},"output":{"type":"structure","members":{"IdentityId":{},"Token":{}}}},"ListIdentities":{"input":{"type":"structure","required":["IdentityPoolId","MaxResults"],"members":{"IdentityPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{},"HideDisabled":{"type":"boolean"}}},"output":{"type":"structure","members":{"IdentityPoolId":{},"Identities":{"type":"list","member":{"shape":"Sr"}},"NextToken":{}}}},"ListIdentityPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityPools":{"type":"list","member":{"type":"structure","members":{"IdentityPoolId":{},"IdentityPoolName":{}}}},"NextToken":{}}}},"LookupDeveloperIdentity":{"input":{"type":"structure","required":["IdentityPoolId"],"members":{"IdentityPoolId":{},"IdentityId":{},"DeveloperUserIdentifier":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"IdentityId":{},"DeveloperUserIdentifierList":{"type":"list","member":{}},"NextToken":{}}}},"MergeDeveloperIdentities":{"input":{"type":"structure","required":["SourceUserIdentifier","DestinationUserIdentifier","DeveloperProviderName","IdentityPoolId"],"members":{"SourceUserIdentifier":{},"DestinationUserIdentifier":{},"DeveloperProviderName":{},"IdentityPoolId":{}}},"output":{"type":"structure","members":{"IdentityId":{}}}},"SetIdentityPoolRoles":{"input":{"type":"structure","required":["IdentityPoolId","Roles"],"members":{"IdentityPoolId":{},"Roles":{"shape":"S18"},"RoleMappings":{"shape":"S1a"}}}},"UnlinkDeveloperIdentity":{"input":{"type":"structure","required":["IdentityId","IdentityPoolId","DeveloperProviderName","DeveloperUserIdentifier"],"members":{"IdentityId":{},"IdentityPoolId":{},"DeveloperProviderName":{},"DeveloperUserIdentifier":{}}}},"UnlinkIdentity":{"input":{"type":"structure","required":["IdentityId","Logins","LoginsToRemove"],"members":{"IdentityId":{},"Logins":{"shape":"Sw"},"LoginsToRemove":{"shape":"Ss"}}}},"UpdateIdentityPool":{"input":{"shape":"Sg"},"output":{"shape":"Sg"}}},"shapes":{"S4":{"type":"map","key":{},"value":{}},"S8":{"type":"list","member":{}},"Sa":{"type":"list","member":{"type":"structure","members":{"ProviderName":{},"ClientId":{},"ServerSideTokenCheck":{"type":"boolean"}}}},"Sf":{"type":"list","member":{}},"Sg":{"type":"structure","required":["IdentityPoolId","IdentityPoolName","AllowUnauthenticatedIdentities"],"members":{"IdentityPoolId":{},"IdentityPoolName":{},"AllowUnauthenticatedIdentities":{"type":"boolean"},"SupportedLoginProviders":{"shape":"S4"},"DeveloperProviderName":{},"OpenIdConnectProviderARNs":{"shape":"S8"},"CognitoIdentityProviders":{"shape":"Sa"},"SamlProviderARNs":{"shape":"Sf"}}},"Sr":{"type":"structure","members":{"IdentityId":{},"Logins":{"shape":"Ss"},"CreationDate":{"type":"timestamp"},"LastModifiedDate":{"type":"timestamp"}}},"Ss":{"type":"list","member":{}},"Sw":{"type":"map","key":{},"value":{}},"S18":{"type":"map","key":{},"value":{}},"S1a":{"type":"map","key":{},"value":{"type":"structure","required":["Type"],"members":{"Type":{},"AmbiguousRoleResolution":{},"RulesConfiguration":{"type":"structure","required":["Rules"],"members":{"Rules":{"type":"list","member":{"type":"structure","required":["Claim","MatchType","Value","RoleARN"],"members":{"Claim":{},"MatchType":{},"Value":{},"RoleARN":{}}}}}}}}}}}
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, exports) {
 
 module.exports = {"pagination":{}}
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(26);
+var STS = __webpack_require__(25);
 
 /**
  * Represents credentials retrieved from STS SAML support.
@@ -25465,7 +25975,7 @@ AWS.SAMLCredentials = AWS.util.inherit(AWS.Credentials, {
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
@@ -25657,11 +26167,11 @@ module.exports = DomXmlParser;
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var EventEmitter = __webpack_require__(259).EventEmitter;
+var EventEmitter = __webpack_require__(260).EventEmitter;
 __webpack_require__(79);
 
 /**
@@ -25799,7 +26309,7 @@ AWS.HttpClient.streamsApiVersion = 1;
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -26107,14 +26617,14 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider__ = __webpack_require__(261);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider__ = __webpack_require__(262);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CognitoUser__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StorageHelper__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__CognitoUser__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__StorageHelper__ = __webpack_require__(94);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*!
@@ -26148,6 +26658,10 @@ var CognitoUserPool = function () {
    * @param {string} data.UserPoolId Cognito user pool id.
    * @param {string} data.ClientId User pool application client id.
    * @param {object} data.Storage Optional storage object.
+   * @param {boolean} data.AdvancedSecurityDataCollectionFlag Optional:
+   *        boolean flag indicating if the data collection is enabled
+   *        to support cognito advanced security features. By default, this
+   *        flag is set to true.
    */
   function CognitoUserPool(data) {
     _classCallCheck(this, CognitoUserPool);
@@ -26155,7 +26669,8 @@ var CognitoUserPool = function () {
     var _ref = data || {},
         UserPoolId = _ref.UserPoolId,
         ClientId = _ref.ClientId,
-        endpoint = _ref.endpoint;
+        endpoint = _ref.endpoint,
+        AdvancedSecurityDataCollectionFlag = _ref.AdvancedSecurityDataCollectionFlag;
 
     if (!UserPoolId || !ClientId) {
       throw new Error('Both UserPoolId and ClientId are required.');
@@ -26168,7 +26683,17 @@ var CognitoUserPool = function () {
     this.userPoolId = UserPoolId;
     this.clientId = ClientId;
 
-    this.client = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider___default.a({ apiVersion: '2016-04-19', region: region, endpoint: endpoint });
+    this.client = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk_clients_cognitoidentityserviceprovider___default.a({
+      apiVersion: '2016-04-19',
+      region: region,
+      endpoint: endpoint
+    });
+
+    /**
+     * By default, AdvancedSecurityDataCollectionFlag is set to true,
+     * if no input value is provided.
+     */
+    this.advancedSecurityDataCollectionFlag = AdvancedSecurityDataCollectionFlag !== false;
 
     this.storage = data.Storage || new __WEBPACK_IMPORTED_MODULE_2__StorageHelper__["a" /* default */]().getStorage();
   }
@@ -26210,13 +26735,17 @@ var CognitoUserPool = function () {
   CognitoUserPool.prototype.signUp = function signUp(username, password, userAttributes, validationData, callback) {
     var _this = this;
 
-    this.client.makeUnauthenticatedRequest('signUp', {
+    var jsonReq = {
       ClientId: this.clientId,
       Username: username,
       Password: password,
       UserAttributes: userAttributes,
       ValidationData: validationData
-    }, function (err, data) {
+    };
+    if (this.getUserContextData(username)) {
+      jsonReq.UserContextData = this.getUserContextData(username);
+    }
+    this.client.makeUnauthenticatedRequest('signUp', jsonReq, function (err, data) {
       if (err) {
         return callback(err, null);
       }
@@ -26261,16 +26790,46 @@ var CognitoUserPool = function () {
     return null;
   };
 
+  /**
+   * This method returns the encoded data string used for cognito advanced security feature.
+   * This would be generated only when developer has included the JS used for collecting the
+   * data on their client. Please refer to documentation to know more about using AdvancedSecurity
+   * features
+   * @param {string} username the username for the context data
+   * @returns {string} the user context data
+   **/
+
+
+  CognitoUserPool.prototype.getUserContextData = function getUserContextData(username) {
+    if (typeof AmazonCognitoAdvancedSecurityData === 'undefined') {
+      return undefined;
+    }
+    /* eslint-disable */
+    var amazonCognitoAdvancedSecurityDataConst = AmazonCognitoAdvancedSecurityData;
+    /* eslint-enable */
+
+    if (this.advancedSecurityDataCollectionFlag) {
+      var advancedSecurityData = amazonCognitoAdvancedSecurityDataConst.getData(username, this.userPoolId, this.clientId);
+      if (advancedSecurityData) {
+        var userContextData = {
+          EncodedData: advancedSecurityData
+        };
+        return userContextData;
+      }
+    }
+    return {};
+  };
+
   return CognitoUserPool;
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (CognitoUserPool);
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(16);
+__webpack_require__(15);
 var AWS = __webpack_require__(0);
 var Service = AWS.Service;
 var apiLoader = AWS.apiLoader;
@@ -26279,8 +26838,8 @@ apiLoader.services['cognitoidentityserviceprovider'] = {};
 AWS.CognitoIdentityServiceProvider = Service.defineService('cognitoidentityserviceprovider', ['2016-04-18']);
 Object.defineProperty(apiLoader.services['cognitoidentityserviceprovider'], '2016-04-18', {
   get: function get() {
-    var model = __webpack_require__(262);
-    model.paginators = __webpack_require__(263).pagination;
+    var model = __webpack_require__(263);
+    model.paginators = __webpack_require__(264).pagination;
     return model;
   },
   enumerable: true,
@@ -26291,16 +26850,300 @@ module.exports = AWS.CognitoIdentityServiceProvider;
 
 
 /***/ }),
-/* 262 */
-/***/ (function(module, exports) {
-
-module.exports = {"version":"2.0","metadata":{"apiVersion":"2016-04-18","endpointPrefix":"cognito-idp","jsonVersion":"1.1","protocol":"json","serviceFullName":"Amazon Cognito Identity Provider","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityProviderService","uid":"cognito-idp-2016-04-18"},"operations":{"AddCustomAttributes":{"input":{"type":"structure","required":["UserPoolId","CustomAttributes"],"members":{"UserPoolId":{},"CustomAttributes":{"type":"list","member":{"shape":"S4"}}}},"output":{"type":"structure","members":{}}},"AdminAddUserToGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminConfirmSignUp":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminCreateUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"TemporaryPassword":{"shape":"Sm"},"ForceAliasCreation":{"type":"boolean"},"MessageAction":{},"DesiredDeliveryMediums":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"User":{"shape":"Ss"}}}},"AdminDeleteUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}}},"AdminDeleteUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributeNames"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributeNames":{"shape":"Sz"}}},"output":{"type":"structure","members":{}}},"AdminDisableProviderForUser":{"input":{"type":"structure","required":["UserPoolId","User"],"members":{"UserPoolId":{},"User":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminDisableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminEnableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminForgetDevice":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{}}}},"AdminGetDevice":{"input":{"type":"structure","required":["DeviceKey","UserPoolId","Username"],"members":{"DeviceKey":{},"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"AdminGetUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Username"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"}}}},"AdminInitiateAuth":{"input":{"type":"structure","required":["UserPoolId","ClientId","AuthFlow"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"},"AuthFlow":{},"AuthParameters":{"shape":"S1j"},"ClientMetadata":{"shape":"S1k"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1o"},"AuthenticationResult":{"shape":"S1p"}}}},"AdminLinkProviderForUser":{"input":{"type":"structure","required":["UserPoolId","DestinationUser","SourceUser"],"members":{"UserPoolId":{},"DestinationUser":{"shape":"S12"},"SourceUser":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminListDevices":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S1z"},"PaginationToken":{}}}},"AdminListGroupsForUser":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"Username":{"shape":"Sd"},"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S23"},"NextToken":{}}}},"AdminRemoveUserFromGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminResetUserPassword":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminRespondToAuthChallenge":{"input":{"type":"structure","required":["UserPoolId","ClientId","ChallengeName"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"},"ChallengeName":{},"ChallengeResponses":{"shape":"S2c"},"Session":{}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1o"},"AuthenticationResult":{"shape":"S1p"}}}},"AdminSetUserSettings":{"input":{"type":"structure","required":["UserPoolId","Username","MFAOptions"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}}},"AdminUpdateDeviceStatus":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributes"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"}}},"output":{"type":"structure","members":{}}},"AdminUserGlobalSignOut":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"ChangePassword":{"input":{"type":"structure","required":["PreviousPassword","ProposedPassword","AccessToken"],"members":{"PreviousPassword":{"shape":"Sm"},"ProposedPassword":{"shape":"Sm"},"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmDevice":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1q"},"DeviceKey":{},"DeviceSecretVerifierConfig":{"type":"structure","members":{"PasswordVerifier":{},"Salt":{}}},"DeviceName":{}}},"output":{"type":"structure","members":{"UserConfirmationNecessary":{"type":"boolean"}}}},"ConfirmForgotPassword":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode","Password"],"members":{"ClientId":{"shape":"S1h"},"SecretHash":{"shape":"S2u"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"Password":{"shape":"Sm"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmSignUp":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode"],"members":{"ClientId":{"shape":"S1h"},"SecretHash":{"shape":"S2u"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"ForceAliasCreation":{"type":"boolean"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"CreateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S24"}}}},"CreateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName","ProviderType","ProviderDetails"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S34"},"AttributeMapping":{"shape":"S35"},"IdpIdentifiers":{"shape":"S37"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S3a"}}}},"CreateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S3e"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S3j"}}}},"CreateUserImportJob":{"input":{"type":"structure","required":["JobName","UserPoolId","CloudWatchLogsRoleArn"],"members":{"JobName":{},"UserPoolId":{},"CloudWatchLogsRoleArn":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S3n"}}}},"CreateUserPool":{"input":{"type":"structure","required":["PoolName"],"members":{"PoolName":{},"Policies":{"shape":"S3v"},"LambdaConfig":{"shape":"S3y"},"AutoVerifiedAttributes":{"shape":"S3z"},"AliasAttributes":{"shape":"S41"},"UsernameAttributes":{"shape":"S43"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S48"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S4d"},"EmailConfiguration":{"shape":"S4e"},"SmsConfiguration":{"shape":"S4g"},"UserPoolTags":{"shape":"S4h"},"AdminCreateUserConfig":{"shape":"S4i"},"Schema":{"shape":"S4l"}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S4n"}}}},"CreateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientName"],"members":{"UserPoolId":{},"ClientName":{},"GenerateSecret":{"type":"boolean"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S4t"},"WriteAttributes":{"shape":"S4t"},"ExplicitAuthFlows":{"shape":"S4v"},"SupportedIdentityProviders":{"shape":"S4x"},"CallbackURLs":{"shape":"S4y"},"LogoutURLs":{"shape":"S50"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S51"},"AllowedOAuthScopes":{"shape":"S53"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S56"}}}},"CreateUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DeleteGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}}},"DeleteIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}}},"DeleteResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}}},"DeleteUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1q"}}},"authtype":"none"},"DeleteUserAttributes":{"input":{"type":"structure","required":["UserAttributeNames","AccessToken"],"members":{"UserAttributeNames":{"shape":"Sz"},"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"DeleteUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}}},"DeleteUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"}}}},"DeleteUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DescribeIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S3a"}}}},"DescribeResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S3j"}}}},"DescribeUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S3n"}}}},"DescribeUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S4n"}}}},"DescribeUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S56"}}}},"DescribeUserPoolDomain":{"input":{"type":"structure","required":["Domain"],"members":{"Domain":{}}},"output":{"type":"structure","members":{"DomainDescription":{"type":"structure","members":{"UserPoolId":{},"AWSAccountId":{},"Domain":{},"S3Bucket":{},"CloudFrontDistribution":{},"Version":{},"Status":{}}}}}},"ForgetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"AccessToken":{"shape":"S1q"},"DeviceKey":{}}}},"ForgotPassword":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1h"},"SecretHash":{"shape":"S2u"},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S65"}}},"authtype":"none"},"GetCSVHeader":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPoolId":{},"CSVHeader":{"type":"list","member":{}}}}},"GetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"DeviceKey":{},"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"GetGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}},"output":{"type":"structure","members":{"Group":{"shape":"S24"}}}},"GetIdentityProviderByIdentifier":{"input":{"type":"structure","required":["UserPoolId","IdpIdentifier"],"members":{"UserPoolId":{},"IdpIdentifier":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S3a"}}}},"GetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S6h"}}}},"GetUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","required":["Username","UserAttributes"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"MFAOptions":{"shape":"Sv"}}},"authtype":"none"},"GetUserAttributeVerificationCode":{"input":{"type":"structure","required":["AccessToken","AttributeName"],"members":{"AccessToken":{"shape":"S1q"},"AttributeName":{}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S65"}}},"authtype":"none"},"GlobalSignOut":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","members":{}}},"InitiateAuth":{"input":{"type":"structure","required":["AuthFlow","ClientId"],"members":{"AuthFlow":{},"AuthParameters":{"shape":"S1j"},"ClientMetadata":{"shape":"S1k"},"ClientId":{"shape":"S1h"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1o"},"AuthenticationResult":{"shape":"S1p"}}}},"ListDevices":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1q"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S1z"},"PaginationToken":{}}}},"ListGroups":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S23"},"NextToken":{}}}},"ListIdentityProviders":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["Providers"],"members":{"Providers":{"type":"list","member":{"type":"structure","members":{"ProviderName":{},"ProviderType":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListResourceServers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["ResourceServers"],"members":{"ResourceServers":{"type":"list","member":{"shape":"S3j"}},"NextToken":{}}}},"ListUserImportJobs":{"input":{"type":"structure","required":["UserPoolId","MaxResults"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"UserImportJobs":{"type":"list","member":{"shape":"S3n"}},"PaginationToken":{}}}},"ListUserPoolClients":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"UserPoolClients":{"type":"list","member":{"type":"structure","members":{"ClientId":{"shape":"S1h"},"UserPoolId":{},"ClientName":{}}}},"NextToken":{}}}},"ListUserPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"UserPools":{"type":"list","member":{"type":"structure","members":{"Id":{},"Name":{},"LambdaConfig":{"shape":"S3y"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListUsers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"AttributesToGet":{"type":"list","member":{}},"Limit":{"type":"integer"},"PaginationToken":{},"Filter":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S7o"},"PaginationToken":{}}}},"ListUsersInGroup":{"input":{"type":"structure","required":["UserPoolId","GroupName"],"members":{"UserPoolId":{},"GroupName":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S7o"},"NextToken":{}}}},"ResendConfirmationCode":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1h"},"SecretHash":{"shape":"S2u"},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S65"}}},"authtype":"none"},"RespondToAuthChallenge":{"input":{"type":"structure","required":["ClientId","ChallengeName"],"members":{"ClientId":{"shape":"S1h"},"ChallengeName":{},"Session":{},"ChallengeResponses":{"shape":"S2c"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1o"},"AuthenticationResult":{"shape":"S1p"}}}},"SetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"},"CSS":{},"ImageFile":{"type":"blob"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S6h"}}}},"SetUserSettings":{"input":{"type":"structure","required":["AccessToken","MFAOptions"],"members":{"AccessToken":{"shape":"S1q"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"SignUp":{"input":{"type":"structure","required":["ClientId","Username","Password"],"members":{"ClientId":{"shape":"S1h"},"SecretHash":{"shape":"S2u"},"Username":{"shape":"Sd"},"Password":{"shape":"Sm"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"}}},"output":{"type":"structure","required":["UserConfirmed","UserSub"],"members":{"UserConfirmed":{"type":"boolean"},"CodeDeliveryDetails":{"shape":"S65"},"UserSub":{}}},"authtype":"none"},"StartUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S3n"}}}},"StopUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S3n"}}}},"UpdateDeviceStatus":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1q"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"UpdateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S24"}}}},"UpdateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderDetails":{"shape":"S34"},"AttributeMapping":{"shape":"S35"},"IdpIdentifiers":{"shape":"S37"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S3a"}}}},"UpdateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S3e"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S3j"}}}},"UpdateUserAttributes":{"input":{"type":"structure","required":["UserAttributes","AccessToken"],"members":{"UserAttributes":{"shape":"Si"},"AccessToken":{"shape":"S1q"}}},"output":{"type":"structure","members":{"CodeDeliveryDetailsList":{"type":"list","member":{"shape":"S65"}}}},"authtype":"none"},"UpdateUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Policies":{"shape":"S3v"},"LambdaConfig":{"shape":"S3y"},"AutoVerifiedAttributes":{"shape":"S3z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S48"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S4d"},"EmailConfiguration":{"shape":"S4e"},"SmsConfiguration":{"shape":"S4g"},"UserPoolTags":{"shape":"S4h"},"AdminCreateUserConfig":{"shape":"S4i"}}},"output":{"type":"structure","members":{}}},"UpdateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1h"},"ClientName":{},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S4t"},"WriteAttributes":{"shape":"S4t"},"ExplicitAuthFlows":{"shape":"S4v"},"SupportedIdentityProviders":{"shape":"S4x"},"CallbackURLs":{"shape":"S4y"},"LogoutURLs":{"shape":"S50"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S51"},"AllowedOAuthScopes":{"shape":"S53"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S56"}}}},"VerifyUserAttribute":{"input":{"type":"structure","required":["AccessToken","AttributeName","Code"],"members":{"AccessToken":{"shape":"S1q"},"AttributeName":{},"Code":{}}},"output":{"type":"structure","members":{}},"authtype":"none"}},"shapes":{"S4":{"type":"structure","members":{"Name":{},"AttributeDataType":{},"DeveloperOnlyAttribute":{"type":"boolean"},"Mutable":{"type":"boolean"},"Required":{"type":"boolean"},"NumberAttributeConstraints":{"type":"structure","members":{"MinValue":{},"MaxValue":{}}},"StringAttributeConstraints":{"type":"structure","members":{"MinLength":{},"MaxLength":{}}}}},"Sd":{"type":"string","sensitive":true},"Si":{"type":"list","member":{"type":"structure","required":["Name"],"members":{"Name":{},"Value":{"type":"string","sensitive":true}}}},"Sm":{"type":"string","sensitive":true},"Ss":{"type":"structure","members":{"Username":{"shape":"Sd"},"Attributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"}}},"Sv":{"type":"list","member":{"type":"structure","members":{"DeliveryMedium":{},"AttributeName":{}}}},"Sz":{"type":"list","member":{}},"S12":{"type":"structure","members":{"ProviderName":{},"ProviderAttributeName":{},"ProviderAttributeValue":{}}},"S1d":{"type":"structure","members":{"DeviceKey":{},"DeviceAttributes":{"shape":"Si"},"DeviceCreateDate":{"type":"timestamp"},"DeviceLastModifiedDate":{"type":"timestamp"},"DeviceLastAuthenticatedDate":{"type":"timestamp"}}},"S1h":{"type":"string","sensitive":true},"S1j":{"type":"map","key":{},"value":{}},"S1k":{"type":"map","key":{},"value":{}},"S1o":{"type":"map","key":{},"value":{}},"S1p":{"type":"structure","members":{"AccessToken":{"shape":"S1q"},"ExpiresIn":{"type":"integer"},"TokenType":{},"RefreshToken":{"shape":"S1q"},"IdToken":{"shape":"S1q"},"NewDeviceMetadata":{"type":"structure","members":{"DeviceKey":{},"DeviceGroupKey":{}}}}},"S1q":{"type":"string","sensitive":true},"S1z":{"type":"list","member":{"shape":"S1d"}},"S23":{"type":"list","member":{"shape":"S24"}},"S24":{"type":"structure","members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S2c":{"type":"map","key":{},"value":{}},"S2u":{"type":"string","sensitive":true},"S34":{"type":"map","key":{},"value":{}},"S35":{"type":"map","key":{},"value":{}},"S37":{"type":"list","member":{}},"S3a":{"type":"structure","members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S34"},"AttributeMapping":{"shape":"S35"},"IdpIdentifiers":{"shape":"S37"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S3e":{"type":"list","member":{"type":"structure","required":["ScopeName","ScopeDescription"],"members":{"ScopeName":{},"ScopeDescription":{}}}},"S3j":{"type":"structure","members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S3e"}}},"S3n":{"type":"structure","members":{"JobName":{},"JobId":{},"UserPoolId":{},"PreSignedUrl":{},"CreationDate":{"type":"timestamp"},"StartDate":{"type":"timestamp"},"CompletionDate":{"type":"timestamp"},"Status":{},"CloudWatchLogsRoleArn":{},"ImportedUsers":{"type":"long"},"SkippedUsers":{"type":"long"},"FailedUsers":{"type":"long"},"CompletionMessage":{}}},"S3v":{"type":"structure","members":{"PasswordPolicy":{"type":"structure","members":{"MinimumLength":{"type":"integer"},"RequireUppercase":{"type":"boolean"},"RequireLowercase":{"type":"boolean"},"RequireNumbers":{"type":"boolean"},"RequireSymbols":{"type":"boolean"}}}}},"S3y":{"type":"structure","members":{"PreSignUp":{},"CustomMessage":{},"PostConfirmation":{},"PreAuthentication":{},"PostAuthentication":{},"DefineAuthChallenge":{},"CreateAuthChallenge":{},"VerifyAuthChallengeResponse":{}}},"S3z":{"type":"list","member":{}},"S41":{"type":"list","member":{}},"S43":{"type":"list","member":{}},"S48":{"type":"structure","members":{"SmsMessage":{},"EmailMessage":{},"EmailSubject":{},"EmailMessageByLink":{},"EmailSubjectByLink":{},"DefaultEmailOption":{}}},"S4d":{"type":"structure","members":{"ChallengeRequiredOnNewDevice":{"type":"boolean"},"DeviceOnlyRememberedOnUserPrompt":{"type":"boolean"}}},"S4e":{"type":"structure","members":{"SourceArn":{},"ReplyToEmailAddress":{}}},"S4g":{"type":"structure","required":["SnsCallerArn"],"members":{"SnsCallerArn":{},"ExternalId":{}}},"S4h":{"type":"map","key":{},"value":{}},"S4i":{"type":"structure","members":{"AllowAdminCreateUserOnly":{"type":"boolean"},"UnusedAccountValidityDays":{"type":"integer"},"InviteMessageTemplate":{"type":"structure","members":{"SMSMessage":{},"EmailMessage":{},"EmailSubject":{}}}}},"S4l":{"type":"list","member":{"shape":"S4"}},"S4n":{"type":"structure","members":{"Id":{},"Name":{},"Policies":{"shape":"S3v"},"LambdaConfig":{"shape":"S3y"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"SchemaAttributes":{"shape":"S4l"},"AutoVerifiedAttributes":{"shape":"S3z"},"AliasAttributes":{"shape":"S41"},"UsernameAttributes":{"shape":"S43"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S48"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S4d"},"EstimatedNumberOfUsers":{"type":"integer"},"EmailConfiguration":{"shape":"S4e"},"SmsConfiguration":{"shape":"S4g"},"UserPoolTags":{"shape":"S4h"},"SmsConfigurationFailure":{},"EmailConfigurationFailure":{},"AdminCreateUserConfig":{"shape":"S4i"}}},"S4t":{"type":"list","member":{}},"S4v":{"type":"list","member":{}},"S4x":{"type":"list","member":{}},"S4y":{"type":"list","member":{}},"S50":{"type":"list","member":{}},"S51":{"type":"list","member":{}},"S53":{"type":"list","member":{}},"S56":{"type":"structure","members":{"UserPoolId":{},"ClientName":{},"ClientId":{"shape":"S1h"},"ClientSecret":{"type":"string","sensitive":true},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S4t"},"WriteAttributes":{"shape":"S4t"},"ExplicitAuthFlows":{"shape":"S4v"},"SupportedIdentityProviders":{"shape":"S4x"},"CallbackURLs":{"shape":"S4y"},"LogoutURLs":{"shape":"S50"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S51"},"AllowedOAuthScopes":{"shape":"S53"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"}}},"S65":{"type":"structure","members":{"Destination":{},"DeliveryMedium":{},"AttributeName":{}}},"S6h":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1h"},"ImageUrl":{},"CSS":{},"CSSVersion":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S7o":{"type":"list","member":{"shape":"Ss"}}}}
-
-/***/ }),
 /* 263 */
 /***/ (function(module, exports) {
 
+module.exports = {"version":"2.0","metadata":{"apiVersion":"2016-04-18","endpointPrefix":"cognito-idp","jsonVersion":"1.1","protocol":"json","serviceFullName":"Amazon Cognito Identity Provider","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityProviderService","uid":"cognito-idp-2016-04-18"},"operations":{"AddCustomAttributes":{"input":{"type":"structure","required":["UserPoolId","CustomAttributes"],"members":{"UserPoolId":{},"CustomAttributes":{"type":"list","member":{"shape":"S4"}}}},"output":{"type":"structure","members":{}}},"AdminAddUserToGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminConfirmSignUp":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminCreateUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"TemporaryPassword":{"shape":"Sm"},"ForceAliasCreation":{"type":"boolean"},"MessageAction":{},"DesiredDeliveryMediums":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"User":{"shape":"Ss"}}}},"AdminDeleteUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}}},"AdminDeleteUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributeNames"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributeNames":{"shape":"Sz"}}},"output":{"type":"structure","members":{}}},"AdminDisableProviderForUser":{"input":{"type":"structure","required":["UserPoolId","User"],"members":{"UserPoolId":{},"User":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminDisableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminEnableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminForgetDevice":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{}}}},"AdminGetDevice":{"input":{"type":"structure","required":["DeviceKey","UserPoolId","Username"],"members":{"DeviceKey":{},"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"AdminGetUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Username"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}}},"AdminInitiateAuth":{"input":{"type":"structure","required":["UserPoolId","ClientId","AuthFlow"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminLinkProviderForUser":{"input":{"type":"structure","required":["UserPoolId","DestinationUser","SourceUser"],"members":{"UserPoolId":{},"DestinationUser":{"shape":"S12"},"SourceUser":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminListDevices":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"AdminListGroupsForUser":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"Username":{"shape":"Sd"},"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"AdminListUserAuthEvents":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"AuthEvents":{"type":"list","member":{"type":"structure","members":{"EventId":{},"EventType":{},"CreationDate":{"type":"timestamp"},"EventResponse":{},"EventRisk":{"type":"structure","members":{"RiskDecision":{},"RiskLevel":{}}},"ChallengeResponses":{"type":"list","member":{"type":"structure","members":{"ChallengeName":{},"ChallengeResponse":{}}}},"EventContextData":{"type":"structure","members":{"IpAddress":{},"DeviceName":{},"Timezone":{},"City":{},"Country":{}}},"EventFeedback":{"type":"structure","required":["FeedbackValue","Provider"],"members":{"FeedbackValue":{},"Provider":{},"FeedbackDate":{"type":"timestamp"}}}}}},"NextToken":{}}}},"AdminRemoveUserFromGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminResetUserPassword":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminRespondToAuthChallenge":{"input":{"type":"structure","required":["UserPoolId","ClientId","ChallengeName"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ChallengeName":{},"ChallengeResponses":{"shape":"S2x"},"Session":{},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminSetUserMFAPreference":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"Username":{"shape":"Sd"},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"AdminSetUserSettings":{"input":{"type":"structure","required":["UserPoolId","Username","MFAOptions"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}}},"AdminUpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateDeviceStatus":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributes"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"}}},"output":{"type":"structure","members":{}}},"AdminUserGlobalSignOut":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AssociateSoftwareToken":{"input":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"Session":{}}},"output":{"type":"structure","members":{"SecretCode":{"type":"string","sensitive":true},"Session":{}}}},"ChangePassword":{"input":{"type":"structure","required":["PreviousPassword","ProposedPassword","AccessToken"],"members":{"PreviousPassword":{"shape":"Sm"},"ProposedPassword":{"shape":"Sm"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmDevice":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceSecretVerifierConfig":{"type":"structure","members":{"PasswordVerifier":{},"Salt":{}}},"DeviceName":{}}},"output":{"type":"structure","members":{"UserConfirmationNecessary":{"type":"boolean"}}}},"ConfirmForgotPassword":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"Password":{"shape":"Sm"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmSignUp":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"ForceAliasCreation":{"type":"boolean"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"CreateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"CreateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName","ProviderType","ProviderDetails"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"CreateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"CreateUserImportJob":{"input":{"type":"structure","required":["JobName","UserPoolId","CloudWatchLogsRoleArn"],"members":{"JobName":{},"UserPoolId":{},"CloudWatchLogsRoleArn":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"CreateUserPool":{"input":{"type":"structure","required":["PoolName"],"members":{"PoolName":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"Schema":{"shape":"S5h"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"CreateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientName"],"members":{"UserPoolId":{},"ClientName":{},"GenerateSecret":{"type":"boolean"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"CreateUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DeleteGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}}},"DeleteIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}}},"DeleteResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}}},"DeleteUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"authtype":"none"},"DeleteUserAttributes":{"input":{"type":"structure","required":["UserAttributeNames","AccessToken"],"members":{"UserAttributeNames":{"shape":"Sz"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"DeleteUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}}},"DeleteUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}}},"DeleteUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DescribeIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"DescribeResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"DescribeRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"DescribeUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"DescribeUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"DescribeUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"DescribeUserPoolDomain":{"input":{"type":"structure","required":["Domain"],"members":{"Domain":{}}},"output":{"type":"structure","members":{"DomainDescription":{"type":"structure","members":{"UserPoolId":{},"AWSAccountId":{},"Domain":{},"S3Bucket":{},"CloudFrontDistribution":{},"Version":{},"Status":{}}}}}},"ForgetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{}}}},"ForgotPassword":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetCSVHeader":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPoolId":{},"CSVHeader":{"type":"list","member":{}}}}},"GetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"DeviceKey":{},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"GetGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"GetIdentityProviderByIdentifier":{"input":{"type":"structure","required":["UserPoolId","IdpIdentifier"],"members":{"UserPoolId":{},"IdpIdentifier":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"GetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S81"}}}},"GetUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Username","UserAttributes"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}},"authtype":"none"},"GetUserAttributeVerificationCode":{"input":{"type":"structure","required":["AccessToken","AttributeName"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}}},"GlobalSignOut":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"InitiateAuth":{"input":{"type":"structure","required":["AuthFlow","ClientId"],"members":{"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"ClientId":{"shape":"S1i"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"ListDevices":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"ListGroups":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"ListIdentityProviders":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["Providers"],"members":{"Providers":{"type":"list","member":{"type":"structure","members":{"ProviderName":{},"ProviderType":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListResourceServers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["ResourceServers"],"members":{"ResourceServers":{"type":"list","member":{"shape":"S4f"}},"NextToken":{}}}},"ListUserImportJobs":{"input":{"type":"structure","required":["UserPoolId","MaxResults"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"UserImportJobs":{"type":"list","member":{"shape":"S4j"}},"PaginationToken":{}}}},"ListUserPoolClients":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"UserPoolClients":{"type":"list","member":{"type":"structure","members":{"ClientId":{"shape":"S1i"},"UserPoolId":{},"ClientName":{}}}},"NextToken":{}}}},"ListUserPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"UserPools":{"type":"list","member":{"type":"structure","members":{"Id":{},"Name":{},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListUsers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"AttributesToGet":{"type":"list","member":{}},"Limit":{"type":"integer"},"PaginationToken":{},"Filter":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9c"},"PaginationToken":{}}}},"ListUsersInGroup":{"input":{"type":"structure","required":["UserPoolId","GroupName"],"members":{"UserPoolId":{},"GroupName":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9c"},"NextToken":{}}}},"ResendConfirmationCode":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"RespondToAuthChallenge":{"input":{"type":"structure","required":["ClientId","ChallengeName"],"members":{"ClientId":{"shape":"S1i"},"ChallengeName":{},"Session":{},"ChallengeResponses":{"shape":"S2x"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"SetRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"SetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CSS":{},"ImageFile":{"type":"blob"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S81"}}}},"SetUserMFAPreference":{"input":{"type":"structure","required":["AccessToken"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"SetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}}},"SetUserSettings":{"input":{"type":"structure","required":["AccessToken","MFAOptions"],"members":{"AccessToken":{"shape":"S1v"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"SignUp":{"input":{"type":"structure","required":["ClientId","Username","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"Password":{"shape":"Sm"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","required":["UserConfirmed","UserSub"],"members":{"UserConfirmed":{"type":"boolean"},"CodeDeliveryDetails":{"shape":"S7p"},"UserSub":{}}},"authtype":"none"},"StartUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"StopUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"UpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackToken","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackToken":{"shape":"S1v"},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"UpdateDeviceStatus":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"UpdateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"UpdateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"UpdateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"UpdateUserAttributes":{"input":{"type":"structure","required":["UserAttributes","AccessToken"],"members":{"UserAttributes":{"shape":"Si"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{"CodeDeliveryDetailsList":{"type":"list","member":{"shape":"S7p"}}}},"authtype":"none"},"UpdateUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{}}},"UpdateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ClientName":{},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"VerifySoftwareToken":{"input":{"type":"structure","required":["UserCode"],"members":{"AccessToken":{"shape":"S1v"},"Session":{},"UserCode":{},"FriendlyDeviceName":{}}},"output":{"type":"structure","members":{"Status":{},"Session":{}}}},"VerifyUserAttribute":{"input":{"type":"structure","required":["AccessToken","AttributeName","Code"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{},"Code":{}}},"output":{"type":"structure","members":{}},"authtype":"none"}},"shapes":{"S4":{"type":"structure","members":{"Name":{},"AttributeDataType":{},"DeveloperOnlyAttribute":{"type":"boolean"},"Mutable":{"type":"boolean"},"Required":{"type":"boolean"},"NumberAttributeConstraints":{"type":"structure","members":{"MinValue":{},"MaxValue":{}}},"StringAttributeConstraints":{"type":"structure","members":{"MinLength":{},"MaxLength":{}}}}},"Sd":{"type":"string","sensitive":true},"Si":{"type":"list","member":{"type":"structure","required":["Name"],"members":{"Name":{},"Value":{"type":"string","sensitive":true}}}},"Sm":{"type":"string","sensitive":true},"Ss":{"type":"structure","members":{"Username":{"shape":"Sd"},"Attributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"}}},"Sv":{"type":"list","member":{"type":"structure","members":{"DeliveryMedium":{},"AttributeName":{}}}},"Sz":{"type":"list","member":{}},"S12":{"type":"structure","members":{"ProviderName":{},"ProviderAttributeName":{},"ProviderAttributeValue":{}}},"S1d":{"type":"structure","members":{"DeviceKey":{},"DeviceAttributes":{"shape":"Si"},"DeviceCreateDate":{"type":"timestamp"},"DeviceLastModifiedDate":{"type":"timestamp"},"DeviceLastAuthenticatedDate":{"type":"timestamp"}}},"S1g":{"type":"list","member":{}},"S1i":{"type":"string","sensitive":true},"S1k":{"type":"map","key":{},"value":{}},"S1l":{"type":"map","key":{},"value":{}},"S1m":{"type":"structure","members":{"AnalyticsEndpointId":{}}},"S1n":{"type":"structure","required":["IpAddress","ServerName","ServerPath","HttpHeaders"],"members":{"IpAddress":{},"ServerName":{},"ServerPath":{},"HttpHeaders":{"type":"list","member":{"type":"structure","members":{"headerName":{},"headerValue":{}}}},"EncodedData":{}}},"S1t":{"type":"map","key":{},"value":{}},"S1u":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"ExpiresIn":{"type":"integer"},"TokenType":{},"RefreshToken":{"shape":"S1v"},"IdToken":{"shape":"S1v"},"NewDeviceMetadata":{"type":"structure","members":{"DeviceKey":{},"DeviceGroupKey":{}}}}},"S1v":{"type":"string","sensitive":true},"S24":{"type":"list","member":{"shape":"S1d"}},"S28":{"type":"list","member":{"shape":"S29"}},"S29":{"type":"structure","members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S2x":{"type":"map","key":{},"value":{}},"S30":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S31":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S3p":{"type":"string","sensitive":true},"S3r":{"type":"structure","members":{"EncodedData":{}}},"S40":{"type":"map","key":{},"value":{}},"S41":{"type":"map","key":{},"value":{}},"S43":{"type":"list","member":{}},"S46":{"type":"structure","members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S4a":{"type":"list","member":{"type":"structure","required":["ScopeName","ScopeDescription"],"members":{"ScopeName":{},"ScopeDescription":{}}}},"S4f":{"type":"structure","members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"S4j":{"type":"structure","members":{"JobName":{},"JobId":{},"UserPoolId":{},"PreSignedUrl":{},"CreationDate":{"type":"timestamp"},"StartDate":{"type":"timestamp"},"CompletionDate":{"type":"timestamp"},"Status":{},"CloudWatchLogsRoleArn":{},"ImportedUsers":{"type":"long"},"SkippedUsers":{"type":"long"},"FailedUsers":{"type":"long"},"CompletionMessage":{}}},"S4r":{"type":"structure","members":{"PasswordPolicy":{"type":"structure","members":{"MinimumLength":{"type":"integer"},"RequireUppercase":{"type":"boolean"},"RequireLowercase":{"type":"boolean"},"RequireNumbers":{"type":"boolean"},"RequireSymbols":{"type":"boolean"}}}}},"S4u":{"type":"structure","members":{"PreSignUp":{},"CustomMessage":{},"PostConfirmation":{},"PreAuthentication":{},"PostAuthentication":{},"DefineAuthChallenge":{},"CreateAuthChallenge":{},"VerifyAuthChallengeResponse":{},"PreTokenGeneration":{}}},"S4v":{"type":"list","member":{}},"S4x":{"type":"list","member":{}},"S4z":{"type":"list","member":{}},"S54":{"type":"structure","members":{"SmsMessage":{},"EmailMessage":{},"EmailSubject":{},"EmailMessageByLink":{},"EmailSubjectByLink":{},"DefaultEmailOption":{}}},"S59":{"type":"structure","members":{"ChallengeRequiredOnNewDevice":{"type":"boolean"},"DeviceOnlyRememberedOnUserPrompt":{"type":"boolean"}}},"S5a":{"type":"structure","members":{"SourceArn":{},"ReplyToEmailAddress":{}}},"S5c":{"type":"structure","required":["SnsCallerArn"],"members":{"SnsCallerArn":{},"ExternalId":{}}},"S5d":{"type":"map","key":{},"value":{}},"S5e":{"type":"structure","members":{"AllowAdminCreateUserOnly":{"type":"boolean"},"UnusedAccountValidityDays":{"type":"integer"},"InviteMessageTemplate":{"type":"structure","members":{"SMSMessage":{},"EmailMessage":{},"EmailSubject":{}}}}},"S5h":{"type":"list","member":{"shape":"S4"}},"S5i":{"type":"structure","required":["AdvancedSecurityMode"],"members":{"AdvancedSecurityMode":{}}},"S5l":{"type":"structure","members":{"Id":{},"Name":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"SchemaAttributes":{"shape":"S5h"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EstimatedNumberOfUsers":{"type":"integer"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"SmsConfigurationFailure":{},"EmailConfigurationFailure":{},"Domain":{},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"S5s":{"type":"list","member":{}},"S5u":{"type":"list","member":{}},"S5w":{"type":"list","member":{}},"S5x":{"type":"list","member":{}},"S5z":{"type":"list","member":{}},"S60":{"type":"list","member":{}},"S62":{"type":"list","member":{}},"S64":{"type":"structure","required":["ApplicationId","RoleArn","ExternalId"],"members":{"ApplicationId":{},"RoleArn":{},"ExternalId":{},"UserDataShared":{"type":"boolean"}}},"S67":{"type":"structure","members":{"UserPoolId":{},"ClientName":{},"ClientId":{"shape":"S1i"},"ClientSecret":{"type":"string","sensitive":true},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"S6r":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"},"LastModifiedDate":{"type":"timestamp"}}},"S6s":{"type":"structure","required":["Actions"],"members":{"EventFilter":{"type":"list","member":{}},"Actions":{"type":"structure","required":["EventAction"],"members":{"EventAction":{}}}}},"S6x":{"type":"structure","required":["Actions"],"members":{"NotifyConfiguration":{"type":"structure","required":["SourceArn"],"members":{"From":{},"ReplyTo":{},"SourceArn":{},"BlockEmail":{"shape":"S6z"},"NoActionEmail":{"shape":"S6z"},"MfaEmail":{"shape":"S6z"}}},"Actions":{"type":"structure","members":{"LowAction":{"shape":"S73"},"MediumAction":{"shape":"S73"},"HighAction":{"shape":"S73"}}}}},"S6z":{"type":"structure","required":["Subject"],"members":{"Subject":{},"HtmlBody":{},"TextBody":{}}},"S73":{"type":"structure","required":["Notify","EventAction"],"members":{"Notify":{"type":"boolean"},"EventAction":{}}},"S76":{"type":"structure","members":{"BlockedIPRangeList":{"type":"list","member":{}},"SkippedIPRangeList":{"type":"list","member":{}}}},"S7p":{"type":"structure","members":{"Destination":{},"DeliveryMedium":{},"AttributeName":{}}},"S81":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ImageUrl":{},"CSS":{},"CSSVersion":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S8b":{"type":"structure","members":{"SmsAuthenticationMessage":{},"SmsConfiguration":{"shape":"S5c"}}},"S8c":{"type":"structure","members":{"Enabled":{"type":"boolean"}}},"S9c":{"type":"list","member":{"shape":"Ss"}}}}
+
+/***/ }),
+/* 264 */
+/***/ (function(module, exports) {
+
 module.exports = {"pagination":{}}
+
+/***/ }),
+/* 265 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_js_cookie__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_js_cookie___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_js_cookie__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+/** @class */
+
+var CookieStorage = function () {
+
+  /**
+   * Constructs a new CookieStorage object
+   * @param {object} data Creation options.
+   * @param {string} data.domain Cookies domain (mandatory).
+   * @param {string} data.path Cookies path (default: '/')
+   * @param {integer} data.expires Cookie expiration (in days, default: 365)
+   * @param {boolean} data.secure Cookie secure flag (default: true)
+   */
+  function CookieStorage(data) {
+    _classCallCheck(this, CookieStorage);
+
+    this.domain = data.domain;
+    if (data.path) {
+      this.path = data.path;
+    } else {
+      this.path = '/';
+    }
+    if (Object.prototype.hasOwnProperty.call(data, 'expires')) {
+      this.expires = data.expires;
+    } else {
+      this.expires = 365;
+    }
+    if (Object.prototype.hasOwnProperty.call(data, 'secure')) {
+      this.secure = data.secure;
+    } else {
+      this.secure = true;
+    }
+  }
+
+  /**
+   * This is used to set a specific item in storage
+   * @param {string} key - the key for the item
+   * @param {object} value - the value
+   * @returns {string} value that was set
+   */
+
+
+  CookieStorage.prototype.setItem = function setItem(key, value) {
+    __WEBPACK_IMPORTED_MODULE_0_js_cookie__["set"](key, value, {
+      path: this.path,
+      expires: this.expires,
+      domain: this.domain,
+      secure: this.secure
+    });
+    return __WEBPACK_IMPORTED_MODULE_0_js_cookie__["get"](key);
+  };
+
+  /**
+   * This is used to get a specific key from storage
+   * @param {string} key - the key for the item
+   * This is used to clear the storage
+   * @returns {string} the data item
+   */
+
+
+  CookieStorage.prototype.getItem = function getItem(key) {
+    return __WEBPACK_IMPORTED_MODULE_0_js_cookie__["get"](key);
+  };
+
+  /**
+   * This is used to remove an item from storage
+   * @param {string} key - the key being set
+   * @returns {string} value - value that was deleted
+   */
+
+
+  CookieStorage.prototype.removeItem = function removeItem(key) {
+    return __WEBPACK_IMPORTED_MODULE_0_js_cookie__["remove"](key, {
+      path: this.path,
+      domain: this.domain,
+      secure: this.secure
+    });
+  };
+
+  /**
+   * This is used to clear the storage
+   * @returns {string} nothing
+   */
+
+
+  CookieStorage.prototype.clear = function clear() {
+    var cookies = __WEBPACK_IMPORTED_MODULE_0_js_cookie__["get"]();
+    var index = void 0;
+    for (index = 0; index < cookies.length; ++index) {
+      __WEBPACK_IMPORTED_MODULE_0_js_cookie__["remove"](cookies[index]);
+    }
+    return {};
+  };
+
+  return CookieStorage;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (CookieStorage);
+
+/***/ }),
+/* 266 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * JavaScript Cookie v2.2.0
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+;(function (factory) {
+	var registeredInModuleLoader = false;
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		registeredInModuleLoader = true;
+	}
+	if (true) {
+		module.exports = factory();
+		registeredInModuleLoader = true;
+	}
+	if (!registeredInModuleLoader) {
+		var OldCookies = window.Cookies;
+		var api = window.Cookies = factory();
+		api.noConflict = function () {
+			window.Cookies = OldCookies;
+			return api;
+		};
+	}
+}(function () {
+	function extend () {
+		var i = 0;
+		var result = {};
+		for (; i < arguments.length; i++) {
+			var attributes = arguments[ i ];
+			for (var key in attributes) {
+				result[key] = attributes[key];
+			}
+		}
+		return result;
+	}
+
+	function init (converter) {
+		function api (key, value, attributes) {
+			var result;
+			if (typeof document === 'undefined') {
+				return;
+			}
+
+			// Write
+
+			if (arguments.length > 1) {
+				attributes = extend({
+					path: '/'
+				}, api.defaults, attributes);
+
+				if (typeof attributes.expires === 'number') {
+					var expires = new Date();
+					expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+					attributes.expires = expires;
+				}
+
+				// We're using "expires" because "max-age" is not supported by IE
+				attributes.expires = attributes.expires ? attributes.expires.toUTCString() : '';
+
+				try {
+					result = JSON.stringify(value);
+					if (/^[\{\[]/.test(result)) {
+						value = result;
+					}
+				} catch (e) {}
+
+				if (!converter.write) {
+					value = encodeURIComponent(String(value))
+						.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+				} else {
+					value = converter.write(value, key);
+				}
+
+				key = encodeURIComponent(String(key));
+				key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+				key = key.replace(/[\(\)]/g, escape);
+
+				var stringifiedAttributes = '';
+
+				for (var attributeName in attributes) {
+					if (!attributes[attributeName]) {
+						continue;
+					}
+					stringifiedAttributes += '; ' + attributeName;
+					if (attributes[attributeName] === true) {
+						continue;
+					}
+					stringifiedAttributes += '=' + attributes[attributeName];
+				}
+				return (document.cookie = key + '=' + value + stringifiedAttributes);
+			}
+
+			// Read
+
+			if (!key) {
+				result = {};
+			}
+
+			// To prevent the for loop in the first place assign an empty array
+			// in case there are no cookies at all. Also prevents odd result when
+			// calling "get()"
+			var cookies = document.cookie ? document.cookie.split('; ') : [];
+			var rdecode = /(%[0-9A-Z]{2})+/g;
+			var i = 0;
+
+			for (; i < cookies.length; i++) {
+				var parts = cookies[i].split('=');
+				var cookie = parts.slice(1).join('=');
+
+				if (!this.json && cookie.charAt(0) === '"') {
+					cookie = cookie.slice(1, -1);
+				}
+
+				try {
+					var name = parts[0].replace(rdecode, decodeURIComponent);
+					cookie = converter.read ?
+						converter.read(cookie, name) : converter(cookie, name) ||
+						cookie.replace(rdecode, decodeURIComponent);
+
+					if (this.json) {
+						try {
+							cookie = JSON.parse(cookie);
+						} catch (e) {}
+					}
+
+					if (key === name) {
+						result = cookie;
+						break;
+					}
+
+					if (!key) {
+						result[name] = cookie;
+					}
+				} catch (e) {}
+			}
+
+			return result;
+		}
+
+		api.set = api;
+		api.get = function (key) {
+			return api.call(api, key);
+		};
+		api.getJSON = function () {
+			return api.apply({
+				json: true
+			}, [].slice.call(arguments));
+		};
+		api.defaults = {};
+
+		api.remove = function (key, attributes) {
+			api(key, '', extend(attributes, {
+				expires: -1
+			}));
+		};
+
+		api.withConverter = init;
+
+		return api;
+	}
+
+	return init(function () {});
+}));
+
 
 /***/ })
 /******/ ]);
