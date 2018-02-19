@@ -4,6 +4,8 @@ declare var AWS: any;
 
 export class DigilentAuthJs {
 
+    public authenticated: boolean = false;
+
     private poolData: CognitoUserPool;
     private region: string;
     private identityPoolId: string;
@@ -12,7 +14,7 @@ export class DigilentAuthJs {
     /********************************************************************************
      * Construct a DigilentAuthJs Object
      ********************************************************************************/
-    constructor() {        
+    constructor() {
     }
 
     /********************************************************************************
@@ -52,12 +54,13 @@ export class DigilentAuthJs {
                 Pool: this.poolData
             });
 
-            let params =  {
+            let params = {
                 onSuccess: (result) => {
                     //console.log('access token + ' + result.getAccessToken().getJwtToken());
                     this.setCredentialsAndRefresh(result.getIdToken().getJwtToken())
                         .then((data) => {
                             //console.log(AWS.config.credentials);
+                            this.authenticated = true;
                             this.authenticatedUser = cognitoUser;
                             resolve(cognitoUser);
                         })
@@ -258,6 +261,7 @@ export class DigilentAuthJs {
             Pool: this.poolData
         });
         cognitoUser.signOut();
+        this.authenticated = false;
         this.authenticatedUser = undefined;
     }
 
@@ -269,6 +273,7 @@ export class DigilentAuthJs {
         return new Promise((resolve, reject) => {
             this.authenticatedUser.globalSignOut({
                 onSuccess: (data) => {
+                    this.authenticated = false;
                     this.authenticatedUser = undefined;
                     resolve(data);
                 },
@@ -289,7 +294,6 @@ export class DigilentAuthJs {
             if (cognitoUser != null) {
                 cognitoUser.getSession((err, session) => {
                     if (err) {
-                        //alert(err);
                         reject(err);
                         return;
                     }
@@ -304,6 +308,7 @@ export class DigilentAuthJs {
                             // Do something with attributes
                             this.setCredentialsAndRefresh(session.getIdToken().getJwtToken())
                                 .then(() => {
+                                    this.authenticated = true;
                                     this.authenticatedUser = cognitoUser;
                                     resolve(cognitoUser);
                                 })

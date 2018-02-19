@@ -86,7 +86,7 @@ AWS.util.update(AWS, {
   /**
    * @constant
    */
-  VERSION: '2.172.0',
+  VERSION: '2.177.0',
 
   /**
    * @api private
@@ -1241,29 +1241,6 @@ module.exports = root;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsNative = __webpack_require__(105),
-    getValue = __webpack_require__(110);
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = getValue(object, key);
-  return baseIsNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1287,6 +1264,29 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsNative = __webpack_require__(105),
+    getValue = __webpack_require__(110);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+module.exports = getNative;
 
 
 /***/ }),
@@ -2678,7 +2678,7 @@ module.exports = assocIndexOf;
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6);
+var getNative = __webpack_require__(7);
 
 /* Built-in method references that are verified to be native. */
 var nativeCreate = getNative(Object, 'create');
@@ -3065,10 +3065,13 @@ var reIsUint = /^(?:0|[1-9]\d*)$/;
  * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
  */
 function isIndex(value, length) {
+  var type = typeof value;
   length = length == null ? MAX_SAFE_INTEGER : length;
+
   return !!length &&
-    (typeof value == 'number' || reIsUint.test(value)) &&
-    (value > -1 && value % 1 == 0 && value < length);
+    (type == 'number' ||
+      (type != 'symbol' && reIsUint.test(value))) &&
+        (value > -1 && value % 1 == 0 && value < length);
 }
 
 module.exports = isIndex;
@@ -3250,7 +3253,7 @@ module.exports = isTypedArray;
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6),
+var getNative = __webpack_require__(7),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -6841,7 +6844,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 45 */
@@ -7633,7 +7636,7 @@ module.exports = baseAssignValue;
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6);
+var getNative = __webpack_require__(7);
 
 var defineProperty = (function() {
   try {
@@ -7655,7 +7658,7 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 55 */
@@ -9969,7 +9972,7 @@ if (!rng) {
 
 module.exports = rng;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 83 */
@@ -13224,6 +13227,7 @@ var DigilentAuthJs = (function () {
      * Construct a DigilentAuthJs Object
      ********************************************************************************/
     function DigilentAuthJs() {
+        this.authenticated = false;
     }
     /********************************************************************************
      * Initialize the AWS Cognito configuration parameters
@@ -13268,6 +13272,7 @@ var DigilentAuthJs = (function () {
                     _this.setCredentialsAndRefresh(result.getIdToken().getJwtToken())
                         .then(function (data) {
                         //console.log(AWS.config.credentials);
+                        _this.authenticated = true;
                         _this.authenticatedUser = cognitoUser;
                         resolve(cognitoUser);
                     })
@@ -13465,6 +13470,7 @@ var DigilentAuthJs = (function () {
             Pool: this.poolData
         });
         cognitoUser.signOut();
+        this.authenticated = false;
         this.authenticatedUser = undefined;
     };
     /********************************************************************************
@@ -13476,6 +13482,7 @@ var DigilentAuthJs = (function () {
         return new Promise(function (resolve, reject) {
             _this.authenticatedUser.globalSignOut({
                 onSuccess: function (data) {
+                    _this.authenticated = false;
                     _this.authenticatedUser = undefined;
                     resolve(data);
                 },
@@ -13496,7 +13503,6 @@ var DigilentAuthJs = (function () {
             if (cognitoUser != null) {
                 cognitoUser.getSession(function (err, session) {
                     if (err) {
-                        //alert(err);
                         reject(err);
                         return;
                     }
@@ -13512,6 +13518,7 @@ var DigilentAuthJs = (function () {
                             // Do something with attributes
                             _this.setCredentialsAndRefresh(session.getIdToken().getJwtToken())
                                 .then(function () {
+                                _this.authenticated = true;
                                 _this.authenticatedUser = cognitoUser;
                                 resolve(cognitoUser);
                             })
@@ -13732,7 +13739,7 @@ var AuthenticationDetails = function () {
 /* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var apply = Function.prototype.apply;
+/* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
 
 // DOM APIs, for completeness
 
@@ -13783,9 +13790,17 @@ exports._unrefActive = exports.active = function(item) {
 
 // setimmediate attaches itself to the global object
 __webpack_require__(100);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
+// On some exotic environments, it's not clear which object `setimmeidate` was
+// able to install onto.  Search each possibility in the same order as the
+// `setimmediate` library.
+exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
+                       (typeof global !== "undefined" && global.setImmediate) ||
+                       (this && this.setImmediate);
+exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
+                         (typeof global !== "undefined" && global.clearImmediate) ||
+                         (this && this.clearImmediate);
 
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 100 */
@@ -13978,7 +13993,7 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(9)))
 
 /***/ }),
 /* 101 */
@@ -15365,7 +15380,7 @@ module.exports = isEmpty;
 /* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6),
+var getNative = __webpack_require__(7),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15378,7 +15393,7 @@ module.exports = DataView;
 /* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6),
+var getNative = __webpack_require__(7),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15391,7 +15406,7 @@ module.exports = Promise;
 /* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6),
+var getNative = __webpack_require__(7),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15404,7 +15419,7 @@ module.exports = Set;
 /* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(6),
+var getNative = __webpack_require__(7),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -17154,8 +17169,7 @@ module.exports = get;
 var memoizeCapped = __webpack_require__(191);
 
 /** Used to match property names within property paths. */
-var reLeadingDot = /^\./,
-    rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 
 /** Used to match backslashes in property paths. */
 var reEscapeChar = /\\(\\)?/g;
@@ -17169,11 +17183,11 @@ var reEscapeChar = /\\(\\)?/g;
  */
 var stringToPath = memoizeCapped(function(string) {
   var result = [];
-  if (reLeadingDot.test(string)) {
+  if (string.charCodeAt(0) === 46 /* . */) {
     result.push('');
   }
-  string.replace(rePropName, function(match, number, quote, string) {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+  string.replace(rePropName, function(match, number, quote, subString) {
+    result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
   });
   return result;
 });
@@ -20440,7 +20454,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(9)))
 
 /***/ }),
 /* 216 */
@@ -23051,6 +23065,8 @@ for (var i = 0, len = code.length; i < len; ++i) {
   revLookup[code.charCodeAt(i)] = i
 }
 
+// Support decoding URL-safe base64 strings, as Node.js does.
+// See: https://en.wikipedia.org/wiki/Base64#URL_applications
 revLookup['-'.charCodeAt(0)] = 62
 revLookup['_'.charCodeAt(0)] = 63
 
@@ -23112,7 +23128,7 @@ function encodeChunk (uint8, start, end) {
   var tmp
   var output = []
   for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    tmp = ((uint8[i] << 16) & 0xFF0000) + ((uint8[i + 1] << 8) & 0xFF00) + (uint8[i + 2] & 0xFF)
     output.push(tripletToBase64(tmp))
   }
   return output.join('')
@@ -24923,7 +24939,7 @@ Url.prototype.parseHost = function() {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module), __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module), __webpack_require__(6)))
 
 /***/ }),
 /* 244 */
