@@ -288,7 +288,7 @@ export class DigilentAuthJs {
     * Check for user details in local storage.  If a user exists authenticate that user.
     * @return This function returns a Promise that resolves if a user was successfully authenticated or rejects otherwise.
     ********************************************************************************/
-    getUserFromLocalStorage(): Promise<any> {
+    public getUserFromLocalStorage(): Promise<any> {
         return new Promise((resolve, reject) => {
             var cognitoUser = this.poolData.getCurrentUser();
             if (cognitoUser != null) {
@@ -325,6 +325,23 @@ export class DigilentAuthJs {
         });
     }
 
+    /********************************************************************************
+    * Get the user name of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    public getUsername(): string {
+        if (this.authenticated) {
+            return this.authenticatedUser.getUsername();
+        }
+        else {
+            return undefined;
+        }
+    }
+
+
+
+
+    
 
     //---------------------------------------- Private ----------------------------------------
 

@@ -13534,6 +13534,18 @@ var DigilentAuthJs = (function () {
             }
         });
     };
+    /********************************************************************************
+    * Get the user name of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    DigilentAuthJs.prototype.getUsername = function () {
+        if (this.authenticated) {
+            return this.authenticatedUser.getUsername();
+        }
+        else {
+            return undefined;
+        }
+    };
     //---------------------------------------- Private ----------------------------------------
     /********************************************************************************
     * This function clears any cached credentials and retrieves new credentials for the authenticated user.
