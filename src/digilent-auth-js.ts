@@ -242,7 +242,7 @@ export class DigilentAuthJs {
                 },
                 //Optional automatic callback
                 inputVerificationCode: function (data) {
-                    //console.log('Code sent to: ' + data);
+                    console.log('Code sent to: ', data);
                     var verificationCode = prompt('Please input verification code ', '');
                     var newPassword = prompt('Enter new password ', '');
                     cognitoUser.confirmPassword(verificationCode, newPassword, this);
@@ -341,7 +341,7 @@ export class DigilentAuthJs {
 
 
 
-    
+
 
     //---------------------------------------- Private ----------------------------------------
 
