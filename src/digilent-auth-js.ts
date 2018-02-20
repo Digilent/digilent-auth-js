@@ -10,6 +10,7 @@ export class DigilentAuthJs {
     private region: string;
     private identityPoolId: string;
     private authenticatedUser: CognitoUser;
+    private unauthenticatedUser: CognitoUser;
 
     /********************************************************************************
      * Construct a DigilentAuthJs Object
@@ -227,29 +228,40 @@ export class DigilentAuthJs {
     ********************************************************************************/
     public forgotPassword(username: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            let cognitoUser = new CognitoUser({
+            this.unauthenticatedUser = new CognitoUser({
                 Username: username,
                 Pool: this.poolData
             });
-            cognitoUser.forgotPassword({
+            this.unauthenticatedUser.forgotPassword({
                 onSuccess: function () {
                     // successfully initiated reset password request                    
                     resolve();
                 },
-                onFailure: function (err) {
-                    alert(err);
+                onFailure: function (err) {                    
                     reject(err);
+                }                
+            });            
+        });
+    }
+
+    /********************************************************************************
+    * Reset the user's password.  Call forgot password before calling this function to generate the password reset verification code.
+    * @param verificationCode The password reset verification code.
+    * @param newPassowrd The desired new password.
+    ********************************************************************************/
+    public resetPassword(verificationCode: string, newPassword: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.unauthenticatedUser.confirmPassword(verificationCode, newPassword, {
+                onSuccess: () => {
+                    resolve();
                 },
-                //Optional automatic callback
-                inputVerificationCode: function (data) {
-                    console.log('Code sent to: ', data);
-                    var verificationCode = prompt('Please input verification code ', '');
-                    var newPassword = prompt('Enter new password ', '');
-                    cognitoUser.confirmPassword(verificationCode, newPassword, this);
+                onFailure: () => {
+                    reject('Failed to reset password');
                 }
             });
         });
     }
+
 
     /********************************************************************************
     * Sign out an unauthenticated user.
