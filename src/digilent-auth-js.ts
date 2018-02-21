@@ -8,7 +8,7 @@ export class DigilentAuthJs {
 
     private poolData: CognitoUserPool;
     private region: string;
-    private identityPoolId: string;
+    private identityPoolId: string = undefined;
     private authenticatedUser: CognitoUser;
     private unauthenticatedUser: CognitoUser;
 
@@ -233,14 +233,14 @@ export class DigilentAuthJs {
                 Pool: this.poolData
             });
             this.unauthenticatedUser.forgotPassword({
-                onSuccess: function () {
-                    // successfully initiated reset password request                    
-                    resolve();
+                onSuccess: function (resp) {
+                    // successfully initiated reset password request                           
+                    resolve(resp.CodeDeliveryDetails);
                 },
-                onFailure: function (err) {                    
+                onFailure: function (err) {
                     reject(err);
-                }                
-            });            
+                }
+            });
         });
     }
 
@@ -338,7 +338,7 @@ export class DigilentAuthJs {
     }
 
     /********************************************************************************
-    * Get the user name of an authenticated user.
+    * Get the username of an authenticated user.
     * @return The username of the authenticated user, or undefined if the user is not authenticated.
     ********************************************************************************/
     public getUsername(): string {
@@ -350,9 +350,26 @@ export class DigilentAuthJs {
         }
     }
 
+    /********************************************************************************
+    * Get the identityId of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    public getIdentityId(): string {
+        if (this.authenticated) {
+            return AWS.config.credentials.identityId;
+        }
+        else {
+            return undefined;
+        }
+    }
 
-
-
+    /********************************************************************************
+    * Get the identityPoolId of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    public getIdentityPoolId(): string {
+        return this.identityPoolId;
+    }
 
 
     //---------------------------------------- Private ----------------------------------------
