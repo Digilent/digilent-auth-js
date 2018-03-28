@@ -45,6 +45,52 @@ Install dependencies
 npm install
 ```
 
+#### Use with Ionic
+Install AWS SDK 
+```
+npm install --save aws-sdk
+````
+
+Import AWS SDK into app.component.ts 
+```
+import 'aws-sdk';
+```
+
+Install DigilentAuthJs: 
+```
+npm install --save @digilent/digilent-auth-js
+```
+
+Add DigilentAuthJs as a provide in app.module.ts
+```
+import { DigilentAuthJs } from '@digilent/digilent-auth-js';
+
+...
+
+providers: [    
+    DigilentAuthJs,
+    ...
+]
+```
+
+Import DigilentAuthJs where needed and use dependency injection
+```
+import {DigilentLambdaJs} from '@digilent/digilent-lambda-js';
+
+...
+
+constructor(
+){
+  public digilentAuth: DigilentAuthJs,
+  ...
+}
+```
+
+Initialize with AWS credentials (it's recommended to do this early in app.component.ts)
+```
+this.digilentAuth.initialize(USER_POOL_ID, CLIENT_ID, REGION, IDENTITY_POOL_ID);
+```
+
 **Note**: If node-gyp rebuild fails, try the following command:
 
 ```
