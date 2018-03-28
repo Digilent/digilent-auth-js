@@ -1,2 +1,7 @@
 import { DigilentAuthJs } from './dist/digilent-auth-js';
-window.DigilentAuthJs = DigilentAuthJs;
+if (typeof window !== 'undefined') {
+    window.DigilentAuthJs = DigilentAuthJs;
+}
+else {
+    exports.DigilentAuthJs = DigilentAuthJs;
+}

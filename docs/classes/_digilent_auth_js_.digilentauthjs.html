@@ -95,6 +95,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#identitypoolid" class="tsd-kind-icon">identity<wbr>Pool<wbr>Id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#pooldata" class="tsd-kind-icon">pool<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#region" class="tsd-kind-icon">region</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#unauthenticateduser" class="tsd-kind-icon">unauthenticated<wbr>User</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -107,10 +108,13 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#forgotpassword" class="tsd-kind-icon">forgot<wbr>Password</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#generateloginobject" class="tsd-kind-icon">generate<wbr>Login<wbr>Object</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#getauthenticateduserdetails" class="tsd-kind-icon">get<wbr>Authenticated<wbr>User<wbr>Details</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#getidentityid" class="tsd-kind-icon">get<wbr>Identity<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#getidentitypoolid" class="tsd-kind-icon">get<wbr>Identity<wbr>Pool<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#getuserfromlocalstorage" class="tsd-kind-icon">get<wbr>User<wbr>From<wbr>Local<wbr>Storage</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#getusername" class="tsd-kind-icon">get<wbr>Username</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#initialize" class="tsd-kind-icon">initialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#resendconfirmationcode" class="tsd-kind-icon">resend<wbr>Confirmation<wbr>Code</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#resetpassword" class="tsd-kind-icon">reset<wbr>Password</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_digilent_auth_js_.digilentauthjs.html#setcredentialsandrefresh" class="tsd-kind-icon">set<wbr>Credentials<wbr>And<wbr>Refresh</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#signoutauthenticateduser" class="tsd-kind-icon">sign<wbr>Out<wbr>Authenticated<wbr>User</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_digilent_auth_js_.digilentauthjs.html#signoutunauthenticateduser" class="tsd-kind-icon">sign<wbr>Out<wbr>Unauthenticated<wbr>User</a></li>
@@ -132,7 +136,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:12</li>
+									<li>Defined in digilent-auth-js.ts:13</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -170,7 +174,7 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="identitypoolid" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> identity<wbr>Pool<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">identity<wbr>Pool<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<div class="tsd-signature tsd-kind-icon">identity<wbr>Pool<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in digilent-auth-js.ts:11</li>
@@ -197,6 +201,16 @@
 						</ul>
 					</aside>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="unauthenticateduser" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> unauthenticated<wbr>User</h3>
+					<div class="tsd-signature tsd-kind-icon">unauthenticated<wbr>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CognitoUser</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in digilent-auth-js.ts:13</li>
+						</ul>
+					</aside>
+				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
@@ -210,7 +224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:46</li>
+									<li>Defined in digilent-auth-js.ts:47</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -266,7 +280,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:209</li>
+									<li>Defined in digilent-auth-js.ts:210</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -304,7 +318,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:147</li>
+									<li>Defined in digilent-auth-js.ts:148</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -342,7 +356,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:190</li>
+									<li>Defined in digilent-auth-js.ts:191</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -365,7 +379,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:228</li>
+									<li>Defined in digilent-auth-js.ts:229</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -398,7 +412,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:384</li>
+									<li>Defined in digilent-auth-js.ts:413</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -432,7 +446,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:94</li>
+									<li>Defined in digilent-auth-js.ts:95</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -446,6 +460,52 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getidentityid" class="tsd-anchor"></a>
+					<h3>get<wbr>Identity<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Identity<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in digilent-auth-js.ts:357</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the identityId of an authenticated user.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The username of the authenticated user, or undefined if the user is not authenticated.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getidentitypoolid" class="tsd-anchor"></a>
+					<h3>get<wbr>Identity<wbr>Pool<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Identity<wbr>Pool<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in digilent-auth-js.ts:370</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the identityPoolId of an authenticated user.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>The username of the authenticated user, or undefined if the user is not authenticated.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="getuserfromlocalstorage" class="tsd-anchor"></a>
 					<h3>get<wbr>User<wbr>From<wbr>Local<wbr>Storage</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -455,7 +515,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:291</li>
+									<li>Defined in digilent-auth-js.ts:303</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -478,12 +538,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:332</li>
+									<li>Defined in digilent-auth-js.ts:344</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Get the user name of an authenticated user.</p>
+									<p>Get the username of an authenticated user.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -501,7 +561,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:27</li>
+									<li>Defined in digilent-auth-js.ts:28</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -550,7 +610,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:169</li>
+									<li>Defined in digilent-auth-js.ts:170</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -572,6 +632,40 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="resetpassword" class="tsd-anchor"></a>
+					<h3>reset<wbr>Password</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reset<wbr>Password<span class="tsd-signature-symbol">(</span>verificationCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, newPassword<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in digilent-auth-js.ts:252</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reset the user&#39;s password.  Call forgot password before calling this function to generate the password reset verification code.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>verificationCode: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The password reset verification code.</p>
+									</div>
+								</li>
+								<li>
+									<h5>newPassword: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="setcredentialsandrefresh" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Credentials<wbr>And<wbr>Refresh</h3>
@@ -582,7 +676,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:354</li>
+									<li>Defined in digilent-auth-js.ts:383</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -614,7 +708,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:272</li>
+									<li>Defined in digilent-auth-js.ts:284</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -637,7 +731,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:258</li>
+									<li>Defined in digilent-auth-js.ts:270</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -668,7 +762,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in digilent-auth-js.ts:115</li>
+									<li>Defined in digilent-auth-js.ts:116</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -746,6 +840,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="_digilent_auth_js_.digilentauthjs.html#region" class="tsd-kind-icon">region</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_digilent_auth_js_.digilentauthjs.html#unauthenticateduser" class="tsd-kind-icon">unauthenticated<wbr>User</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_digilent_auth_js_.digilentauthjs.html#authenticateuser" class="tsd-kind-icon">authenticate<wbr>User</a>
 							</li>
@@ -768,6 +865,12 @@
 								<a href="_digilent_auth_js_.digilentauthjs.html#getauthenticateduserdetails" class="tsd-kind-icon">get<wbr>Authenticated<wbr>User<wbr>Details</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_digilent_auth_js_.digilentauthjs.html#getidentityid" class="tsd-kind-icon">get<wbr>Identity<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_digilent_auth_js_.digilentauthjs.html#getidentitypoolid" class="tsd-kind-icon">get<wbr>Identity<wbr>Pool<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_digilent_auth_js_.digilentauthjs.html#getuserfromlocalstorage" class="tsd-kind-icon">get<wbr>User<wbr>From<wbr>Local<wbr>Storage</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -778,6 +881,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_digilent_auth_js_.digilentauthjs.html#resendconfirmationcode" class="tsd-kind-icon">resend<wbr>Confirmation<wbr>Code</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_digilent_auth_js_.digilentauthjs.html#resetpassword" class="tsd-kind-icon">reset<wbr>Password</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="_digilent_auth_js_.digilentauthjs.html#setcredentialsandrefresh" class="tsd-kind-icon">set<wbr>Credentials<wbr>And<wbr>Refresh</a>

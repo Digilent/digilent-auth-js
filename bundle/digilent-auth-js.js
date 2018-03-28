@@ -86,7 +86,7 @@ AWS.util.update(AWS, {
   /**
    * @constant
    */
-  VERSION: '2.177.0',
+  VERSION: '2.215.1',
 
   /**
    * @api private
@@ -97,9 +97,9 @@ AWS.util.update(AWS, {
    * @api private
    */
   Protocol: {
-    Json: __webpack_require__(27),
+    Json: __webpack_require__(29),
     Query: __webpack_require__(47),
-    Rest: __webpack_require__(16),
+    Rest: __webpack_require__(17),
     RestJson: __webpack_require__(49),
     RestXml: __webpack_require__(50)
   },
@@ -116,8 +116,8 @@ AWS.util.update(AWS, {
    * @api private
    */
   JSON: {
-    Builder: __webpack_require__(28),
-    Parser: __webpack_require__(29)
+    Builder: __webpack_require__(30),
+    Parser: __webpack_require__(31)
   },
 
   /**
@@ -267,7 +267,7 @@ var util = {
 
   readFileSync: function readFileSync(path) {
     if (util.isBrowser()) return null;
-    return __webpack_require__(43).readFileSync(path, 'utf-8');
+    return __webpack_require__(45).readFileSync(path, 'utf-8');
   },
 
   base64: {
@@ -347,7 +347,7 @@ var util = {
       } else if (typeof string.size === 'number') {
         return string.size;
       } else if (typeof string.path === 'string') {
-        return __webpack_require__(43).lstatSync(string.path).size;
+        return __webpack_require__(45).lstatSync(string.path).size;
       } else {
         throw util.error(new Error('Cannot determine length of ' + string),
           { object: string });
@@ -875,7 +875,7 @@ var util = {
   computeSha256: function computeSha256(body, done) {
     if (util.isNode()) {
       var Stream = util.stream.Stream;
-      var fs = __webpack_require__(43);
+      var fs = __webpack_require__(45);
       if (body instanceof Stream) {
         if (typeof body.path === 'string') { // assume file object
           var settings = {};
@@ -1099,7 +1099,12 @@ var util = {
   /**
    * @api private
    */
-  sharedConfigFileEnv: 'AWS_CONFIG_FILE'
+  sharedConfigFileEnv: 'AWS_CONFIG_FILE',
+
+  /**
+   * @api private
+   */
+  imdsDisabledEnv: 'AWS_EC2_METADATA_DISABLED'
 };
 
 module.exports = util;
@@ -1241,6 +1246,29 @@ module.exports = root;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsNative = __webpack_require__(105),
+    getValue = __webpack_require__(110);
+
+/**
+ * Gets the native function at `key` of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {string} key The key of the method to get.
+ * @returns {*} Returns the function if it's native, else `undefined`.
+ */
+function getNative(object, key) {
+  var value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+module.exports = getNative;
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1267,29 +1295,6 @@ module.exports = g;
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsNative = __webpack_require__(105),
-    getValue = __webpack_require__(110);
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = getValue(object, key);
-  return baseIsNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-
-/***/ }),
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1300,7 +1305,7 @@ module.exports = getNative;
 
   isObject = __webpack_require__(3);
 
-  isFunction = __webpack_require__(17);
+  isFunction = __webpack_require__(18);
 
   isEmpty = __webpack_require__(132);
 
@@ -2179,7 +2184,7 @@ module.exports = Shape;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(18),
+var Symbol = __webpack_require__(19),
     getRawTag = __webpack_require__(106),
     objectToString = __webpack_require__(107);
 
@@ -2213,8 +2218,8 @@ module.exports = baseGetTag;
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(17),
-    isLength = __webpack_require__(31);
+var isFunction = __webpack_require__(18),
+    isLength = __webpack_require__(33);
 
 /**
  * Checks if `value` is array-like. A value is considered array-like if it's
@@ -2330,2729 +2335,6 @@ module.exports = isObjectLike;
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(process) {var util = __webpack_require__(1);
-
-// browser specific modules
-util.crypto.lib = __webpack_require__(234);
-util.Buffer = __webpack_require__(44).Buffer;
-util.url = __webpack_require__(242);
-util.querystring = __webpack_require__(84);
-util.environment = 'js';
-
-var AWS = __webpack_require__(0);
-module.exports = AWS;
-
-__webpack_require__(77);
-__webpack_require__(78);
-__webpack_require__(247);
-__webpack_require__(251);
-__webpack_require__(252);
-__webpack_require__(257);
-
-// Load the DOMParser XML parser
-AWS.XML.Parser = __webpack_require__(258);
-
-// Load the XHR HttpClient
-__webpack_require__(259);
-
-if (typeof process === 'undefined') {
-  process = {
-    browser: true
-  };
-}
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var util = __webpack_require__(1);
-
-function populateMethod(req) {
-  req.httpRequest.method = req.service.api.operations[req.operation].httpMethod;
-}
-
-function generateURI(endpointPath, operationPath, input, params) {
-  var uri = [endpointPath, operationPath].join('/');
-  uri = uri.replace(/\/+/g, '/');
-
-  var queryString = {}, queryStringSet = false;
-  util.each(input.members, function (name, member) {
-    var paramValue = params[name];
-    if (paramValue === null || paramValue === undefined) return;
-    if (member.location === 'uri') {
-      var regex = new RegExp('\\{' + member.name + '(\\+)?\\}');
-      uri = uri.replace(regex, function(_, plus) {
-        var fn = plus ? util.uriEscapePath : util.uriEscape;
-        return fn(String(paramValue));
-      });
-    } else if (member.location === 'querystring') {
-      queryStringSet = true;
-
-      if (member.type === 'list') {
-        queryString[member.name] = paramValue.map(function(val) {
-          return util.uriEscape(String(val));
-        });
-      } else if (member.type === 'map') {
-        util.each(paramValue, function(key, value) {
-          if (Array.isArray(value)) {
-            queryString[key] = value.map(function(val) {
-              return util.uriEscape(String(val));
-            });
-          } else {
-            queryString[key] = util.uriEscape(String(value));
-          }
-        });
-      } else {
-        queryString[member.name] = util.uriEscape(String(paramValue));
-      }
-    }
-  });
-
-  if (queryStringSet) {
-    uri += (uri.indexOf('?') >= 0 ? '&' : '?');
-    var parts = [];
-    util.arrayEach(Object.keys(queryString).sort(), function(key) {
-      if (!Array.isArray(queryString[key])) {
-        queryString[key] = [queryString[key]];
-      }
-      for (var i = 0; i < queryString[key].length; i++) {
-        parts.push(util.uriEscape(String(key)) + '=' + queryString[key][i]);
-      }
-    });
-    uri += parts.join('&');
-  }
-
-  return uri;
-}
-
-function populateURI(req) {
-  var operation = req.service.api.operations[req.operation];
-  var input = operation.input;
-
-  var uri = generateURI(req.httpRequest.endpoint.path, operation.httpPath, input, req.params);
-  req.httpRequest.path = uri;
-}
-
-function populateHeaders(req) {
-  var operation = req.service.api.operations[req.operation];
-  util.each(operation.input.members, function (name, member) {
-    var value = req.params[name];
-    if (value === null || value === undefined) return;
-
-    if (member.location === 'headers' && member.type === 'map') {
-      util.each(value, function(key, memberValue) {
-        req.httpRequest.headers[member.name + key] = memberValue;
-      });
-    } else if (member.location === 'header') {
-      value = member.toWireFormat(value).toString();
-      if (member.isJsonValue) {
-        value = util.base64.encode(value);
-      }
-      req.httpRequest.headers[member.name] = value;
-    }
-  });
-}
-
-function buildRequest(req) {
-  populateMethod(req);
-  populateURI(req);
-  populateHeaders(req);
-}
-
-function extractError() {
-}
-
-function extractData(resp) {
-  var req = resp.request;
-  var data = {};
-  var r = resp.httpResponse;
-  var operation = req.service.api.operations[req.operation];
-  var output = operation.output;
-
-  // normalize headers names to lower-cased keys for matching
-  var headers = {};
-  util.each(r.headers, function (k, v) {
-    headers[k.toLowerCase()] = v;
-  });
-
-  util.each(output.members, function(name, member) {
-    var header = (member.name || name).toLowerCase();
-    if (member.location === 'headers' && member.type === 'map') {
-      data[name] = {};
-      var location = member.isLocationName ? member.name : '';
-      var pattern = new RegExp('^' + location + '(.+)', 'i');
-      util.each(r.headers, function (k, v) {
-        var result = k.match(pattern);
-        if (result !== null) {
-          data[name][result[1]] = v;
-        }
-      });
-    } else if (member.location === 'header') {
-      if (headers[header] !== undefined) {
-        var value = member.isJsonValue ?
-          util.base64.decode(headers[header]) :
-          headers[header];
-        data[name] = member.toType(value);
-      }
-    } else if (member.location === 'statusCode') {
-      data[name] = parseInt(r.statusCode, 10);
-    }
-  });
-
-  resp.data = data;
-}
-
-module.exports = {
-  buildRequest: buildRequest,
-  extractError: extractError,
-  extractData: extractData,
-  generateURI: generateURI
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(11),
-    isObject = __webpack_require__(3);
-
-/** `Object#toString` result references. */
-var asyncTag = '[object AsyncFunction]',
-    funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]',
-    proxyTag = '[object Proxy]';
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a function, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  if (!isObject(value)) {
-    return false;
-  }
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 9 which returns 'object' for typed arrays and other constructors.
-  var tag = baseGetTag(value);
-  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-}
-
-module.exports = isFunction;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var root = __webpack_require__(5);
-
-/** Built-in value references. */
-var Symbol = root.Symbol;
-
-module.exports = Symbol;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-/**
- * Performs a
- * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
- * comparison between two values to determine if they are equivalent.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- * @example
- *
- * var object = { 'a': 1 };
- * var other = { 'a': 1 };
- *
- * _.eq(object, object);
- * // => true
- *
- * _.eq(object, other);
- * // => false
- *
- * _.eq('a', 'a');
- * // => true
- *
- * _.eq('a', Object('a'));
- * // => false
- *
- * _.eq(NaN, NaN);
- * // => true
- */
-function eq(value, other) {
-  return value === other || (value !== value && other !== other);
-}
-
-module.exports = eq;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var listCacheClear = __webpack_require__(148),
-    listCacheDelete = __webpack_require__(149),
-    listCacheGet = __webpack_require__(150),
-    listCacheHas = __webpack_require__(151),
-    listCacheSet = __webpack_require__(152);
-
-/**
- * Creates an list cache object.
- *
- * @private
- * @constructor
- * @param {Array} [entries] The key-value pairs to cache.
- */
-function ListCache(entries) {
-  var index = -1,
-      length = entries == null ? 0 : entries.length;
-
-  this.clear();
-  while (++index < length) {
-    var entry = entries[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-
-// Add methods to `ListCache`.
-ListCache.prototype.clear = listCacheClear;
-ListCache.prototype['delete'] = listCacheDelete;
-ListCache.prototype.get = listCacheGet;
-ListCache.prototype.has = listCacheHas;
-ListCache.prototype.set = listCacheSet;
-
-module.exports = ListCache;
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var eq = __webpack_require__(19);
-
-/**
- * Gets the index at which the `key` is found in `array` of key-value pairs.
- *
- * @private
- * @param {Array} array The array to inspect.
- * @param {*} key The key to search for.
- * @returns {number} Returns the index of the matched value, else `-1`.
- */
-function assocIndexOf(array, key) {
-  var length = array.length;
-  while (length--) {
-    if (eq(array[length][0], key)) {
-      return length;
-    }
-  }
-  return -1;
-}
-
-module.exports = assocIndexOf;
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var getNative = __webpack_require__(7);
-
-/* Built-in method references that are verified to be native. */
-var nativeCreate = getNative(Object, 'create');
-
-module.exports = nativeCreate;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isKeyable = __webpack_require__(166);
-
-/**
- * Gets the data for `map`.
- *
- * @private
- * @param {Object} map The map to query.
- * @param {string} key The reference key.
- * @returns {*} Returns the map data.
- */
-function getMapData(map, key) {
-  var data = map.__data__;
-  return isKeyable(key)
-    ? data[typeof key == 'string' ? 'string' : 'hash']
-    : data.map;
-}
-
-module.exports = getMapData;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isSymbol = __webpack_require__(41);
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0;
-
-/**
- * Converts `value` to a string key if it's not a string or symbol.
- *
- * @private
- * @param {*} value The value to inspect.
- * @returns {string|symbol} Returns the key.
- */
-function toKey(value) {
-  if (typeof value == 'string' || isSymbol(value)) {
-    return value;
-  }
-  var result = (value + '');
-  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-}
-
-module.exports = toKey;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(15);
-var AWS = __webpack_require__(0);
-var Service = AWS.Service;
-var apiLoader = AWS.apiLoader;
-
-apiLoader.services['sts'] = {};
-AWS.STS = Service.defineService('sts', ['2011-06-15']);
-__webpack_require__(248);
-Object.defineProperty(apiLoader.services['sts'], '2011-06-15', {
-  get: function get() {
-    var model = __webpack_require__(249);
-    model.paginators = __webpack_require__(250).pagination;
-    return model;
-  },
-  enumerable: true,
-  configurable: true
-});
-
-module.exports = AWS.STS;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(15);
-
-var AWS = __webpack_require__(0);
-if (typeof window !== 'undefined') window.AWS = AWS;
-if (true) module.exports = AWS;
-if (typeof self !== 'undefined') self.AWS = AWS;
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var util = __webpack_require__(1);
-var JsonBuilder = __webpack_require__(28);
-var JsonParser = __webpack_require__(29);
-
-function buildRequest(req) {
-  var httpRequest = req.httpRequest;
-  var api = req.service.api;
-  var target = api.targetPrefix + '.' + api.operations[req.operation].name;
-  var version = api.jsonVersion || '1.0';
-  var input = api.operations[req.operation].input;
-  var builder = new JsonBuilder();
-
-  if (version === 1) version = '1.0';
-  httpRequest.body = builder.build(req.params || {}, input);
-  httpRequest.headers['Content-Type'] = 'application/x-amz-json-' + version;
-  httpRequest.headers['X-Amz-Target'] = target;
-}
-
-function extractError(resp) {
-  var error = {};
-  var httpResponse = resp.httpResponse;
-
-  error.code = httpResponse.headers['x-amzn-errortype'] || 'UnknownError';
-  if (typeof error.code === 'string') {
-    error.code = error.code.split(':')[0];
-  }
-
-  if (httpResponse.body.length > 0) {
-    try {
-      var e = JSON.parse(httpResponse.body.toString());
-      if (e.__type || e.code) {
-        error.code = (e.__type || e.code).split('#').pop();
-      }
-      if (error.code === 'RequestEntityTooLarge') {
-        error.message = 'Request body must be less than 1 MB';
-      } else {
-        error.message = (e.message || e.Message || null);
-      }
-    } catch (e) {
-      error.statusCode = httpResponse.statusCode;
-      error.message = httpResponse.statusMessage;
-    }
-  } else {
-    error.statusCode = httpResponse.statusCode;
-    error.message = httpResponse.statusCode.toString();
-  }
-
-  resp.error = util.error(new Error(), error);
-}
-
-function extractData(resp) {
-  var body = resp.httpResponse.body.toString() || '{}';
-  if (resp.request.service.config.convertResponseTypes === false) {
-    resp.data = JSON.parse(body);
-  } else {
-    var operation = resp.request.service.api.operations[resp.request.operation];
-    var shape = operation.output || {};
-    var parser = new JsonParser();
-    resp.data = parser.parse(body, shape);
-  }
-}
-
-module.exports = {
-  buildRequest: buildRequest,
-  extractError: extractError,
-  extractData: extractData
-};
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var util = __webpack_require__(1);
-
-function JsonBuilder() { }
-
-JsonBuilder.prototype.build = function(value, shape) {
-  return JSON.stringify(translate(value, shape));
-};
-
-function translate(value, shape) {
-  if (!shape || value === undefined || value === null) return undefined;
-
-  switch (shape.type) {
-    case 'structure': return translateStructure(value, shape);
-    case 'map': return translateMap(value, shape);
-    case 'list': return translateList(value, shape);
-    default: return translateScalar(value, shape);
-  }
-}
-
-function translateStructure(structure, shape) {
-  var struct = {};
-  util.each(structure, function(name, value) {
-    var memberShape = shape.members[name];
-    if (memberShape) {
-      if (memberShape.location !== 'body') return;
-      var locationName = memberShape.isLocationName ? memberShape.name : name;
-      var result = translate(value, memberShape);
-      if (result !== undefined) struct[locationName] = result;
-    }
-  });
-  return struct;
-}
-
-function translateList(list, shape) {
-  var out = [];
-  util.arrayEach(list, function(value) {
-    var result = translate(value, shape.member);
-    if (result !== undefined) out.push(result);
-  });
-  return out;
-}
-
-function translateMap(map, shape) {
-  var out = {};
-  util.each(map, function(key, value) {
-    var result = translate(value, shape.value);
-    if (result !== undefined) out[key] = result;
-  });
-  return out;
-}
-
-function translateScalar(value, shape) {
-  return shape.toWireFormat(value);
-}
-
-module.exports = JsonBuilder;
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var util = __webpack_require__(1);
-
-function JsonParser() { }
-
-JsonParser.prototype.parse = function(value, shape) {
-  return translate(JSON.parse(value), shape);
-};
-
-function translate(value, shape) {
-  if (!shape || value === undefined) return undefined;
-
-  switch (shape.type) {
-    case 'structure': return translateStructure(value, shape);
-    case 'map': return translateMap(value, shape);
-    case 'list': return translateList(value, shape);
-    default: return translateScalar(value, shape);
-  }
-}
-
-function translateStructure(structure, shape) {
-  if (structure == null) return undefined;
-
-  var struct = {};
-  var shapeMembers = shape.members;
-  util.each(shapeMembers, function(name, memberShape) {
-    var locationName = memberShape.isLocationName ? memberShape.name : name;
-    if (Object.prototype.hasOwnProperty.call(structure, locationName)) {
-      var value = structure[locationName];
-      var result = translate(value, memberShape);
-      if (result !== undefined) struct[name] = result;
-    }
-  });
-  return struct;
-}
-
-function translateList(list, shape) {
-  if (list == null) return undefined;
-
-  var out = [];
-  util.arrayEach(list, function(value) {
-    var result = translate(value, shape.member);
-    if (result === undefined) out.push(null);
-    else out.push(result);
-  });
-  return out;
-}
-
-function translateMap(map, shape) {
-  if (map == null) return undefined;
-
-  var out = {};
-  util.each(map, function(key, value) {
-    var result = translate(value, shape.value);
-    if (result === undefined) out[key] = null;
-    else out[key] = result;
-  });
-  return out;
-}
-
-function translateScalar(value, shape) {
-  return shape.toType(value);
-}
-
-module.exports = JsonParser;
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-/**
- * This method returns the first argument it receives.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Util
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'a': 1 };
- *
- * console.log(_.identity(object) === object);
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This method is loosely based on
- * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- * @example
- *
- * _.isLength(3);
- * // => true
- *
- * _.isLength(Number.MIN_VALUE);
- * // => false
- *
- * _.isLength(Infinity);
- * // => false
- *
- * _.isLength('3');
- * // => false
- */
-function isLength(value) {
-  return typeof value == 'number' &&
-    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-module.exports = isLength;
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-/** Used as references for various `Number` constants. */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/** Used to detect unsigned integer values. */
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  var type = typeof value;
-  length = length == null ? MAX_SAFE_INTEGER : length;
-
-  return !!length &&
-    (type == 'number' ||
-      (type != 'symbol' && reIsUint.test(value))) &&
-        (value > -1 && value % 1 == 0 && value < length);
-}
-
-module.exports = isIndex;
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Checks if `value` is likely a prototype object.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
- */
-function isPrototype(value) {
-  var Ctor = value && value.constructor,
-      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto;
-
-  return value === proto;
-}
-
-module.exports = isPrototype;
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsArguments = __webpack_require__(121),
-    isObjectLike = __webpack_require__(14);
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Built-in value references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-/**
- * Checks if `value` is likely an `arguments` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an `arguments` object,
- *  else `false`.
- * @example
- *
- * _.isArguments(function() { return arguments; }());
- * // => true
- *
- * _.isArguments([1, 2, 3]);
- * // => false
- */
-var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
-  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
-    !propertyIsEnumerable.call(value, 'callee');
-};
-
-module.exports = isArguments;
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(5),
-    stubFalse = __webpack_require__(122);
-
-/** Detect free variable `exports`. */
-var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
-
-/** Detect free variable `module`. */
-var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
-
-/** Detect the popular CommonJS extension `module.exports`. */
-var moduleExports = freeModule && freeModule.exports === freeExports;
-
-/** Built-in value references. */
-var Buffer = moduleExports ? root.Buffer : undefined;
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
-
-/**
- * Checks if `value` is a buffer.
- *
- * @static
- * @memberOf _
- * @since 4.3.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
- * @example
- *
- * _.isBuffer(new Buffer(2));
- * // => true
- *
- * _.isBuffer(new Uint8Array(2));
- * // => false
- */
-var isBuffer = nativeIsBuffer || stubFalse;
-
-module.exports = isBuffer;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module)))
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsTypedArray = __webpack_require__(123),
-    baseUnary = __webpack_require__(124),
-    nodeUtil = __webpack_require__(125);
-
-/* Node.js helper references. */
-var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
-
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @since 3.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
-
-module.exports = isTypedArray;
-
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var getNative = __webpack_require__(7),
-    root = __webpack_require__(5);
-
-/* Built-in method references that are verified to be native. */
-var Map = getNative(root, 'Map');
-
-module.exports = Map;
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var mapCacheClear = __webpack_require__(158),
-    mapCacheDelete = __webpack_require__(165),
-    mapCacheGet = __webpack_require__(167),
-    mapCacheHas = __webpack_require__(168),
-    mapCacheSet = __webpack_require__(169);
-
-/**
- * Creates a map cache object to store key-value pairs.
- *
- * @private
- * @constructor
- * @param {Array} [entries] The key-value pairs to cache.
- */
-function MapCache(entries) {
-  var index = -1,
-      length = entries == null ? 0 : entries.length;
-
-  this.clear();
-  while (++index < length) {
-    var entry = entries[index];
-    this.set(entry[0], entry[1]);
-  }
-}
-
-// Add methods to `MapCache`.
-MapCache.prototype.clear = mapCacheClear;
-MapCache.prototype['delete'] = mapCacheDelete;
-MapCache.prototype.get = mapCacheGet;
-MapCache.prototype.has = mapCacheHas;
-MapCache.prototype.set = mapCacheSet;
-
-module.exports = MapCache;
-
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArray = __webpack_require__(4),
-    isSymbol = __webpack_require__(41);
-
-/** Used to match property names within property paths. */
-var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
-    reIsPlainProp = /^\w*$/;
-
-/**
- * Checks if `value` is a property name and not a property path.
- *
- * @private
- * @param {*} value The value to check.
- * @param {Object} [object] The object to query keys on.
- * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
- */
-function isKey(value, object) {
-  if (isArray(value)) {
-    return false;
-  }
-  var type = typeof value;
-  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
-      value == null || isSymbol(value)) {
-    return true;
-  }
-  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-    (object != null && value in Object(object));
-}
-
-module.exports = isKey;
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(11),
-    isObjectLike = __webpack_require__(14);
-
-/** `Object#toString` result references. */
-var symbolTag = '[object Symbol]';
-
-/**
- * Checks if `value` is classified as a `Symbol` primitive or object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
- * @example
- *
- * _.isSymbol(Symbol.iterator);
- * // => true
- *
- * _.isSymbol('abc');
- * // => false
- */
-function isSymbol(value) {
-  return typeof value == 'symbol' ||
-    (isObjectLike(value) && baseGetTag(value) == symbolTag);
-}
-
-module.exports = isSymbol;
-
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function(exports) {
-  "use strict";
-
-  function isArray(obj) {
-    if (obj !== null) {
-      return Object.prototype.toString.call(obj) === "[object Array]";
-    } else {
-      return false;
-    }
-  }
-
-  function isObject(obj) {
-    if (obj !== null) {
-      return Object.prototype.toString.call(obj) === "[object Object]";
-    } else {
-      return false;
-    }
-  }
-
-  function strictDeepEqual(first, second) {
-    // Check the scalar case first.
-    if (first === second) {
-      return true;
-    }
-
-    // Check if they are the same type.
-    var firstType = Object.prototype.toString.call(first);
-    if (firstType !== Object.prototype.toString.call(second)) {
-      return false;
-    }
-    // We know that first and second have the same type so we can just check the
-    // first type from now on.
-    if (isArray(first) === true) {
-      // Short circuit if they're not the same length;
-      if (first.length !== second.length) {
-        return false;
-      }
-      for (var i = 0; i < first.length; i++) {
-        if (strictDeepEqual(first[i], second[i]) === false) {
-          return false;
-        }
-      }
-      return true;
-    }
-    if (isObject(first) === true) {
-      // An object is equal if it has the same key/value pairs.
-      var keysSeen = {};
-      for (var key in first) {
-        if (hasOwnProperty.call(first, key)) {
-          if (strictDeepEqual(first[key], second[key]) === false) {
-            return false;
-          }
-          keysSeen[key] = true;
-        }
-      }
-      // Now check that there aren't any keys in second that weren't
-      // in first.
-      for (var key2 in second) {
-        if (hasOwnProperty.call(second, key2)) {
-          if (keysSeen[key2] !== true) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
-  function isFalse(obj) {
-    // From the spec:
-    // A false value corresponds to the following values:
-    // Empty list
-    // Empty object
-    // Empty string
-    // False boolean
-    // null value
-
-    // First check the scalar values.
-    if (obj === "" || obj === false || obj === null) {
-        return true;
-    } else if (isArray(obj) && obj.length === 0) {
-        // Check for an empty array.
-        return true;
-    } else if (isObject(obj)) {
-        // Check for an empty object.
-        for (var key in obj) {
-            // If there are any keys, then
-            // the object is not empty so the object
-            // is not false.
-            if (obj.hasOwnProperty(key)) {
-              return false;
-            }
-        }
-        return true;
-    } else {
-        return false;
-    }
-  }
-
-  function objValues(obj) {
-    var keys = Object.keys(obj);
-    var values = [];
-    for (var i = 0; i < keys.length; i++) {
-      values.push(obj[keys[i]]);
-    }
-    return values;
-  }
-
-  function merge(a, b) {
-      var merged = {};
-      for (var key in a) {
-          merged[key] = a[key];
-      }
-      for (var key2 in b) {
-          merged[key2] = b[key2];
-      }
-      return merged;
-  }
-
-  var trimLeft;
-  if (typeof String.prototype.trimLeft === "function") {
-    trimLeft = function(str) {
-      return str.trimLeft();
-    };
-  } else {
-    trimLeft = function(str) {
-      return str.match(/^\s*(.*)/)[1];
-    };
-  }
-
-  // Type constants used to define functions.
-  var TYPE_NUMBER = 0;
-  var TYPE_ANY = 1;
-  var TYPE_STRING = 2;
-  var TYPE_ARRAY = 3;
-  var TYPE_OBJECT = 4;
-  var TYPE_BOOLEAN = 5;
-  var TYPE_EXPREF = 6;
-  var TYPE_NULL = 7;
-  var TYPE_ARRAY_NUMBER = 8;
-  var TYPE_ARRAY_STRING = 9;
-
-  var TOK_EOF = "EOF";
-  var TOK_UNQUOTEDIDENTIFIER = "UnquotedIdentifier";
-  var TOK_QUOTEDIDENTIFIER = "QuotedIdentifier";
-  var TOK_RBRACKET = "Rbracket";
-  var TOK_RPAREN = "Rparen";
-  var TOK_COMMA = "Comma";
-  var TOK_COLON = "Colon";
-  var TOK_RBRACE = "Rbrace";
-  var TOK_NUMBER = "Number";
-  var TOK_CURRENT = "Current";
-  var TOK_EXPREF = "Expref";
-  var TOK_PIPE = "Pipe";
-  var TOK_OR = "Or";
-  var TOK_AND = "And";
-  var TOK_EQ = "EQ";
-  var TOK_GT = "GT";
-  var TOK_LT = "LT";
-  var TOK_GTE = "GTE";
-  var TOK_LTE = "LTE";
-  var TOK_NE = "NE";
-  var TOK_FLATTEN = "Flatten";
-  var TOK_STAR = "Star";
-  var TOK_FILTER = "Filter";
-  var TOK_DOT = "Dot";
-  var TOK_NOT = "Not";
-  var TOK_LBRACE = "Lbrace";
-  var TOK_LBRACKET = "Lbracket";
-  var TOK_LPAREN= "Lparen";
-  var TOK_LITERAL= "Literal";
-
-  // The "&", "[", "<", ">" tokens
-  // are not in basicToken because
-  // there are two token variants
-  // ("&&", "[?", "<=", ">=").  This is specially handled
-  // below.
-
-  var basicTokens = {
-    ".": TOK_DOT,
-    "*": TOK_STAR,
-    ",": TOK_COMMA,
-    ":": TOK_COLON,
-    "{": TOK_LBRACE,
-    "}": TOK_RBRACE,
-    "]": TOK_RBRACKET,
-    "(": TOK_LPAREN,
-    ")": TOK_RPAREN,
-    "@": TOK_CURRENT
-  };
-
-  var operatorStartToken = {
-      "<": true,
-      ">": true,
-      "=": true,
-      "!": true
-  };
-
-  var skipChars = {
-      " ": true,
-      "\t": true,
-      "\n": true
-  };
-
-
-  function isAlpha(ch) {
-      return (ch >= "a" && ch <= "z") ||
-             (ch >= "A" && ch <= "Z") ||
-             ch === "_";
-  }
-
-  function isNum(ch) {
-      return (ch >= "0" && ch <= "9") ||
-             ch === "-";
-  }
-  function isAlphaNum(ch) {
-      return (ch >= "a" && ch <= "z") ||
-             (ch >= "A" && ch <= "Z") ||
-             (ch >= "0" && ch <= "9") ||
-             ch === "_";
-  }
-
-  function Lexer() {
-  }
-  Lexer.prototype = {
-      tokenize: function(stream) {
-          var tokens = [];
-          this._current = 0;
-          var start;
-          var identifier;
-          var token;
-          while (this._current < stream.length) {
-              if (isAlpha(stream[this._current])) {
-                  start = this._current;
-                  identifier = this._consumeUnquotedIdentifier(stream);
-                  tokens.push({type: TOK_UNQUOTEDIDENTIFIER,
-                               value: identifier,
-                               start: start});
-              } else if (basicTokens[stream[this._current]] !== undefined) {
-                  tokens.push({type: basicTokens[stream[this._current]],
-                              value: stream[this._current],
-                              start: this._current});
-                  this._current++;
-              } else if (isNum(stream[this._current])) {
-                  token = this._consumeNumber(stream);
-                  tokens.push(token);
-              } else if (stream[this._current] === "[") {
-                  // No need to increment this._current.  This happens
-                  // in _consumeLBracket
-                  token = this._consumeLBracket(stream);
-                  tokens.push(token);
-              } else if (stream[this._current] === "\"") {
-                  start = this._current;
-                  identifier = this._consumeQuotedIdentifier(stream);
-                  tokens.push({type: TOK_QUOTEDIDENTIFIER,
-                               value: identifier,
-                               start: start});
-              } else if (stream[this._current] === "'") {
-                  start = this._current;
-                  identifier = this._consumeRawStringLiteral(stream);
-                  tokens.push({type: TOK_LITERAL,
-                               value: identifier,
-                               start: start});
-              } else if (stream[this._current] === "`") {
-                  start = this._current;
-                  var literal = this._consumeLiteral(stream);
-                  tokens.push({type: TOK_LITERAL,
-                               value: literal,
-                               start: start});
-              } else if (operatorStartToken[stream[this._current]] !== undefined) {
-                  tokens.push(this._consumeOperator(stream));
-              } else if (skipChars[stream[this._current]] !== undefined) {
-                  // Ignore whitespace.
-                  this._current++;
-              } else if (stream[this._current] === "&") {
-                  start = this._current;
-                  this._current++;
-                  if (stream[this._current] === "&") {
-                      this._current++;
-                      tokens.push({type: TOK_AND, value: "&&", start: start});
-                  } else {
-                      tokens.push({type: TOK_EXPREF, value: "&", start: start});
-                  }
-              } else if (stream[this._current] === "|") {
-                  start = this._current;
-                  this._current++;
-                  if (stream[this._current] === "|") {
-                      this._current++;
-                      tokens.push({type: TOK_OR, value: "||", start: start});
-                  } else {
-                      tokens.push({type: TOK_PIPE, value: "|", start: start});
-                  }
-              } else {
-                  var error = new Error("Unknown character:" + stream[this._current]);
-                  error.name = "LexerError";
-                  throw error;
-              }
-          }
-          return tokens;
-      },
-
-      _consumeUnquotedIdentifier: function(stream) {
-          var start = this._current;
-          this._current++;
-          while (this._current < stream.length && isAlphaNum(stream[this._current])) {
-              this._current++;
-          }
-          return stream.slice(start, this._current);
-      },
-
-      _consumeQuotedIdentifier: function(stream) {
-          var start = this._current;
-          this._current++;
-          var maxLength = stream.length;
-          while (stream[this._current] !== "\"" && this._current < maxLength) {
-              // You can escape a double quote and you can escape an escape.
-              var current = this._current;
-              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
-                                               stream[current + 1] === "\"")) {
-                  current += 2;
-              } else {
-                  current++;
-              }
-              this._current = current;
-          }
-          this._current++;
-          return JSON.parse(stream.slice(start, this._current));
-      },
-
-      _consumeRawStringLiteral: function(stream) {
-          var start = this._current;
-          this._current++;
-          var maxLength = stream.length;
-          while (stream[this._current] !== "'" && this._current < maxLength) {
-              // You can escape a single quote and you can escape an escape.
-              var current = this._current;
-              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
-                                               stream[current + 1] === "'")) {
-                  current += 2;
-              } else {
-                  current++;
-              }
-              this._current = current;
-          }
-          this._current++;
-          var literal = stream.slice(start + 1, this._current - 1);
-          return literal.replace("\\'", "'");
-      },
-
-      _consumeNumber: function(stream) {
-          var start = this._current;
-          this._current++;
-          var maxLength = stream.length;
-          while (isNum(stream[this._current]) && this._current < maxLength) {
-              this._current++;
-          }
-          var value = parseInt(stream.slice(start, this._current));
-          return {type: TOK_NUMBER, value: value, start: start};
-      },
-
-      _consumeLBracket: function(stream) {
-          var start = this._current;
-          this._current++;
-          if (stream[this._current] === "?") {
-              this._current++;
-              return {type: TOK_FILTER, value: "[?", start: start};
-          } else if (stream[this._current] === "]") {
-              this._current++;
-              return {type: TOK_FLATTEN, value: "[]", start: start};
-          } else {
-              return {type: TOK_LBRACKET, value: "[", start: start};
-          }
-      },
-
-      _consumeOperator: function(stream) {
-          var start = this._current;
-          var startingChar = stream[start];
-          this._current++;
-          if (startingChar === "!") {
-              if (stream[this._current] === "=") {
-                  this._current++;
-                  return {type: TOK_NE, value: "!=", start: start};
-              } else {
-                return {type: TOK_NOT, value: "!", start: start};
-              }
-          } else if (startingChar === "<") {
-              if (stream[this._current] === "=") {
-                  this._current++;
-                  return {type: TOK_LTE, value: "<=", start: start};
-              } else {
-                  return {type: TOK_LT, value: "<", start: start};
-              }
-          } else if (startingChar === ">") {
-              if (stream[this._current] === "=") {
-                  this._current++;
-                  return {type: TOK_GTE, value: ">=", start: start};
-              } else {
-                  return {type: TOK_GT, value: ">", start: start};
-              }
-          } else if (startingChar === "=") {
-              if (stream[this._current] === "=") {
-                  this._current++;
-                  return {type: TOK_EQ, value: "==", start: start};
-              }
-          }
-      },
-
-      _consumeLiteral: function(stream) {
-          this._current++;
-          var start = this._current;
-          var maxLength = stream.length;
-          var literal;
-          while(stream[this._current] !== "`" && this._current < maxLength) {
-              // You can escape a literal char or you can escape the escape.
-              var current = this._current;
-              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
-                                               stream[current + 1] === "`")) {
-                  current += 2;
-              } else {
-                  current++;
-              }
-              this._current = current;
-          }
-          var literalString = trimLeft(stream.slice(start, this._current));
-          literalString = literalString.replace("\\`", "`");
-          if (this._looksLikeJSON(literalString)) {
-              literal = JSON.parse(literalString);
-          } else {
-              // Try to JSON parse it as "<literal>"
-              literal = JSON.parse("\"" + literalString + "\"");
-          }
-          // +1 gets us to the ending "`", +1 to move on to the next char.
-          this._current++;
-          return literal;
-      },
-
-      _looksLikeJSON: function(literalString) {
-          var startingChars = "[{\"";
-          var jsonLiterals = ["true", "false", "null"];
-          var numberLooking = "-0123456789";
-
-          if (literalString === "") {
-              return false;
-          } else if (startingChars.indexOf(literalString[0]) >= 0) {
-              return true;
-          } else if (jsonLiterals.indexOf(literalString) >= 0) {
-              return true;
-          } else if (numberLooking.indexOf(literalString[0]) >= 0) {
-              try {
-                  JSON.parse(literalString);
-                  return true;
-              } catch (ex) {
-                  return false;
-              }
-          } else {
-              return false;
-          }
-      }
-  };
-
-      var bindingPower = {};
-      bindingPower[TOK_EOF] = 0;
-      bindingPower[TOK_UNQUOTEDIDENTIFIER] = 0;
-      bindingPower[TOK_QUOTEDIDENTIFIER] = 0;
-      bindingPower[TOK_RBRACKET] = 0;
-      bindingPower[TOK_RPAREN] = 0;
-      bindingPower[TOK_COMMA] = 0;
-      bindingPower[TOK_RBRACE] = 0;
-      bindingPower[TOK_NUMBER] = 0;
-      bindingPower[TOK_CURRENT] = 0;
-      bindingPower[TOK_EXPREF] = 0;
-      bindingPower[TOK_PIPE] = 1;
-      bindingPower[TOK_OR] = 2;
-      bindingPower[TOK_AND] = 3;
-      bindingPower[TOK_EQ] = 5;
-      bindingPower[TOK_GT] = 5;
-      bindingPower[TOK_LT] = 5;
-      bindingPower[TOK_GTE] = 5;
-      bindingPower[TOK_LTE] = 5;
-      bindingPower[TOK_NE] = 5;
-      bindingPower[TOK_FLATTEN] = 9;
-      bindingPower[TOK_STAR] = 20;
-      bindingPower[TOK_FILTER] = 21;
-      bindingPower[TOK_DOT] = 40;
-      bindingPower[TOK_NOT] = 45;
-      bindingPower[TOK_LBRACE] = 50;
-      bindingPower[TOK_LBRACKET] = 55;
-      bindingPower[TOK_LPAREN] = 60;
-
-  function Parser() {
-  }
-
-  Parser.prototype = {
-      parse: function(expression) {
-          this._loadTokens(expression);
-          this.index = 0;
-          var ast = this.expression(0);
-          if (this._lookahead(0) !== TOK_EOF) {
-              var t = this._lookaheadToken(0);
-              var error = new Error(
-                  "Unexpected token type: " + t.type + ", value: " + t.value);
-              error.name = "ParserError";
-              throw error;
-          }
-          return ast;
-      },
-
-      _loadTokens: function(expression) {
-          var lexer = new Lexer();
-          var tokens = lexer.tokenize(expression);
-          tokens.push({type: TOK_EOF, value: "", start: expression.length});
-          this.tokens = tokens;
-      },
-
-      expression: function(rbp) {
-          var leftToken = this._lookaheadToken(0);
-          this._advance();
-          var left = this.nud(leftToken);
-          var currentToken = this._lookahead(0);
-          while (rbp < bindingPower[currentToken]) {
-              this._advance();
-              left = this.led(currentToken, left);
-              currentToken = this._lookahead(0);
-          }
-          return left;
-      },
-
-      _lookahead: function(number) {
-          return this.tokens[this.index + number].type;
-      },
-
-      _lookaheadToken: function(number) {
-          return this.tokens[this.index + number];
-      },
-
-      _advance: function() {
-          this.index++;
-      },
-
-      nud: function(token) {
-        var left;
-        var right;
-        var expression;
-        switch (token.type) {
-          case TOK_LITERAL:
-            return {type: "Literal", value: token.value};
-          case TOK_UNQUOTEDIDENTIFIER:
-            return {type: "Field", name: token.value};
-          case TOK_QUOTEDIDENTIFIER:
-            var node = {type: "Field", name: token.value};
-            if (this._lookahead(0) === TOK_LPAREN) {
-                throw new Error("Quoted identifier not allowed for function names.");
-            } else {
-                return node;
-            }
-            break;
-          case TOK_NOT:
-            right = this.expression(bindingPower.Not);
-            return {type: "NotExpression", children: [right]};
-          case TOK_STAR:
-            left = {type: "Identity"};
-            right = null;
-            if (this._lookahead(0) === TOK_RBRACKET) {
-                // This can happen in a multiselect,
-                // [a, b, *]
-                right = {type: "Identity"};
-            } else {
-                right = this._parseProjectionRHS(bindingPower.Star);
-            }
-            return {type: "ValueProjection", children: [left, right]};
-          case TOK_FILTER:
-            return this.led(token.type, {type: "Identity"});
-          case TOK_LBRACE:
-            return this._parseMultiselectHash();
-          case TOK_FLATTEN:
-            left = {type: TOK_FLATTEN, children: [{type: "Identity"}]};
-            right = this._parseProjectionRHS(bindingPower.Flatten);
-            return {type: "Projection", children: [left, right]};
-          case TOK_LBRACKET:
-            if (this._lookahead(0) === TOK_NUMBER || this._lookahead(0) === TOK_COLON) {
-                right = this._parseIndexExpression();
-                return this._projectIfSlice({type: "Identity"}, right);
-            } else if (this._lookahead(0) === TOK_STAR &&
-                       this._lookahead(1) === TOK_RBRACKET) {
-                this._advance();
-                this._advance();
-                right = this._parseProjectionRHS(bindingPower.Star);
-                return {type: "Projection",
-                        children: [{type: "Identity"}, right]};
-            } else {
-                return this._parseMultiselectList();
-            }
-            break;
-          case TOK_CURRENT:
-            return {type: TOK_CURRENT};
-          case TOK_EXPREF:
-            expression = this.expression(bindingPower.Expref);
-            return {type: "ExpressionReference", children: [expression]};
-          case TOK_LPAREN:
-            var args = [];
-            while (this._lookahead(0) !== TOK_RPAREN) {
-              if (this._lookahead(0) === TOK_CURRENT) {
-                expression = {type: TOK_CURRENT};
-                this._advance();
-              } else {
-                expression = this.expression(0);
-              }
-              args.push(expression);
-            }
-            this._match(TOK_RPAREN);
-            return args[0];
-          default:
-            this._errorToken(token);
-        }
-      },
-
-      led: function(tokenName, left) {
-        var right;
-        switch(tokenName) {
-          case TOK_DOT:
-            var rbp = bindingPower.Dot;
-            if (this._lookahead(0) !== TOK_STAR) {
-                right = this._parseDotRHS(rbp);
-                return {type: "Subexpression", children: [left, right]};
-            } else {
-                // Creating a projection.
-                this._advance();
-                right = this._parseProjectionRHS(rbp);
-                return {type: "ValueProjection", children: [left, right]};
-            }
-            break;
-          case TOK_PIPE:
-            right = this.expression(bindingPower.Pipe);
-            return {type: TOK_PIPE, children: [left, right]};
-          case TOK_OR:
-            right = this.expression(bindingPower.Or);
-            return {type: "OrExpression", children: [left, right]};
-          case TOK_AND:
-            right = this.expression(bindingPower.And);
-            return {type: "AndExpression", children: [left, right]};
-          case TOK_LPAREN:
-            var name = left.name;
-            var args = [];
-            var expression, node;
-            while (this._lookahead(0) !== TOK_RPAREN) {
-              if (this._lookahead(0) === TOK_CURRENT) {
-                expression = {type: TOK_CURRENT};
-                this._advance();
-              } else {
-                expression = this.expression(0);
-              }
-              if (this._lookahead(0) === TOK_COMMA) {
-                this._match(TOK_COMMA);
-              }
-              args.push(expression);
-            }
-            this._match(TOK_RPAREN);
-            node = {type: "Function", name: name, children: args};
-            return node;
-          case TOK_FILTER:
-            var condition = this.expression(0);
-            this._match(TOK_RBRACKET);
-            if (this._lookahead(0) === TOK_FLATTEN) {
-              right = {type: "Identity"};
-            } else {
-              right = this._parseProjectionRHS(bindingPower.Filter);
-            }
-            return {type: "FilterProjection", children: [left, right, condition]};
-          case TOK_FLATTEN:
-            var leftNode = {type: TOK_FLATTEN, children: [left]};
-            var rightNode = this._parseProjectionRHS(bindingPower.Flatten);
-            return {type: "Projection", children: [leftNode, rightNode]};
-          case TOK_EQ:
-          case TOK_NE:
-          case TOK_GT:
-          case TOK_GTE:
-          case TOK_LT:
-          case TOK_LTE:
-            return this._parseComparator(left, tokenName);
-          case TOK_LBRACKET:
-            var token = this._lookaheadToken(0);
-            if (token.type === TOK_NUMBER || token.type === TOK_COLON) {
-                right = this._parseIndexExpression();
-                return this._projectIfSlice(left, right);
-            } else {
-                this._match(TOK_STAR);
-                this._match(TOK_RBRACKET);
-                right = this._parseProjectionRHS(bindingPower.Star);
-                return {type: "Projection", children: [left, right]};
-            }
-            break;
-          default:
-            this._errorToken(this._lookaheadToken(0));
-        }
-      },
-
-      _match: function(tokenType) {
-          if (this._lookahead(0) === tokenType) {
-              this._advance();
-          } else {
-              var t = this._lookaheadToken(0);
-              var error = new Error("Expected " + tokenType + ", got: " + t.type);
-              error.name = "ParserError";
-              throw error;
-          }
-      },
-
-      _errorToken: function(token) {
-          var error = new Error("Invalid token (" +
-                                token.type + "): \"" +
-                                token.value + "\"");
-          error.name = "ParserError";
-          throw error;
-      },
-
-
-      _parseIndexExpression: function() {
-          if (this._lookahead(0) === TOK_COLON || this._lookahead(1) === TOK_COLON) {
-              return this._parseSliceExpression();
-          } else {
-              var node = {
-                  type: "Index",
-                  value: this._lookaheadToken(0).value};
-              this._advance();
-              this._match(TOK_RBRACKET);
-              return node;
-          }
-      },
-
-      _projectIfSlice: function(left, right) {
-          var indexExpr = {type: "IndexExpression", children: [left, right]};
-          if (right.type === "Slice") {
-              return {
-                  type: "Projection",
-                  children: [indexExpr, this._parseProjectionRHS(bindingPower.Star)]
-              };
-          } else {
-              return indexExpr;
-          }
-      },
-
-      _parseSliceExpression: function() {
-          // [start:end:step] where each part is optional, as well as the last
-          // colon.
-          var parts = [null, null, null];
-          var index = 0;
-          var currentToken = this._lookahead(0);
-          while (currentToken !== TOK_RBRACKET && index < 3) {
-              if (currentToken === TOK_COLON) {
-                  index++;
-                  this._advance();
-              } else if (currentToken === TOK_NUMBER) {
-                  parts[index] = this._lookaheadToken(0).value;
-                  this._advance();
-              } else {
-                  var t = this._lookahead(0);
-                  var error = new Error("Syntax error, unexpected token: " +
-                                        t.value + "(" + t.type + ")");
-                  error.name = "Parsererror";
-                  throw error;
-              }
-              currentToken = this._lookahead(0);
-          }
-          this._match(TOK_RBRACKET);
-          return {
-              type: "Slice",
-              children: parts
-          };
-      },
-
-      _parseComparator: function(left, comparator) {
-        var right = this.expression(bindingPower[comparator]);
-        return {type: "Comparator", name: comparator, children: [left, right]};
-      },
-
-      _parseDotRHS: function(rbp) {
-          var lookahead = this._lookahead(0);
-          var exprTokens = [TOK_UNQUOTEDIDENTIFIER, TOK_QUOTEDIDENTIFIER, TOK_STAR];
-          if (exprTokens.indexOf(lookahead) >= 0) {
-              return this.expression(rbp);
-          } else if (lookahead === TOK_LBRACKET) {
-              this._match(TOK_LBRACKET);
-              return this._parseMultiselectList();
-          } else if (lookahead === TOK_LBRACE) {
-              this._match(TOK_LBRACE);
-              return this._parseMultiselectHash();
-          }
-      },
-
-      _parseProjectionRHS: function(rbp) {
-          var right;
-          if (bindingPower[this._lookahead(0)] < 10) {
-              right = {type: "Identity"};
-          } else if (this._lookahead(0) === TOK_LBRACKET) {
-              right = this.expression(rbp);
-          } else if (this._lookahead(0) === TOK_FILTER) {
-              right = this.expression(rbp);
-          } else if (this._lookahead(0) === TOK_DOT) {
-              this._match(TOK_DOT);
-              right = this._parseDotRHS(rbp);
-          } else {
-              var t = this._lookaheadToken(0);
-              var error = new Error("Sytanx error, unexpected token: " +
-                                    t.value + "(" + t.type + ")");
-              error.name = "ParserError";
-              throw error;
-          }
-          return right;
-      },
-
-      _parseMultiselectList: function() {
-          var expressions = [];
-          while (this._lookahead(0) !== TOK_RBRACKET) {
-              var expression = this.expression(0);
-              expressions.push(expression);
-              if (this._lookahead(0) === TOK_COMMA) {
-                  this._match(TOK_COMMA);
-                  if (this._lookahead(0) === TOK_RBRACKET) {
-                    throw new Error("Unexpected token Rbracket");
-                  }
-              }
-          }
-          this._match(TOK_RBRACKET);
-          return {type: "MultiSelectList", children: expressions};
-      },
-
-      _parseMultiselectHash: function() {
-        var pairs = [];
-        var identifierTypes = [TOK_UNQUOTEDIDENTIFIER, TOK_QUOTEDIDENTIFIER];
-        var keyToken, keyName, value, node;
-        for (;;) {
-          keyToken = this._lookaheadToken(0);
-          if (identifierTypes.indexOf(keyToken.type) < 0) {
-            throw new Error("Expecting an identifier token, got: " +
-                            keyToken.type);
-          }
-          keyName = keyToken.value;
-          this._advance();
-          this._match(TOK_COLON);
-          value = this.expression(0);
-          node = {type: "KeyValuePair", name: keyName, value: value};
-          pairs.push(node);
-          if (this._lookahead(0) === TOK_COMMA) {
-            this._match(TOK_COMMA);
-          } else if (this._lookahead(0) === TOK_RBRACE) {
-            this._match(TOK_RBRACE);
-            break;
-          }
-        }
-        return {type: "MultiSelectHash", children: pairs};
-      }
-  };
-
-
-  function TreeInterpreter(runtime) {
-    this.runtime = runtime;
-  }
-
-  TreeInterpreter.prototype = {
-      search: function(node, value) {
-          return this.visit(node, value);
-      },
-
-      visit: function(node, value) {
-          var matched, current, result, first, second, field, left, right, collected, i;
-          switch (node.type) {
-            case "Field":
-              if (value === null ) {
-                  return null;
-              } else if (isObject(value)) {
-                  field = value[node.name];
-                  if (field === undefined) {
-                      return null;
-                  } else {
-                      return field;
-                  }
-              } else {
-                return null;
-              }
-              break;
-            case "Subexpression":
-              result = this.visit(node.children[0], value);
-              for (i = 1; i < node.children.length; i++) {
-                  result = this.visit(node.children[1], result);
-                  if (result === null) {
-                      return null;
-                  }
-              }
-              return result;
-            case "IndexExpression":
-              left = this.visit(node.children[0], value);
-              right = this.visit(node.children[1], left);
-              return right;
-            case "Index":
-              if (!isArray(value)) {
-                return null;
-              }
-              var index = node.value;
-              if (index < 0) {
-                index = value.length + index;
-              }
-              result = value[index];
-              if (result === undefined) {
-                result = null;
-              }
-              return result;
-            case "Slice":
-              if (!isArray(value)) {
-                return null;
-              }
-              var sliceParams = node.children.slice(0);
-              var computed = this.computeSliceParams(value.length, sliceParams);
-              var start = computed[0];
-              var stop = computed[1];
-              var step = computed[2];
-              result = [];
-              if (step > 0) {
-                  for (i = start; i < stop; i += step) {
-                      result.push(value[i]);
-                  }
-              } else {
-                  for (i = start; i > stop; i += step) {
-                      result.push(value[i]);
-                  }
-              }
-              return result;
-            case "Projection":
-              // Evaluate left child.
-              var base = this.visit(node.children[0], value);
-              if (!isArray(base)) {
-                return null;
-              }
-              collected = [];
-              for (i = 0; i < base.length; i++) {
-                current = this.visit(node.children[1], base[i]);
-                if (current !== null) {
-                  collected.push(current);
-                }
-              }
-              return collected;
-            case "ValueProjection":
-              // Evaluate left child.
-              base = this.visit(node.children[0], value);
-              if (!isObject(base)) {
-                return null;
-              }
-              collected = [];
-              var values = objValues(base);
-              for (i = 0; i < values.length; i++) {
-                current = this.visit(node.children[1], values[i]);
-                if (current !== null) {
-                  collected.push(current);
-                }
-              }
-              return collected;
-            case "FilterProjection":
-              base = this.visit(node.children[0], value);
-              if (!isArray(base)) {
-                return null;
-              }
-              var filtered = [];
-              var finalResults = [];
-              for (i = 0; i < base.length; i++) {
-                matched = this.visit(node.children[2], base[i]);
-                if (!isFalse(matched)) {
-                  filtered.push(base[i]);
-                }
-              }
-              for (var j = 0; j < filtered.length; j++) {
-                current = this.visit(node.children[1], filtered[j]);
-                if (current !== null) {
-                  finalResults.push(current);
-                }
-              }
-              return finalResults;
-            case "Comparator":
-              first = this.visit(node.children[0], value);
-              second = this.visit(node.children[1], value);
-              switch(node.name) {
-                case TOK_EQ:
-                  result = strictDeepEqual(first, second);
-                  break;
-                case TOK_NE:
-                  result = !strictDeepEqual(first, second);
-                  break;
-                case TOK_GT:
-                  result = first > second;
-                  break;
-                case TOK_GTE:
-                  result = first >= second;
-                  break;
-                case TOK_LT:
-                  result = first < second;
-                  break;
-                case TOK_LTE:
-                  result = first <= second;
-                  break;
-                default:
-                  throw new Error("Unknown comparator: " + node.name);
-              }
-              return result;
-            case TOK_FLATTEN:
-              var original = this.visit(node.children[0], value);
-              if (!isArray(original)) {
-                return null;
-              }
-              var merged = [];
-              for (i = 0; i < original.length; i++) {
-                current = original[i];
-                if (isArray(current)) {
-                  merged.push.apply(merged, current);
-                } else {
-                  merged.push(current);
-                }
-              }
-              return merged;
-            case "Identity":
-              return value;
-            case "MultiSelectList":
-              if (value === null) {
-                return null;
-              }
-              collected = [];
-              for (i = 0; i < node.children.length; i++) {
-                  collected.push(this.visit(node.children[i], value));
-              }
-              return collected;
-            case "MultiSelectHash":
-              if (value === null) {
-                return null;
-              }
-              collected = {};
-              var child;
-              for (i = 0; i < node.children.length; i++) {
-                child = node.children[i];
-                collected[child.name] = this.visit(child.value, value);
-              }
-              return collected;
-            case "OrExpression":
-              matched = this.visit(node.children[0], value);
-              if (isFalse(matched)) {
-                  matched = this.visit(node.children[1], value);
-              }
-              return matched;
-            case "AndExpression":
-              first = this.visit(node.children[0], value);
-
-              if (isFalse(first) === true) {
-                return first;
-              }
-              return this.visit(node.children[1], value);
-            case "NotExpression":
-              first = this.visit(node.children[0], value);
-              return isFalse(first);
-            case "Literal":
-              return node.value;
-            case TOK_PIPE:
-              left = this.visit(node.children[0], value);
-              return this.visit(node.children[1], left);
-            case TOK_CURRENT:
-              return value;
-            case "Function":
-              var resolvedArgs = [];
-              for (i = 0; i < node.children.length; i++) {
-                  resolvedArgs.push(this.visit(node.children[i], value));
-              }
-              return this.runtime.callFunction(node.name, resolvedArgs);
-            case "ExpressionReference":
-              var refNode = node.children[0];
-              // Tag the node with a specific attribute so the type
-              // checker verify the type.
-              refNode.jmespathType = TOK_EXPREF;
-              return refNode;
-            default:
-              throw new Error("Unknown node type: " + node.type);
-          }
-      },
-
-      computeSliceParams: function(arrayLength, sliceParams) {
-        var start = sliceParams[0];
-        var stop = sliceParams[1];
-        var step = sliceParams[2];
-        var computed = [null, null, null];
-        if (step === null) {
-          step = 1;
-        } else if (step === 0) {
-          var error = new Error("Invalid slice, step cannot be 0");
-          error.name = "RuntimeError";
-          throw error;
-        }
-        var stepValueNegative = step < 0 ? true : false;
-
-        if (start === null) {
-            start = stepValueNegative ? arrayLength - 1 : 0;
-        } else {
-            start = this.capSliceRange(arrayLength, start, step);
-        }
-
-        if (stop === null) {
-            stop = stepValueNegative ? -1 : arrayLength;
-        } else {
-            stop = this.capSliceRange(arrayLength, stop, step);
-        }
-        computed[0] = start;
-        computed[1] = stop;
-        computed[2] = step;
-        return computed;
-      },
-
-      capSliceRange: function(arrayLength, actualValue, step) {
-          if (actualValue < 0) {
-              actualValue += arrayLength;
-              if (actualValue < 0) {
-                  actualValue = step < 0 ? -1 : 0;
-              }
-          } else if (actualValue >= arrayLength) {
-              actualValue = step < 0 ? arrayLength - 1 : arrayLength;
-          }
-          return actualValue;
-      }
-
-  };
-
-  function Runtime(interpreter) {
-    this._interpreter = interpreter;
-    this.functionTable = {
-        // name: [function, <signature>]
-        // The <signature> can be:
-        //
-        // {
-        //   args: [[type1, type2], [type1, type2]],
-        //   variadic: true|false
-        // }
-        //
-        // Each arg in the arg list is a list of valid types
-        // (if the function is overloaded and supports multiple
-        // types.  If the type is "any" then no type checking
-        // occurs on the argument.  Variadic is optional
-        // and if not provided is assumed to be false.
-        abs: {_func: this._functionAbs, _signature: [{types: [TYPE_NUMBER]}]},
-        avg: {_func: this._functionAvg, _signature: [{types: [TYPE_ARRAY_NUMBER]}]},
-        ceil: {_func: this._functionCeil, _signature: [{types: [TYPE_NUMBER]}]},
-        contains: {
-            _func: this._functionContains,
-            _signature: [{types: [TYPE_STRING, TYPE_ARRAY]},
-                        {types: [TYPE_ANY]}]},
-        "ends_with": {
-            _func: this._functionEndsWith,
-            _signature: [{types: [TYPE_STRING]}, {types: [TYPE_STRING]}]},
-        floor: {_func: this._functionFloor, _signature: [{types: [TYPE_NUMBER]}]},
-        length: {
-            _func: this._functionLength,
-            _signature: [{types: [TYPE_STRING, TYPE_ARRAY, TYPE_OBJECT]}]},
-        map: {
-            _func: this._functionMap,
-            _signature: [{types: [TYPE_EXPREF]}, {types: [TYPE_ARRAY]}]},
-        max: {
-            _func: this._functionMax,
-            _signature: [{types: [TYPE_ARRAY_NUMBER, TYPE_ARRAY_STRING]}]},
-        "merge": {
-            _func: this._functionMerge,
-            _signature: [{types: [TYPE_OBJECT], variadic: true}]
-        },
-        "max_by": {
-          _func: this._functionMaxBy,
-          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
-        },
-        sum: {_func: this._functionSum, _signature: [{types: [TYPE_ARRAY_NUMBER]}]},
-        "starts_with": {
-            _func: this._functionStartsWith,
-            _signature: [{types: [TYPE_STRING]}, {types: [TYPE_STRING]}]},
-        min: {
-            _func: this._functionMin,
-            _signature: [{types: [TYPE_ARRAY_NUMBER, TYPE_ARRAY_STRING]}]},
-        "min_by": {
-          _func: this._functionMinBy,
-          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
-        },
-        type: {_func: this._functionType, _signature: [{types: [TYPE_ANY]}]},
-        keys: {_func: this._functionKeys, _signature: [{types: [TYPE_OBJECT]}]},
-        values: {_func: this._functionValues, _signature: [{types: [TYPE_OBJECT]}]},
-        sort: {_func: this._functionSort, _signature: [{types: [TYPE_ARRAY_STRING, TYPE_ARRAY_NUMBER]}]},
-        "sort_by": {
-          _func: this._functionSortBy,
-          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
-        },
-        join: {
-            _func: this._functionJoin,
-            _signature: [
-                {types: [TYPE_STRING]},
-                {types: [TYPE_ARRAY_STRING]}
-            ]
-        },
-        reverse: {
-            _func: this._functionReverse,
-            _signature: [{types: [TYPE_STRING, TYPE_ARRAY]}]},
-        "to_array": {_func: this._functionToArray, _signature: [{types: [TYPE_ANY]}]},
-        "to_string": {_func: this._functionToString, _signature: [{types: [TYPE_ANY]}]},
-        "to_number": {_func: this._functionToNumber, _signature: [{types: [TYPE_ANY]}]},
-        "not_null": {
-            _func: this._functionNotNull,
-            _signature: [{types: [TYPE_ANY], variadic: true}]
-        }
-    };
-  }
-
-  Runtime.prototype = {
-    callFunction: function(name, resolvedArgs) {
-      var functionEntry = this.functionTable[name];
-      if (functionEntry === undefined) {
-          throw new Error("Unknown function: " + name + "()");
-      }
-      this._validateArgs(name, resolvedArgs, functionEntry._signature);
-      return functionEntry._func.call(this, resolvedArgs);
-    },
-
-    _validateArgs: function(name, args, signature) {
-        // Validating the args requires validating
-        // the correct arity and the correct type of each arg.
-        // If the last argument is declared as variadic, then we need
-        // a minimum number of args to be required.  Otherwise it has to
-        // be an exact amount.
-        var pluralized;
-        if (signature[signature.length - 1].variadic) {
-            if (args.length < signature.length) {
-                pluralized = signature.length === 1 ? " argument" : " arguments";
-                throw new Error("ArgumentError: " + name + "() " +
-                                "takes at least" + signature.length + pluralized +
-                                " but received " + args.length);
-            }
-        } else if (args.length !== signature.length) {
-            pluralized = signature.length === 1 ? " argument" : " arguments";
-            throw new Error("ArgumentError: " + name + "() " +
-                            "takes " + signature.length + pluralized +
-                            " but received " + args.length);
-        }
-        var currentSpec;
-        var actualType;
-        var typeMatched;
-        for (var i = 0; i < signature.length; i++) {
-            typeMatched = false;
-            currentSpec = signature[i].types;
-            actualType = this._getTypeName(args[i]);
-            for (var j = 0; j < currentSpec.length; j++) {
-                if (this._typeMatches(actualType, currentSpec[j], args[i])) {
-                    typeMatched = true;
-                    break;
-                }
-            }
-            if (!typeMatched) {
-                throw new Error("TypeError: " + name + "() " +
-                                "expected argument " + (i + 1) +
-                                " to be type " + currentSpec +
-                                " but received type " + actualType +
-                                " instead.");
-            }
-        }
-    },
-
-    _typeMatches: function(actual, expected, argValue) {
-        if (expected === TYPE_ANY) {
-            return true;
-        }
-        if (expected === TYPE_ARRAY_STRING ||
-            expected === TYPE_ARRAY_NUMBER ||
-            expected === TYPE_ARRAY) {
-            // The expected type can either just be array,
-            // or it can require a specific subtype (array of numbers).
-            //
-            // The simplest case is if "array" with no subtype is specified.
-            if (expected === TYPE_ARRAY) {
-                return actual === TYPE_ARRAY;
-            } else if (actual === TYPE_ARRAY) {
-                // Otherwise we need to check subtypes.
-                // I think this has potential to be improved.
-                var subtype;
-                if (expected === TYPE_ARRAY_NUMBER) {
-                  subtype = TYPE_NUMBER;
-                } else if (expected === TYPE_ARRAY_STRING) {
-                  subtype = TYPE_STRING;
-                }
-                for (var i = 0; i < argValue.length; i++) {
-                    if (!this._typeMatches(
-                            this._getTypeName(argValue[i]), subtype,
-                                             argValue[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        } else {
-            return actual === expected;
-        }
-    },
-    _getTypeName: function(obj) {
-        switch (Object.prototype.toString.call(obj)) {
-            case "[object String]":
-              return TYPE_STRING;
-            case "[object Number]":
-              return TYPE_NUMBER;
-            case "[object Array]":
-              return TYPE_ARRAY;
-            case "[object Boolean]":
-              return TYPE_BOOLEAN;
-            case "[object Null]":
-              return TYPE_NULL;
-            case "[object Object]":
-              // Check if it's an expref.  If it has, it's been
-              // tagged with a jmespathType attr of 'Expref';
-              if (obj.jmespathType === TOK_EXPREF) {
-                return TYPE_EXPREF;
-              } else {
-                return TYPE_OBJECT;
-              }
-        }
-    },
-
-    _functionStartsWith: function(resolvedArgs) {
-        return resolvedArgs[0].lastIndexOf(resolvedArgs[1]) === 0;
-    },
-
-    _functionEndsWith: function(resolvedArgs) {
-        var searchStr = resolvedArgs[0];
-        var suffix = resolvedArgs[1];
-        return searchStr.indexOf(suffix, searchStr.length - suffix.length) !== -1;
-    },
-
-    _functionReverse: function(resolvedArgs) {
-        var typeName = this._getTypeName(resolvedArgs[0]);
-        if (typeName === TYPE_STRING) {
-          var originalStr = resolvedArgs[0];
-          var reversedStr = "";
-          for (var i = originalStr.length - 1; i >= 0; i--) {
-              reversedStr += originalStr[i];
-          }
-          return reversedStr;
-        } else {
-          var reversedArray = resolvedArgs[0].slice(0);
-          reversedArray.reverse();
-          return reversedArray;
-        }
-    },
-
-    _functionAbs: function(resolvedArgs) {
-      return Math.abs(resolvedArgs[0]);
-    },
-
-    _functionCeil: function(resolvedArgs) {
-        return Math.ceil(resolvedArgs[0]);
-    },
-
-    _functionAvg: function(resolvedArgs) {
-        var sum = 0;
-        var inputArray = resolvedArgs[0];
-        for (var i = 0; i < inputArray.length; i++) {
-            sum += inputArray[i];
-        }
-        return sum / inputArray.length;
-    },
-
-    _functionContains: function(resolvedArgs) {
-        return resolvedArgs[0].indexOf(resolvedArgs[1]) >= 0;
-    },
-
-    _functionFloor: function(resolvedArgs) {
-        return Math.floor(resolvedArgs[0]);
-    },
-
-    _functionLength: function(resolvedArgs) {
-       if (!isObject(resolvedArgs[0])) {
-         return resolvedArgs[0].length;
-       } else {
-         // As far as I can tell, there's no way to get the length
-         // of an object without O(n) iteration through the object.
-         return Object.keys(resolvedArgs[0]).length;
-       }
-    },
-
-    _functionMap: function(resolvedArgs) {
-      var mapped = [];
-      var interpreter = this._interpreter;
-      var exprefNode = resolvedArgs[0];
-      var elements = resolvedArgs[1];
-      for (var i = 0; i < elements.length; i++) {
-          mapped.push(interpreter.visit(exprefNode, elements[i]));
-      }
-      return mapped;
-    },
-
-    _functionMerge: function(resolvedArgs) {
-      var merged = {};
-      for (var i = 0; i < resolvedArgs.length; i++) {
-        var current = resolvedArgs[i];
-        for (var key in current) {
-          merged[key] = current[key];
-        }
-      }
-      return merged;
-    },
-
-    _functionMax: function(resolvedArgs) {
-      if (resolvedArgs[0].length > 0) {
-        var typeName = this._getTypeName(resolvedArgs[0][0]);
-        if (typeName === TYPE_NUMBER) {
-          return Math.max.apply(Math, resolvedArgs[0]);
-        } else {
-          var elements = resolvedArgs[0];
-          var maxElement = elements[0];
-          for (var i = 1; i < elements.length; i++) {
-              if (maxElement.localeCompare(elements[i]) < 0) {
-                  maxElement = elements[i];
-              }
-          }
-          return maxElement;
-        }
-      } else {
-          return null;
-      }
-    },
-
-    _functionMin: function(resolvedArgs) {
-      if (resolvedArgs[0].length > 0) {
-        var typeName = this._getTypeName(resolvedArgs[0][0]);
-        if (typeName === TYPE_NUMBER) {
-          return Math.min.apply(Math, resolvedArgs[0]);
-        } else {
-          var elements = resolvedArgs[0];
-          var minElement = elements[0];
-          for (var i = 1; i < elements.length; i++) {
-              if (elements[i].localeCompare(minElement) < 0) {
-                  minElement = elements[i];
-              }
-          }
-          return minElement;
-        }
-      } else {
-        return null;
-      }
-    },
-
-    _functionSum: function(resolvedArgs) {
-      var sum = 0;
-      var listToSum = resolvedArgs[0];
-      for (var i = 0; i < listToSum.length; i++) {
-        sum += listToSum[i];
-      }
-      return sum;
-    },
-
-    _functionType: function(resolvedArgs) {
-        switch (this._getTypeName(resolvedArgs[0])) {
-          case TYPE_NUMBER:
-            return "number";
-          case TYPE_STRING:
-            return "string";
-          case TYPE_ARRAY:
-            return "array";
-          case TYPE_OBJECT:
-            return "object";
-          case TYPE_BOOLEAN:
-            return "boolean";
-          case TYPE_EXPREF:
-            return "expref";
-          case TYPE_NULL:
-            return "null";
-        }
-    },
-
-    _functionKeys: function(resolvedArgs) {
-        return Object.keys(resolvedArgs[0]);
-    },
-
-    _functionValues: function(resolvedArgs) {
-        var obj = resolvedArgs[0];
-        var keys = Object.keys(obj);
-        var values = [];
-        for (var i = 0; i < keys.length; i++) {
-            values.push(obj[keys[i]]);
-        }
-        return values;
-    },
-
-    _functionJoin: function(resolvedArgs) {
-        var joinChar = resolvedArgs[0];
-        var listJoin = resolvedArgs[1];
-        return listJoin.join(joinChar);
-    },
-
-    _functionToArray: function(resolvedArgs) {
-        if (this._getTypeName(resolvedArgs[0]) === TYPE_ARRAY) {
-            return resolvedArgs[0];
-        } else {
-            return [resolvedArgs[0]];
-        }
-    },
-
-    _functionToString: function(resolvedArgs) {
-        if (this._getTypeName(resolvedArgs[0]) === TYPE_STRING) {
-            return resolvedArgs[0];
-        } else {
-            return JSON.stringify(resolvedArgs[0]);
-        }
-    },
-
-    _functionToNumber: function(resolvedArgs) {
-        var typeName = this._getTypeName(resolvedArgs[0]);
-        var convertedValue;
-        if (typeName === TYPE_NUMBER) {
-            return resolvedArgs[0];
-        } else if (typeName === TYPE_STRING) {
-            convertedValue = +resolvedArgs[0];
-            if (!isNaN(convertedValue)) {
-                return convertedValue;
-            }
-        }
-        return null;
-    },
-
-    _functionNotNull: function(resolvedArgs) {
-        for (var i = 0; i < resolvedArgs.length; i++) {
-            if (this._getTypeName(resolvedArgs[i]) !== TYPE_NULL) {
-                return resolvedArgs[i];
-            }
-        }
-        return null;
-    },
-
-    _functionSort: function(resolvedArgs) {
-        var sortedArray = resolvedArgs[0].slice(0);
-        sortedArray.sort();
-        return sortedArray;
-    },
-
-    _functionSortBy: function(resolvedArgs) {
-        var sortedArray = resolvedArgs[0].slice(0);
-        if (sortedArray.length === 0) {
-            return sortedArray;
-        }
-        var interpreter = this._interpreter;
-        var exprefNode = resolvedArgs[1];
-        var requiredType = this._getTypeName(
-            interpreter.visit(exprefNode, sortedArray[0]));
-        if ([TYPE_NUMBER, TYPE_STRING].indexOf(requiredType) < 0) {
-            throw new Error("TypeError");
-        }
-        var that = this;
-        // In order to get a stable sort out of an unstable
-        // sort algorithm, we decorate/sort/undecorate (DSU)
-        // by creating a new list of [index, element] pairs.
-        // In the cmp function, if the evaluated elements are
-        // equal, then the index will be used as the tiebreaker.
-        // After the decorated list has been sorted, it will be
-        // undecorated to extract the original elements.
-        var decorated = [];
-        for (var i = 0; i < sortedArray.length; i++) {
-          decorated.push([i, sortedArray[i]]);
-        }
-        decorated.sort(function(a, b) {
-          var exprA = interpreter.visit(exprefNode, a[1]);
-          var exprB = interpreter.visit(exprefNode, b[1]);
-          if (that._getTypeName(exprA) !== requiredType) {
-              throw new Error(
-                  "TypeError: expected " + requiredType + ", received " +
-                  that._getTypeName(exprA));
-          } else if (that._getTypeName(exprB) !== requiredType) {
-              throw new Error(
-                  "TypeError: expected " + requiredType + ", received " +
-                  that._getTypeName(exprB));
-          }
-          if (exprA > exprB) {
-            return 1;
-          } else if (exprA < exprB) {
-            return -1;
-          } else {
-            // If they're equal compare the items by their
-            // order to maintain relative order of equal keys
-            // (i.e. to get a stable sort).
-            return a[0] - b[0];
-          }
-        });
-        // Undecorate: extract out the original list elements.
-        for (var j = 0; j < decorated.length; j++) {
-          sortedArray[j] = decorated[j][1];
-        }
-        return sortedArray;
-    },
-
-    _functionMaxBy: function(resolvedArgs) {
-      var exprefNode = resolvedArgs[1];
-      var resolvedArray = resolvedArgs[0];
-      var keyFunction = this.createKeyFunction(exprefNode, [TYPE_NUMBER, TYPE_STRING]);
-      var maxNumber = -Infinity;
-      var maxRecord;
-      var current;
-      for (var i = 0; i < resolvedArray.length; i++) {
-        current = keyFunction(resolvedArray[i]);
-        if (current > maxNumber) {
-          maxNumber = current;
-          maxRecord = resolvedArray[i];
-        }
-      }
-      return maxRecord;
-    },
-
-    _functionMinBy: function(resolvedArgs) {
-      var exprefNode = resolvedArgs[1];
-      var resolvedArray = resolvedArgs[0];
-      var keyFunction = this.createKeyFunction(exprefNode, [TYPE_NUMBER, TYPE_STRING]);
-      var minNumber = Infinity;
-      var minRecord;
-      var current;
-      for (var i = 0; i < resolvedArray.length; i++) {
-        current = keyFunction(resolvedArray[i]);
-        if (current < minNumber) {
-          minNumber = current;
-          minRecord = resolvedArray[i];
-        }
-      }
-      return minRecord;
-    },
-
-    createKeyFunction: function(exprefNode, allowedTypes) {
-      var that = this;
-      var interpreter = this._interpreter;
-      var keyFunc = function(x) {
-        var current = interpreter.visit(exprefNode, x);
-        if (allowedTypes.indexOf(that._getTypeName(current)) < 0) {
-          var msg = "TypeError: expected one of " + allowedTypes +
-                    ", received " + that._getTypeName(current);
-          throw new Error(msg);
-        }
-        return current;
-      };
-      return keyFunc;
-    }
-
-  };
-
-  function compile(stream) {
-    var parser = new Parser();
-    var ast = parser.parse(stream);
-    return ast;
-  }
-
-  function tokenize(stream) {
-      var lexer = new Lexer();
-      return lexer.tokenize(stream);
-  }
-
-  function search(data, expression) {
-      var parser = new Parser();
-      // This needs to be improved.  Both the interpreter and runtime depend on
-      // each other.  The runtime needs the interpreter to support exprefs.
-      // There's likely a clean way to avoid the cyclic dependency.
-      var runtime = new Runtime();
-      var interpreter = new TreeInterpreter(runtime);
-      runtime._interpreter = interpreter;
-      var node = parser.parse(expression);
-      return interpreter.search(node, data);
-  }
-
-  exports.tokenize = tokenize;
-  exports.compile = compile;
-  exports.search = search;
-  exports.strictDeepEqual = strictDeepEqual;
-})( false ? this.jmespath = {} : exports);
-
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/*!
  * The buffer module from node.js, for the browser.
@@ -5064,9 +2346,9 @@ module.exports = isSymbol;
 
 
 
-var base64 = __webpack_require__(235)
-var ieee754 = __webpack_require__(236)
-var isArray = __webpack_require__(237)
+var base64 = __webpack_require__(236)
+var ieee754 = __webpack_require__(237)
+var isArray = __webpack_require__(238)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -6844,55 +4126,2803 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {var util = __webpack_require__(1);
+
+// browser specific modules
+util.crypto.lib = __webpack_require__(234);
+util.Buffer = __webpack_require__(15).Buffer;
+util.url = __webpack_require__(242);
+util.querystring = __webpack_require__(84);
+util.environment = 'js';
+
+var AWS = __webpack_require__(0);
+module.exports = AWS;
+
+__webpack_require__(77);
+__webpack_require__(78);
+__webpack_require__(247);
+__webpack_require__(251);
+__webpack_require__(252);
+__webpack_require__(257);
+
+// Load the DOMParser XML parser
+AWS.XML.Parser = __webpack_require__(258);
+
+// Load the XHR HttpClient
+__webpack_require__(259);
+
+if (typeof process === 'undefined') {
+  process = {
+    browser: true
+  };
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var util = __webpack_require__(1);
+
+function populateMethod(req) {
+  req.httpRequest.method = req.service.api.operations[req.operation].httpMethod;
+}
+
+function generateURI(endpointPath, operationPath, input, params) {
+  var uri = [endpointPath, operationPath].join('/');
+  uri = uri.replace(/\/+/g, '/');
+
+  var queryString = {}, queryStringSet = false;
+  util.each(input.members, function (name, member) {
+    var paramValue = params[name];
+    if (paramValue === null || paramValue === undefined) return;
+    if (member.location === 'uri') {
+      var regex = new RegExp('\\{' + member.name + '(\\+)?\\}');
+      uri = uri.replace(regex, function(_, plus) {
+        var fn = plus ? util.uriEscapePath : util.uriEscape;
+        return fn(String(paramValue));
+      });
+    } else if (member.location === 'querystring') {
+      queryStringSet = true;
+
+      if (member.type === 'list') {
+        queryString[member.name] = paramValue.map(function(val) {
+          return util.uriEscape(String(val));
+        });
+      } else if (member.type === 'map') {
+        util.each(paramValue, function(key, value) {
+          if (Array.isArray(value)) {
+            queryString[key] = value.map(function(val) {
+              return util.uriEscape(String(val));
+            });
+          } else {
+            queryString[key] = util.uriEscape(String(value));
+          }
+        });
+      } else {
+        queryString[member.name] = util.uriEscape(String(paramValue));
+      }
+    }
+  });
+
+  if (queryStringSet) {
+    uri += (uri.indexOf('?') >= 0 ? '&' : '?');
+    var parts = [];
+    util.arrayEach(Object.keys(queryString).sort(), function(key) {
+      if (!Array.isArray(queryString[key])) {
+        queryString[key] = [queryString[key]];
+      }
+      for (var i = 0; i < queryString[key].length; i++) {
+        parts.push(util.uriEscape(String(key)) + '=' + queryString[key][i]);
+      }
+    });
+    uri += parts.join('&');
+  }
+
+  return uri;
+}
+
+function populateURI(req) {
+  var operation = req.service.api.operations[req.operation];
+  var input = operation.input;
+
+  var uri = generateURI(req.httpRequest.endpoint.path, operation.httpPath, input, req.params);
+  req.httpRequest.path = uri;
+}
+
+function populateHeaders(req) {
+  var operation = req.service.api.operations[req.operation];
+  util.each(operation.input.members, function (name, member) {
+    var value = req.params[name];
+    if (value === null || value === undefined) return;
+
+    if (member.location === 'headers' && member.type === 'map') {
+      util.each(value, function(key, memberValue) {
+        req.httpRequest.headers[member.name + key] = memberValue;
+      });
+    } else if (member.location === 'header') {
+      value = member.toWireFormat(value).toString();
+      if (member.isJsonValue) {
+        value = util.base64.encode(value);
+      }
+      req.httpRequest.headers[member.name] = value;
+    }
+  });
+}
+
+function buildRequest(req) {
+  populateMethod(req);
+  populateURI(req);
+  populateHeaders(req);
+}
+
+function extractError() {
+}
+
+function extractData(resp) {
+  var req = resp.request;
+  var data = {};
+  var r = resp.httpResponse;
+  var operation = req.service.api.operations[req.operation];
+  var output = operation.output;
+
+  // normalize headers names to lower-cased keys for matching
+  var headers = {};
+  util.each(r.headers, function (k, v) {
+    headers[k.toLowerCase()] = v;
+  });
+
+  util.each(output.members, function(name, member) {
+    var header = (member.name || name).toLowerCase();
+    if (member.location === 'headers' && member.type === 'map') {
+      data[name] = {};
+      var location = member.isLocationName ? member.name : '';
+      var pattern = new RegExp('^' + location + '(.+)', 'i');
+      util.each(r.headers, function (k, v) {
+        var result = k.match(pattern);
+        if (result !== null) {
+          data[name][result[1]] = v;
+        }
+      });
+    } else if (member.location === 'header') {
+      if (headers[header] !== undefined) {
+        var value = member.isJsonValue ?
+          util.base64.decode(headers[header]) :
+          headers[header];
+        data[name] = member.toType(value);
+      }
+    } else if (member.location === 'statusCode') {
+      data[name] = parseInt(r.statusCode, 10);
+    }
+  });
+
+  resp.data = data;
+}
+
+module.exports = {
+  buildRequest: buildRequest,
+  extractError: extractError,
+  extractData: extractData,
+  generateURI: generateURI
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(11),
+    isObject = __webpack_require__(3);
+
+/** `Object#toString` result references. */
+var asyncTag = '[object AsyncFunction]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    proxyTag = '[object Proxy]';
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  if (!isObject(value)) {
+    return false;
+  }
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+  var tag = baseGetTag(value);
+  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+}
+
+module.exports = isFunction;
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var root = __webpack_require__(5);
+
+/** Built-in value references. */
+var Symbol = root.Symbol;
+
+module.exports = Symbol;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+/**
+ * Performs a
+ * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * comparison between two values to determine if they are equivalent.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to compare.
+ * @param {*} other The other value to compare.
+ * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ * var other = { 'a': 1 };
+ *
+ * _.eq(object, object);
+ * // => true
+ *
+ * _.eq(object, other);
+ * // => false
+ *
+ * _.eq('a', 'a');
+ * // => true
+ *
+ * _.eq('a', Object('a'));
+ * // => false
+ *
+ * _.eq(NaN, NaN);
+ * // => true
+ */
+function eq(value, other) {
+  return value === other || (value !== value && other !== other);
+}
+
+module.exports = eq;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var listCacheClear = __webpack_require__(148),
+    listCacheDelete = __webpack_require__(149),
+    listCacheGet = __webpack_require__(150),
+    listCacheHas = __webpack_require__(151),
+    listCacheSet = __webpack_require__(152);
+
+/**
+ * Creates an list cache object.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function ListCache(entries) {
+  var index = -1,
+      length = entries == null ? 0 : entries.length;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+// Add methods to `ListCache`.
+ListCache.prototype.clear = listCacheClear;
+ListCache.prototype['delete'] = listCacheDelete;
+ListCache.prototype.get = listCacheGet;
+ListCache.prototype.has = listCacheHas;
+ListCache.prototype.set = listCacheSet;
+
+module.exports = ListCache;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var eq = __webpack_require__(20);
+
+/**
+ * Gets the index at which the `key` is found in `array` of key-value pairs.
+ *
+ * @private
+ * @param {Array} array The array to inspect.
+ * @param {*} key The key to search for.
+ * @returns {number} Returns the index of the matched value, else `-1`.
+ */
+function assocIndexOf(array, key) {
+  var length = array.length;
+  while (length--) {
+    if (eq(array[length][0], key)) {
+      return length;
+    }
+  }
+  return -1;
+}
+
+module.exports = assocIndexOf;
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getNative = __webpack_require__(6);
+
+/* Built-in method references that are verified to be native. */
+var nativeCreate = getNative(Object, 'create');
+
+module.exports = nativeCreate;
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isKeyable = __webpack_require__(166);
+
+/**
+ * Gets the data for `map`.
+ *
+ * @private
+ * @param {Object} map The map to query.
+ * @param {string} key The reference key.
+ * @returns {*} Returns the map data.
+ */
+function getMapData(map, key) {
+  var data = map.__data__;
+  return isKeyable(key)
+    ? data[typeof key == 'string' ? 'string' : 'hash']
+    : data.map;
+}
+
+module.exports = getMapData;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isSymbol = __webpack_require__(43);
+
+/** Used as references for various `Number` constants. */
+var INFINITY = 1 / 0;
+
+/**
+ * Converts `value` to a string key if it's not a string or symbol.
+ *
+ * @private
+ * @param {*} value The value to inspect.
+ * @returns {string|symbol} Returns the key.
+ */
+function toKey(value) {
+  if (typeof value == 'string' || isSymbol(value)) {
+    return value;
+  }
+  var result = (value + '');
+  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
+}
+
+module.exports = toKey;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Buffer = __webpack_require__(15).Buffer;
+
+/**
+ * This is a polyfill for the static method `isView` of `ArrayBuffer`, which is
+ * e.g. missing in IE 10.
+ *
+ * @api private
+ */
+if (
+    typeof ArrayBuffer !== 'undefined' &&
+    typeof ArrayBuffer.isView === 'undefined'
+) {
+    ArrayBuffer.isView = function(arg) {
+        return viewStrings.indexOf(Object.prototype.toString.call(arg)) > -1;
+    };
+}
+
+/**
+ * @api private
+ */
+var viewStrings = [
+    '[object Int8Array]',
+    '[object Uint8Array]',
+    '[object Uint8ClampedArray]',
+    '[object Int16Array]',
+    '[object Uint16Array]',
+    '[object Int32Array]',
+    '[object Uint32Array]',
+    '[object Float32Array]',
+    '[object Float64Array]',
+    '[object DataView]',
+];
+
+/**
+ * @api private
+ */
+function isEmptyData(data) {
+    if (typeof data === 'string') {
+        return data.length === 0;
+    }
+    return data.byteLength === 0;
+}
+
+/**
+ * @api private
+ */
+function convertToBuffer(data) {
+    if (typeof data === 'string') {
+        data = new Buffer(data, 'utf8');
+    }
+
+    if (ArrayBuffer.isView(data)) {
+        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+    }
+
+    return new Uint8Array(data);
+}
+
+module.exports = exports = {
+    isEmptyData: isEmptyData,
+    convertToBuffer: convertToBuffer,
+}
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(16);
+var AWS = __webpack_require__(0);
+var Service = AWS.Service;
+var apiLoader = AWS.apiLoader;
+
+apiLoader.services['sts'] = {};
+AWS.STS = Service.defineService('sts', ['2011-06-15']);
+__webpack_require__(248);
+Object.defineProperty(apiLoader.services['sts'], '2011-06-15', {
+  get: function get() {
+    var model = __webpack_require__(249);
+    model.paginators = __webpack_require__(250).pagination;
+    return model;
+  },
+  enumerable: true,
+  configurable: true
+});
+
+module.exports = AWS.STS;
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(16);
+
+var AWS = __webpack_require__(0);
+if (typeof window !== 'undefined') window.AWS = AWS;
+if (true) module.exports = AWS;
+if (typeof self !== 'undefined') self.AWS = AWS;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var util = __webpack_require__(1);
+var JsonBuilder = __webpack_require__(30);
+var JsonParser = __webpack_require__(31);
+
+function buildRequest(req) {
+  var httpRequest = req.httpRequest;
+  var api = req.service.api;
+  var target = api.targetPrefix + '.' + api.operations[req.operation].name;
+  var version = api.jsonVersion || '1.0';
+  var input = api.operations[req.operation].input;
+  var builder = new JsonBuilder();
+
+  if (version === 1) version = '1.0';
+  httpRequest.body = builder.build(req.params || {}, input);
+  httpRequest.headers['Content-Type'] = 'application/x-amz-json-' + version;
+  httpRequest.headers['X-Amz-Target'] = target;
+}
+
+function extractError(resp) {
+  var error = {};
+  var httpResponse = resp.httpResponse;
+
+  error.code = httpResponse.headers['x-amzn-errortype'] || 'UnknownError';
+  if (typeof error.code === 'string') {
+    error.code = error.code.split(':')[0];
+  }
+
+  if (httpResponse.body.length > 0) {
+    try {
+      var e = JSON.parse(httpResponse.body.toString());
+      if (e.__type || e.code) {
+        error.code = (e.__type || e.code).split('#').pop();
+      }
+      if (error.code === 'RequestEntityTooLarge') {
+        error.message = 'Request body must be less than 1 MB';
+      } else {
+        error.message = (e.message || e.Message || null);
+      }
+    } catch (e) {
+      error.statusCode = httpResponse.statusCode;
+      error.message = httpResponse.statusMessage;
+    }
+  } else {
+    error.statusCode = httpResponse.statusCode;
+    error.message = httpResponse.statusCode.toString();
+  }
+
+  resp.error = util.error(new Error(), error);
+}
+
+function extractData(resp) {
+  var body = resp.httpResponse.body.toString() || '{}';
+  if (resp.request.service.config.convertResponseTypes === false) {
+    resp.data = JSON.parse(body);
+  } else {
+    var operation = resp.request.service.api.operations[resp.request.operation];
+    var shape = operation.output || {};
+    var parser = new JsonParser();
+    resp.data = parser.parse(body, shape);
+  }
+}
+
+module.exports = {
+  buildRequest: buildRequest,
+  extractError: extractError,
+  extractData: extractData
+};
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var util = __webpack_require__(1);
+
+function JsonBuilder() { }
+
+JsonBuilder.prototype.build = function(value, shape) {
+  return JSON.stringify(translate(value, shape));
+};
+
+function translate(value, shape) {
+  if (!shape || value === undefined || value === null) return undefined;
+
+  switch (shape.type) {
+    case 'structure': return translateStructure(value, shape);
+    case 'map': return translateMap(value, shape);
+    case 'list': return translateList(value, shape);
+    default: return translateScalar(value, shape);
+  }
+}
+
+function translateStructure(structure, shape) {
+  var struct = {};
+  util.each(structure, function(name, value) {
+    var memberShape = shape.members[name];
+    if (memberShape) {
+      if (memberShape.location !== 'body') return;
+      var locationName = memberShape.isLocationName ? memberShape.name : name;
+      var result = translate(value, memberShape);
+      if (result !== undefined) struct[locationName] = result;
+    }
+  });
+  return struct;
+}
+
+function translateList(list, shape) {
+  var out = [];
+  util.arrayEach(list, function(value) {
+    var result = translate(value, shape.member);
+    if (result !== undefined) out.push(result);
+  });
+  return out;
+}
+
+function translateMap(map, shape) {
+  var out = {};
+  util.each(map, function(key, value) {
+    var result = translate(value, shape.value);
+    if (result !== undefined) out[key] = result;
+  });
+  return out;
+}
+
+function translateScalar(value, shape) {
+  return shape.toWireFormat(value);
+}
+
+module.exports = JsonBuilder;
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var util = __webpack_require__(1);
+
+function JsonParser() { }
+
+JsonParser.prototype.parse = function(value, shape) {
+  return translate(JSON.parse(value), shape);
+};
+
+function translate(value, shape) {
+  if (!shape || value === undefined) return undefined;
+
+  switch (shape.type) {
+    case 'structure': return translateStructure(value, shape);
+    case 'map': return translateMap(value, shape);
+    case 'list': return translateList(value, shape);
+    default: return translateScalar(value, shape);
+  }
+}
+
+function translateStructure(structure, shape) {
+  if (structure == null) return undefined;
+
+  var struct = {};
+  var shapeMembers = shape.members;
+  util.each(shapeMembers, function(name, memberShape) {
+    var locationName = memberShape.isLocationName ? memberShape.name : name;
+    if (Object.prototype.hasOwnProperty.call(structure, locationName)) {
+      var value = structure[locationName];
+      var result = translate(value, memberShape);
+      if (result !== undefined) struct[name] = result;
+    }
+  });
+  return struct;
+}
+
+function translateList(list, shape) {
+  if (list == null) return undefined;
+
+  var out = [];
+  util.arrayEach(list, function(value) {
+    var result = translate(value, shape.member);
+    if (result === undefined) out.push(null);
+    else out.push(result);
+  });
+  return out;
+}
+
+function translateMap(map, shape) {
+  if (map == null) return undefined;
+
+  var out = {};
+  util.each(map, function(key, value) {
+    var result = translate(value, shape.value);
+    if (result === undefined) out[key] = null;
+    else out[key] = result;
+  });
+  return out;
+}
+
+function translateScalar(value, shape) {
+  return shape.toType(value);
+}
+
+module.exports = JsonParser;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+/**
+ * This method returns the first argument it receives.
+ *
+ * @static
+ * @since 0.1.0
+ * @memberOf _
+ * @category Util
+ * @param {*} value Any value.
+ * @returns {*} Returns `value`.
+ * @example
+ *
+ * var object = { 'a': 1 };
+ *
+ * console.log(_.identity(object) === object);
+ * // => true
+ */
+function identity(value) {
+  return value;
+}
+
+module.exports = identity;
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/**
+ * Checks if `value` is a valid array-like length.
+ *
+ * **Note:** This method is loosely based on
+ * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+ * @example
+ *
+ * _.isLength(3);
+ * // => true
+ *
+ * _.isLength(Number.MIN_VALUE);
+ * // => false
+ *
+ * _.isLength(Infinity);
+ * // => false
+ *
+ * _.isLength('3');
+ * // => false
+ */
+function isLength(value) {
+  return typeof value == 'number' &&
+    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+}
+
+module.exports = isLength;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+/** Used as references for various `Number` constants. */
+var MAX_SAFE_INTEGER = 9007199254740991;
+
+/** Used to detect unsigned integer values. */
+var reIsUint = /^(?:0|[1-9]\d*)$/;
+
+/**
+ * Checks if `value` is a valid array-like index.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+ * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+ */
+function isIndex(value, length) {
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return !!length &&
+    (typeof value == 'number' || reIsUint.test(value)) &&
+    (value > -1 && value % 1 == 0 && value < length);
+}
+
+module.exports = isIndex;
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Checks if `value` is likely a prototype object.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a prototype, else `false`.
+ */
+function isPrototype(value) {
+  var Ctor = value && value.constructor,
+      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto;
+
+  return value === proto;
+}
+
+module.exports = isPrototype;
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsArguments = __webpack_require__(121),
+    isObjectLike = __webpack_require__(14);
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/** Built-in value references. */
+var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+/**
+ * Checks if `value` is likely an `arguments` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+ *  else `false`.
+ * @example
+ *
+ * _.isArguments(function() { return arguments; }());
+ * // => true
+ *
+ * _.isArguments([1, 2, 3]);
+ * // => false
+ */
+var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+    !propertyIsEnumerable.call(value, 'callee');
+};
+
+module.exports = isArguments;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(5),
+    stubFalse = __webpack_require__(122);
+
+/** Detect free variable `exports`. */
+var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+/** Detect free variable `module`. */
+var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+/** Detect the popular CommonJS extension `module.exports`. */
+var moduleExports = freeModule && freeModule.exports === freeExports;
+
+/** Built-in value references. */
+var Buffer = moduleExports ? root.Buffer : undefined;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
+
+/**
+ * Checks if `value` is a buffer.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.3.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
+ * @example
+ *
+ * _.isBuffer(new Buffer(2));
+ * // => true
+ *
+ * _.isBuffer(new Uint8Array(2));
+ * // => false
+ */
+var isBuffer = nativeIsBuffer || stubFalse;
+
+module.exports = isBuffer;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38)(module)))
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseIsTypedArray = __webpack_require__(123),
+    baseUnary = __webpack_require__(124),
+    nodeUtil = __webpack_require__(125);
+
+/* Node.js helper references. */
+var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+
+/**
+ * Checks if `value` is classified as a typed array.
+ *
+ * @static
+ * @memberOf _
+ * @since 3.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a typed array, else `false`.
+ * @example
+ *
+ * _.isTypedArray(new Uint8Array);
+ * // => true
+ *
+ * _.isTypedArray([]);
+ * // => false
+ */
+var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+
+module.exports = isTypedArray;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getNative = __webpack_require__(6),
+    root = __webpack_require__(5);
+
+/* Built-in method references that are verified to be native. */
+var Map = getNative(root, 'Map');
+
+module.exports = Map;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var mapCacheClear = __webpack_require__(158),
+    mapCacheDelete = __webpack_require__(165),
+    mapCacheGet = __webpack_require__(167),
+    mapCacheHas = __webpack_require__(168),
+    mapCacheSet = __webpack_require__(169);
+
+/**
+ * Creates a map cache object to store key-value pairs.
+ *
+ * @private
+ * @constructor
+ * @param {Array} [entries] The key-value pairs to cache.
+ */
+function MapCache(entries) {
+  var index = -1,
+      length = entries == null ? 0 : entries.length;
+
+  this.clear();
+  while (++index < length) {
+    var entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+// Add methods to `MapCache`.
+MapCache.prototype.clear = mapCacheClear;
+MapCache.prototype['delete'] = mapCacheDelete;
+MapCache.prototype.get = mapCacheGet;
+MapCache.prototype.has = mapCacheHas;
+MapCache.prototype.set = mapCacheSet;
+
+module.exports = MapCache;
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isArray = __webpack_require__(4),
+    isSymbol = __webpack_require__(43);
+
+/** Used to match property names within property paths. */
+var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+    reIsPlainProp = /^\w*$/;
+
+/**
+ * Checks if `value` is a property name and not a property path.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @param {Object} [object] The object to query keys on.
+ * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+ */
+function isKey(value, object) {
+  if (isArray(value)) {
+    return false;
+  }
+  var type = typeof value;
+  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
+      value == null || isSymbol(value)) {
+    return true;
+  }
+  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
+    (object != null && value in Object(object));
+}
+
+module.exports = isKey;
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(11),
+    isObjectLike = __webpack_require__(14);
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && baseGetTag(value) == symbolTag);
+}
+
+module.exports = isSymbol;
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(exports) {
+  "use strict";
+
+  function isArray(obj) {
+    if (obj !== null) {
+      return Object.prototype.toString.call(obj) === "[object Array]";
+    } else {
+      return false;
+    }
+  }
+
+  function isObject(obj) {
+    if (obj !== null) {
+      return Object.prototype.toString.call(obj) === "[object Object]";
+    } else {
+      return false;
+    }
+  }
+
+  function strictDeepEqual(first, second) {
+    // Check the scalar case first.
+    if (first === second) {
+      return true;
+    }
+
+    // Check if they are the same type.
+    var firstType = Object.prototype.toString.call(first);
+    if (firstType !== Object.prototype.toString.call(second)) {
+      return false;
+    }
+    // We know that first and second have the same type so we can just check the
+    // first type from now on.
+    if (isArray(first) === true) {
+      // Short circuit if they're not the same length;
+      if (first.length !== second.length) {
+        return false;
+      }
+      for (var i = 0; i < first.length; i++) {
+        if (strictDeepEqual(first[i], second[i]) === false) {
+          return false;
+        }
+      }
+      return true;
+    }
+    if (isObject(first) === true) {
+      // An object is equal if it has the same key/value pairs.
+      var keysSeen = {};
+      for (var key in first) {
+        if (hasOwnProperty.call(first, key)) {
+          if (strictDeepEqual(first[key], second[key]) === false) {
+            return false;
+          }
+          keysSeen[key] = true;
+        }
+      }
+      // Now check that there aren't any keys in second that weren't
+      // in first.
+      for (var key2 in second) {
+        if (hasOwnProperty.call(second, key2)) {
+          if (keysSeen[key2] !== true) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function isFalse(obj) {
+    // From the spec:
+    // A false value corresponds to the following values:
+    // Empty list
+    // Empty object
+    // Empty string
+    // False boolean
+    // null value
+
+    // First check the scalar values.
+    if (obj === "" || obj === false || obj === null) {
+        return true;
+    } else if (isArray(obj) && obj.length === 0) {
+        // Check for an empty array.
+        return true;
+    } else if (isObject(obj)) {
+        // Check for an empty object.
+        for (var key in obj) {
+            // If there are any keys, then
+            // the object is not empty so the object
+            // is not false.
+            if (obj.hasOwnProperty(key)) {
+              return false;
+            }
+        }
+        return true;
+    } else {
+        return false;
+    }
+  }
+
+  function objValues(obj) {
+    var keys = Object.keys(obj);
+    var values = [];
+    for (var i = 0; i < keys.length; i++) {
+      values.push(obj[keys[i]]);
+    }
+    return values;
+  }
+
+  function merge(a, b) {
+      var merged = {};
+      for (var key in a) {
+          merged[key] = a[key];
+      }
+      for (var key2 in b) {
+          merged[key2] = b[key2];
+      }
+      return merged;
+  }
+
+  var trimLeft;
+  if (typeof String.prototype.trimLeft === "function") {
+    trimLeft = function(str) {
+      return str.trimLeft();
+    };
+  } else {
+    trimLeft = function(str) {
+      return str.match(/^\s*(.*)/)[1];
+    };
+  }
+
+  // Type constants used to define functions.
+  var TYPE_NUMBER = 0;
+  var TYPE_ANY = 1;
+  var TYPE_STRING = 2;
+  var TYPE_ARRAY = 3;
+  var TYPE_OBJECT = 4;
+  var TYPE_BOOLEAN = 5;
+  var TYPE_EXPREF = 6;
+  var TYPE_NULL = 7;
+  var TYPE_ARRAY_NUMBER = 8;
+  var TYPE_ARRAY_STRING = 9;
+
+  var TOK_EOF = "EOF";
+  var TOK_UNQUOTEDIDENTIFIER = "UnquotedIdentifier";
+  var TOK_QUOTEDIDENTIFIER = "QuotedIdentifier";
+  var TOK_RBRACKET = "Rbracket";
+  var TOK_RPAREN = "Rparen";
+  var TOK_COMMA = "Comma";
+  var TOK_COLON = "Colon";
+  var TOK_RBRACE = "Rbrace";
+  var TOK_NUMBER = "Number";
+  var TOK_CURRENT = "Current";
+  var TOK_EXPREF = "Expref";
+  var TOK_PIPE = "Pipe";
+  var TOK_OR = "Or";
+  var TOK_AND = "And";
+  var TOK_EQ = "EQ";
+  var TOK_GT = "GT";
+  var TOK_LT = "LT";
+  var TOK_GTE = "GTE";
+  var TOK_LTE = "LTE";
+  var TOK_NE = "NE";
+  var TOK_FLATTEN = "Flatten";
+  var TOK_STAR = "Star";
+  var TOK_FILTER = "Filter";
+  var TOK_DOT = "Dot";
+  var TOK_NOT = "Not";
+  var TOK_LBRACE = "Lbrace";
+  var TOK_LBRACKET = "Lbracket";
+  var TOK_LPAREN= "Lparen";
+  var TOK_LITERAL= "Literal";
+
+  // The "&", "[", "<", ">" tokens
+  // are not in basicToken because
+  // there are two token variants
+  // ("&&", "[?", "<=", ">=").  This is specially handled
+  // below.
+
+  var basicTokens = {
+    ".": TOK_DOT,
+    "*": TOK_STAR,
+    ",": TOK_COMMA,
+    ":": TOK_COLON,
+    "{": TOK_LBRACE,
+    "}": TOK_RBRACE,
+    "]": TOK_RBRACKET,
+    "(": TOK_LPAREN,
+    ")": TOK_RPAREN,
+    "@": TOK_CURRENT
+  };
+
+  var operatorStartToken = {
+      "<": true,
+      ">": true,
+      "=": true,
+      "!": true
+  };
+
+  var skipChars = {
+      " ": true,
+      "\t": true,
+      "\n": true
+  };
+
+
+  function isAlpha(ch) {
+      return (ch >= "a" && ch <= "z") ||
+             (ch >= "A" && ch <= "Z") ||
+             ch === "_";
+  }
+
+  function isNum(ch) {
+      return (ch >= "0" && ch <= "9") ||
+             ch === "-";
+  }
+  function isAlphaNum(ch) {
+      return (ch >= "a" && ch <= "z") ||
+             (ch >= "A" && ch <= "Z") ||
+             (ch >= "0" && ch <= "9") ||
+             ch === "_";
+  }
+
+  function Lexer() {
+  }
+  Lexer.prototype = {
+      tokenize: function(stream) {
+          var tokens = [];
+          this._current = 0;
+          var start;
+          var identifier;
+          var token;
+          while (this._current < stream.length) {
+              if (isAlpha(stream[this._current])) {
+                  start = this._current;
+                  identifier = this._consumeUnquotedIdentifier(stream);
+                  tokens.push({type: TOK_UNQUOTEDIDENTIFIER,
+                               value: identifier,
+                               start: start});
+              } else if (basicTokens[stream[this._current]] !== undefined) {
+                  tokens.push({type: basicTokens[stream[this._current]],
+                              value: stream[this._current],
+                              start: this._current});
+                  this._current++;
+              } else if (isNum(stream[this._current])) {
+                  token = this._consumeNumber(stream);
+                  tokens.push(token);
+              } else if (stream[this._current] === "[") {
+                  // No need to increment this._current.  This happens
+                  // in _consumeLBracket
+                  token = this._consumeLBracket(stream);
+                  tokens.push(token);
+              } else if (stream[this._current] === "\"") {
+                  start = this._current;
+                  identifier = this._consumeQuotedIdentifier(stream);
+                  tokens.push({type: TOK_QUOTEDIDENTIFIER,
+                               value: identifier,
+                               start: start});
+              } else if (stream[this._current] === "'") {
+                  start = this._current;
+                  identifier = this._consumeRawStringLiteral(stream);
+                  tokens.push({type: TOK_LITERAL,
+                               value: identifier,
+                               start: start});
+              } else if (stream[this._current] === "`") {
+                  start = this._current;
+                  var literal = this._consumeLiteral(stream);
+                  tokens.push({type: TOK_LITERAL,
+                               value: literal,
+                               start: start});
+              } else if (operatorStartToken[stream[this._current]] !== undefined) {
+                  tokens.push(this._consumeOperator(stream));
+              } else if (skipChars[stream[this._current]] !== undefined) {
+                  // Ignore whitespace.
+                  this._current++;
+              } else if (stream[this._current] === "&") {
+                  start = this._current;
+                  this._current++;
+                  if (stream[this._current] === "&") {
+                      this._current++;
+                      tokens.push({type: TOK_AND, value: "&&", start: start});
+                  } else {
+                      tokens.push({type: TOK_EXPREF, value: "&", start: start});
+                  }
+              } else if (stream[this._current] === "|") {
+                  start = this._current;
+                  this._current++;
+                  if (stream[this._current] === "|") {
+                      this._current++;
+                      tokens.push({type: TOK_OR, value: "||", start: start});
+                  } else {
+                      tokens.push({type: TOK_PIPE, value: "|", start: start});
+                  }
+              } else {
+                  var error = new Error("Unknown character:" + stream[this._current]);
+                  error.name = "LexerError";
+                  throw error;
+              }
+          }
+          return tokens;
+      },
+
+      _consumeUnquotedIdentifier: function(stream) {
+          var start = this._current;
+          this._current++;
+          while (this._current < stream.length && isAlphaNum(stream[this._current])) {
+              this._current++;
+          }
+          return stream.slice(start, this._current);
+      },
+
+      _consumeQuotedIdentifier: function(stream) {
+          var start = this._current;
+          this._current++;
+          var maxLength = stream.length;
+          while (stream[this._current] !== "\"" && this._current < maxLength) {
+              // You can escape a double quote and you can escape an escape.
+              var current = this._current;
+              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
+                                               stream[current + 1] === "\"")) {
+                  current += 2;
+              } else {
+                  current++;
+              }
+              this._current = current;
+          }
+          this._current++;
+          return JSON.parse(stream.slice(start, this._current));
+      },
+
+      _consumeRawStringLiteral: function(stream) {
+          var start = this._current;
+          this._current++;
+          var maxLength = stream.length;
+          while (stream[this._current] !== "'" && this._current < maxLength) {
+              // You can escape a single quote and you can escape an escape.
+              var current = this._current;
+              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
+                                               stream[current + 1] === "'")) {
+                  current += 2;
+              } else {
+                  current++;
+              }
+              this._current = current;
+          }
+          this._current++;
+          var literal = stream.slice(start + 1, this._current - 1);
+          return literal.replace("\\'", "'");
+      },
+
+      _consumeNumber: function(stream) {
+          var start = this._current;
+          this._current++;
+          var maxLength = stream.length;
+          while (isNum(stream[this._current]) && this._current < maxLength) {
+              this._current++;
+          }
+          var value = parseInt(stream.slice(start, this._current));
+          return {type: TOK_NUMBER, value: value, start: start};
+      },
+
+      _consumeLBracket: function(stream) {
+          var start = this._current;
+          this._current++;
+          if (stream[this._current] === "?") {
+              this._current++;
+              return {type: TOK_FILTER, value: "[?", start: start};
+          } else if (stream[this._current] === "]") {
+              this._current++;
+              return {type: TOK_FLATTEN, value: "[]", start: start};
+          } else {
+              return {type: TOK_LBRACKET, value: "[", start: start};
+          }
+      },
+
+      _consumeOperator: function(stream) {
+          var start = this._current;
+          var startingChar = stream[start];
+          this._current++;
+          if (startingChar === "!") {
+              if (stream[this._current] === "=") {
+                  this._current++;
+                  return {type: TOK_NE, value: "!=", start: start};
+              } else {
+                return {type: TOK_NOT, value: "!", start: start};
+              }
+          } else if (startingChar === "<") {
+              if (stream[this._current] === "=") {
+                  this._current++;
+                  return {type: TOK_LTE, value: "<=", start: start};
+              } else {
+                  return {type: TOK_LT, value: "<", start: start};
+              }
+          } else if (startingChar === ">") {
+              if (stream[this._current] === "=") {
+                  this._current++;
+                  return {type: TOK_GTE, value: ">=", start: start};
+              } else {
+                  return {type: TOK_GT, value: ">", start: start};
+              }
+          } else if (startingChar === "=") {
+              if (stream[this._current] === "=") {
+                  this._current++;
+                  return {type: TOK_EQ, value: "==", start: start};
+              }
+          }
+      },
+
+      _consumeLiteral: function(stream) {
+          this._current++;
+          var start = this._current;
+          var maxLength = stream.length;
+          var literal;
+          while(stream[this._current] !== "`" && this._current < maxLength) {
+              // You can escape a literal char or you can escape the escape.
+              var current = this._current;
+              if (stream[current] === "\\" && (stream[current + 1] === "\\" ||
+                                               stream[current + 1] === "`")) {
+                  current += 2;
+              } else {
+                  current++;
+              }
+              this._current = current;
+          }
+          var literalString = trimLeft(stream.slice(start, this._current));
+          literalString = literalString.replace("\\`", "`");
+          if (this._looksLikeJSON(literalString)) {
+              literal = JSON.parse(literalString);
+          } else {
+              // Try to JSON parse it as "<literal>"
+              literal = JSON.parse("\"" + literalString + "\"");
+          }
+          // +1 gets us to the ending "`", +1 to move on to the next char.
+          this._current++;
+          return literal;
+      },
+
+      _looksLikeJSON: function(literalString) {
+          var startingChars = "[{\"";
+          var jsonLiterals = ["true", "false", "null"];
+          var numberLooking = "-0123456789";
+
+          if (literalString === "") {
+              return false;
+          } else if (startingChars.indexOf(literalString[0]) >= 0) {
+              return true;
+          } else if (jsonLiterals.indexOf(literalString) >= 0) {
+              return true;
+          } else if (numberLooking.indexOf(literalString[0]) >= 0) {
+              try {
+                  JSON.parse(literalString);
+                  return true;
+              } catch (ex) {
+                  return false;
+              }
+          } else {
+              return false;
+          }
+      }
+  };
+
+      var bindingPower = {};
+      bindingPower[TOK_EOF] = 0;
+      bindingPower[TOK_UNQUOTEDIDENTIFIER] = 0;
+      bindingPower[TOK_QUOTEDIDENTIFIER] = 0;
+      bindingPower[TOK_RBRACKET] = 0;
+      bindingPower[TOK_RPAREN] = 0;
+      bindingPower[TOK_COMMA] = 0;
+      bindingPower[TOK_RBRACE] = 0;
+      bindingPower[TOK_NUMBER] = 0;
+      bindingPower[TOK_CURRENT] = 0;
+      bindingPower[TOK_EXPREF] = 0;
+      bindingPower[TOK_PIPE] = 1;
+      bindingPower[TOK_OR] = 2;
+      bindingPower[TOK_AND] = 3;
+      bindingPower[TOK_EQ] = 5;
+      bindingPower[TOK_GT] = 5;
+      bindingPower[TOK_LT] = 5;
+      bindingPower[TOK_GTE] = 5;
+      bindingPower[TOK_LTE] = 5;
+      bindingPower[TOK_NE] = 5;
+      bindingPower[TOK_FLATTEN] = 9;
+      bindingPower[TOK_STAR] = 20;
+      bindingPower[TOK_FILTER] = 21;
+      bindingPower[TOK_DOT] = 40;
+      bindingPower[TOK_NOT] = 45;
+      bindingPower[TOK_LBRACE] = 50;
+      bindingPower[TOK_LBRACKET] = 55;
+      bindingPower[TOK_LPAREN] = 60;
+
+  function Parser() {
+  }
+
+  Parser.prototype = {
+      parse: function(expression) {
+          this._loadTokens(expression);
+          this.index = 0;
+          var ast = this.expression(0);
+          if (this._lookahead(0) !== TOK_EOF) {
+              var t = this._lookaheadToken(0);
+              var error = new Error(
+                  "Unexpected token type: " + t.type + ", value: " + t.value);
+              error.name = "ParserError";
+              throw error;
+          }
+          return ast;
+      },
+
+      _loadTokens: function(expression) {
+          var lexer = new Lexer();
+          var tokens = lexer.tokenize(expression);
+          tokens.push({type: TOK_EOF, value: "", start: expression.length});
+          this.tokens = tokens;
+      },
+
+      expression: function(rbp) {
+          var leftToken = this._lookaheadToken(0);
+          this._advance();
+          var left = this.nud(leftToken);
+          var currentToken = this._lookahead(0);
+          while (rbp < bindingPower[currentToken]) {
+              this._advance();
+              left = this.led(currentToken, left);
+              currentToken = this._lookahead(0);
+          }
+          return left;
+      },
+
+      _lookahead: function(number) {
+          return this.tokens[this.index + number].type;
+      },
+
+      _lookaheadToken: function(number) {
+          return this.tokens[this.index + number];
+      },
+
+      _advance: function() {
+          this.index++;
+      },
+
+      nud: function(token) {
+        var left;
+        var right;
+        var expression;
+        switch (token.type) {
+          case TOK_LITERAL:
+            return {type: "Literal", value: token.value};
+          case TOK_UNQUOTEDIDENTIFIER:
+            return {type: "Field", name: token.value};
+          case TOK_QUOTEDIDENTIFIER:
+            var node = {type: "Field", name: token.value};
+            if (this._lookahead(0) === TOK_LPAREN) {
+                throw new Error("Quoted identifier not allowed for function names.");
+            } else {
+                return node;
+            }
+            break;
+          case TOK_NOT:
+            right = this.expression(bindingPower.Not);
+            return {type: "NotExpression", children: [right]};
+          case TOK_STAR:
+            left = {type: "Identity"};
+            right = null;
+            if (this._lookahead(0) === TOK_RBRACKET) {
+                // This can happen in a multiselect,
+                // [a, b, *]
+                right = {type: "Identity"};
+            } else {
+                right = this._parseProjectionRHS(bindingPower.Star);
+            }
+            return {type: "ValueProjection", children: [left, right]};
+          case TOK_FILTER:
+            return this.led(token.type, {type: "Identity"});
+          case TOK_LBRACE:
+            return this._parseMultiselectHash();
+          case TOK_FLATTEN:
+            left = {type: TOK_FLATTEN, children: [{type: "Identity"}]};
+            right = this._parseProjectionRHS(bindingPower.Flatten);
+            return {type: "Projection", children: [left, right]};
+          case TOK_LBRACKET:
+            if (this._lookahead(0) === TOK_NUMBER || this._lookahead(0) === TOK_COLON) {
+                right = this._parseIndexExpression();
+                return this._projectIfSlice({type: "Identity"}, right);
+            } else if (this._lookahead(0) === TOK_STAR &&
+                       this._lookahead(1) === TOK_RBRACKET) {
+                this._advance();
+                this._advance();
+                right = this._parseProjectionRHS(bindingPower.Star);
+                return {type: "Projection",
+                        children: [{type: "Identity"}, right]};
+            } else {
+                return this._parseMultiselectList();
+            }
+            break;
+          case TOK_CURRENT:
+            return {type: TOK_CURRENT};
+          case TOK_EXPREF:
+            expression = this.expression(bindingPower.Expref);
+            return {type: "ExpressionReference", children: [expression]};
+          case TOK_LPAREN:
+            var args = [];
+            while (this._lookahead(0) !== TOK_RPAREN) {
+              if (this._lookahead(0) === TOK_CURRENT) {
+                expression = {type: TOK_CURRENT};
+                this._advance();
+              } else {
+                expression = this.expression(0);
+              }
+              args.push(expression);
+            }
+            this._match(TOK_RPAREN);
+            return args[0];
+          default:
+            this._errorToken(token);
+        }
+      },
+
+      led: function(tokenName, left) {
+        var right;
+        switch(tokenName) {
+          case TOK_DOT:
+            var rbp = bindingPower.Dot;
+            if (this._lookahead(0) !== TOK_STAR) {
+                right = this._parseDotRHS(rbp);
+                return {type: "Subexpression", children: [left, right]};
+            } else {
+                // Creating a projection.
+                this._advance();
+                right = this._parseProjectionRHS(rbp);
+                return {type: "ValueProjection", children: [left, right]};
+            }
+            break;
+          case TOK_PIPE:
+            right = this.expression(bindingPower.Pipe);
+            return {type: TOK_PIPE, children: [left, right]};
+          case TOK_OR:
+            right = this.expression(bindingPower.Or);
+            return {type: "OrExpression", children: [left, right]};
+          case TOK_AND:
+            right = this.expression(bindingPower.And);
+            return {type: "AndExpression", children: [left, right]};
+          case TOK_LPAREN:
+            var name = left.name;
+            var args = [];
+            var expression, node;
+            while (this._lookahead(0) !== TOK_RPAREN) {
+              if (this._lookahead(0) === TOK_CURRENT) {
+                expression = {type: TOK_CURRENT};
+                this._advance();
+              } else {
+                expression = this.expression(0);
+              }
+              if (this._lookahead(0) === TOK_COMMA) {
+                this._match(TOK_COMMA);
+              }
+              args.push(expression);
+            }
+            this._match(TOK_RPAREN);
+            node = {type: "Function", name: name, children: args};
+            return node;
+          case TOK_FILTER:
+            var condition = this.expression(0);
+            this._match(TOK_RBRACKET);
+            if (this._lookahead(0) === TOK_FLATTEN) {
+              right = {type: "Identity"};
+            } else {
+              right = this._parseProjectionRHS(bindingPower.Filter);
+            }
+            return {type: "FilterProjection", children: [left, right, condition]};
+          case TOK_FLATTEN:
+            var leftNode = {type: TOK_FLATTEN, children: [left]};
+            var rightNode = this._parseProjectionRHS(bindingPower.Flatten);
+            return {type: "Projection", children: [leftNode, rightNode]};
+          case TOK_EQ:
+          case TOK_NE:
+          case TOK_GT:
+          case TOK_GTE:
+          case TOK_LT:
+          case TOK_LTE:
+            return this._parseComparator(left, tokenName);
+          case TOK_LBRACKET:
+            var token = this._lookaheadToken(0);
+            if (token.type === TOK_NUMBER || token.type === TOK_COLON) {
+                right = this._parseIndexExpression();
+                return this._projectIfSlice(left, right);
+            } else {
+                this._match(TOK_STAR);
+                this._match(TOK_RBRACKET);
+                right = this._parseProjectionRHS(bindingPower.Star);
+                return {type: "Projection", children: [left, right]};
+            }
+            break;
+          default:
+            this._errorToken(this._lookaheadToken(0));
+        }
+      },
+
+      _match: function(tokenType) {
+          if (this._lookahead(0) === tokenType) {
+              this._advance();
+          } else {
+              var t = this._lookaheadToken(0);
+              var error = new Error("Expected " + tokenType + ", got: " + t.type);
+              error.name = "ParserError";
+              throw error;
+          }
+      },
+
+      _errorToken: function(token) {
+          var error = new Error("Invalid token (" +
+                                token.type + "): \"" +
+                                token.value + "\"");
+          error.name = "ParserError";
+          throw error;
+      },
+
+
+      _parseIndexExpression: function() {
+          if (this._lookahead(0) === TOK_COLON || this._lookahead(1) === TOK_COLON) {
+              return this._parseSliceExpression();
+          } else {
+              var node = {
+                  type: "Index",
+                  value: this._lookaheadToken(0).value};
+              this._advance();
+              this._match(TOK_RBRACKET);
+              return node;
+          }
+      },
+
+      _projectIfSlice: function(left, right) {
+          var indexExpr = {type: "IndexExpression", children: [left, right]};
+          if (right.type === "Slice") {
+              return {
+                  type: "Projection",
+                  children: [indexExpr, this._parseProjectionRHS(bindingPower.Star)]
+              };
+          } else {
+              return indexExpr;
+          }
+      },
+
+      _parseSliceExpression: function() {
+          // [start:end:step] where each part is optional, as well as the last
+          // colon.
+          var parts = [null, null, null];
+          var index = 0;
+          var currentToken = this._lookahead(0);
+          while (currentToken !== TOK_RBRACKET && index < 3) {
+              if (currentToken === TOK_COLON) {
+                  index++;
+                  this._advance();
+              } else if (currentToken === TOK_NUMBER) {
+                  parts[index] = this._lookaheadToken(0).value;
+                  this._advance();
+              } else {
+                  var t = this._lookahead(0);
+                  var error = new Error("Syntax error, unexpected token: " +
+                                        t.value + "(" + t.type + ")");
+                  error.name = "Parsererror";
+                  throw error;
+              }
+              currentToken = this._lookahead(0);
+          }
+          this._match(TOK_RBRACKET);
+          return {
+              type: "Slice",
+              children: parts
+          };
+      },
+
+      _parseComparator: function(left, comparator) {
+        var right = this.expression(bindingPower[comparator]);
+        return {type: "Comparator", name: comparator, children: [left, right]};
+      },
+
+      _parseDotRHS: function(rbp) {
+          var lookahead = this._lookahead(0);
+          var exprTokens = [TOK_UNQUOTEDIDENTIFIER, TOK_QUOTEDIDENTIFIER, TOK_STAR];
+          if (exprTokens.indexOf(lookahead) >= 0) {
+              return this.expression(rbp);
+          } else if (lookahead === TOK_LBRACKET) {
+              this._match(TOK_LBRACKET);
+              return this._parseMultiselectList();
+          } else if (lookahead === TOK_LBRACE) {
+              this._match(TOK_LBRACE);
+              return this._parseMultiselectHash();
+          }
+      },
+
+      _parseProjectionRHS: function(rbp) {
+          var right;
+          if (bindingPower[this._lookahead(0)] < 10) {
+              right = {type: "Identity"};
+          } else if (this._lookahead(0) === TOK_LBRACKET) {
+              right = this.expression(rbp);
+          } else if (this._lookahead(0) === TOK_FILTER) {
+              right = this.expression(rbp);
+          } else if (this._lookahead(0) === TOK_DOT) {
+              this._match(TOK_DOT);
+              right = this._parseDotRHS(rbp);
+          } else {
+              var t = this._lookaheadToken(0);
+              var error = new Error("Sytanx error, unexpected token: " +
+                                    t.value + "(" + t.type + ")");
+              error.name = "ParserError";
+              throw error;
+          }
+          return right;
+      },
+
+      _parseMultiselectList: function() {
+          var expressions = [];
+          while (this._lookahead(0) !== TOK_RBRACKET) {
+              var expression = this.expression(0);
+              expressions.push(expression);
+              if (this._lookahead(0) === TOK_COMMA) {
+                  this._match(TOK_COMMA);
+                  if (this._lookahead(0) === TOK_RBRACKET) {
+                    throw new Error("Unexpected token Rbracket");
+                  }
+              }
+          }
+          this._match(TOK_RBRACKET);
+          return {type: "MultiSelectList", children: expressions};
+      },
+
+      _parseMultiselectHash: function() {
+        var pairs = [];
+        var identifierTypes = [TOK_UNQUOTEDIDENTIFIER, TOK_QUOTEDIDENTIFIER];
+        var keyToken, keyName, value, node;
+        for (;;) {
+          keyToken = this._lookaheadToken(0);
+          if (identifierTypes.indexOf(keyToken.type) < 0) {
+            throw new Error("Expecting an identifier token, got: " +
+                            keyToken.type);
+          }
+          keyName = keyToken.value;
+          this._advance();
+          this._match(TOK_COLON);
+          value = this.expression(0);
+          node = {type: "KeyValuePair", name: keyName, value: value};
+          pairs.push(node);
+          if (this._lookahead(0) === TOK_COMMA) {
+            this._match(TOK_COMMA);
+          } else if (this._lookahead(0) === TOK_RBRACE) {
+            this._match(TOK_RBRACE);
+            break;
+          }
+        }
+        return {type: "MultiSelectHash", children: pairs};
+      }
+  };
+
+
+  function TreeInterpreter(runtime) {
+    this.runtime = runtime;
+  }
+
+  TreeInterpreter.prototype = {
+      search: function(node, value) {
+          return this.visit(node, value);
+      },
+
+      visit: function(node, value) {
+          var matched, current, result, first, second, field, left, right, collected, i;
+          switch (node.type) {
+            case "Field":
+              if (value === null ) {
+                  return null;
+              } else if (isObject(value)) {
+                  field = value[node.name];
+                  if (field === undefined) {
+                      return null;
+                  } else {
+                      return field;
+                  }
+              } else {
+                return null;
+              }
+              break;
+            case "Subexpression":
+              result = this.visit(node.children[0], value);
+              for (i = 1; i < node.children.length; i++) {
+                  result = this.visit(node.children[1], result);
+                  if (result === null) {
+                      return null;
+                  }
+              }
+              return result;
+            case "IndexExpression":
+              left = this.visit(node.children[0], value);
+              right = this.visit(node.children[1], left);
+              return right;
+            case "Index":
+              if (!isArray(value)) {
+                return null;
+              }
+              var index = node.value;
+              if (index < 0) {
+                index = value.length + index;
+              }
+              result = value[index];
+              if (result === undefined) {
+                result = null;
+              }
+              return result;
+            case "Slice":
+              if (!isArray(value)) {
+                return null;
+              }
+              var sliceParams = node.children.slice(0);
+              var computed = this.computeSliceParams(value.length, sliceParams);
+              var start = computed[0];
+              var stop = computed[1];
+              var step = computed[2];
+              result = [];
+              if (step > 0) {
+                  for (i = start; i < stop; i += step) {
+                      result.push(value[i]);
+                  }
+              } else {
+                  for (i = start; i > stop; i += step) {
+                      result.push(value[i]);
+                  }
+              }
+              return result;
+            case "Projection":
+              // Evaluate left child.
+              var base = this.visit(node.children[0], value);
+              if (!isArray(base)) {
+                return null;
+              }
+              collected = [];
+              for (i = 0; i < base.length; i++) {
+                current = this.visit(node.children[1], base[i]);
+                if (current !== null) {
+                  collected.push(current);
+                }
+              }
+              return collected;
+            case "ValueProjection":
+              // Evaluate left child.
+              base = this.visit(node.children[0], value);
+              if (!isObject(base)) {
+                return null;
+              }
+              collected = [];
+              var values = objValues(base);
+              for (i = 0; i < values.length; i++) {
+                current = this.visit(node.children[1], values[i]);
+                if (current !== null) {
+                  collected.push(current);
+                }
+              }
+              return collected;
+            case "FilterProjection":
+              base = this.visit(node.children[0], value);
+              if (!isArray(base)) {
+                return null;
+              }
+              var filtered = [];
+              var finalResults = [];
+              for (i = 0; i < base.length; i++) {
+                matched = this.visit(node.children[2], base[i]);
+                if (!isFalse(matched)) {
+                  filtered.push(base[i]);
+                }
+              }
+              for (var j = 0; j < filtered.length; j++) {
+                current = this.visit(node.children[1], filtered[j]);
+                if (current !== null) {
+                  finalResults.push(current);
+                }
+              }
+              return finalResults;
+            case "Comparator":
+              first = this.visit(node.children[0], value);
+              second = this.visit(node.children[1], value);
+              switch(node.name) {
+                case TOK_EQ:
+                  result = strictDeepEqual(first, second);
+                  break;
+                case TOK_NE:
+                  result = !strictDeepEqual(first, second);
+                  break;
+                case TOK_GT:
+                  result = first > second;
+                  break;
+                case TOK_GTE:
+                  result = first >= second;
+                  break;
+                case TOK_LT:
+                  result = first < second;
+                  break;
+                case TOK_LTE:
+                  result = first <= second;
+                  break;
+                default:
+                  throw new Error("Unknown comparator: " + node.name);
+              }
+              return result;
+            case TOK_FLATTEN:
+              var original = this.visit(node.children[0], value);
+              if (!isArray(original)) {
+                return null;
+              }
+              var merged = [];
+              for (i = 0; i < original.length; i++) {
+                current = original[i];
+                if (isArray(current)) {
+                  merged.push.apply(merged, current);
+                } else {
+                  merged.push(current);
+                }
+              }
+              return merged;
+            case "Identity":
+              return value;
+            case "MultiSelectList":
+              if (value === null) {
+                return null;
+              }
+              collected = [];
+              for (i = 0; i < node.children.length; i++) {
+                  collected.push(this.visit(node.children[i], value));
+              }
+              return collected;
+            case "MultiSelectHash":
+              if (value === null) {
+                return null;
+              }
+              collected = {};
+              var child;
+              for (i = 0; i < node.children.length; i++) {
+                child = node.children[i];
+                collected[child.name] = this.visit(child.value, value);
+              }
+              return collected;
+            case "OrExpression":
+              matched = this.visit(node.children[0], value);
+              if (isFalse(matched)) {
+                  matched = this.visit(node.children[1], value);
+              }
+              return matched;
+            case "AndExpression":
+              first = this.visit(node.children[0], value);
+
+              if (isFalse(first) === true) {
+                return first;
+              }
+              return this.visit(node.children[1], value);
+            case "NotExpression":
+              first = this.visit(node.children[0], value);
+              return isFalse(first);
+            case "Literal":
+              return node.value;
+            case TOK_PIPE:
+              left = this.visit(node.children[0], value);
+              return this.visit(node.children[1], left);
+            case TOK_CURRENT:
+              return value;
+            case "Function":
+              var resolvedArgs = [];
+              for (i = 0; i < node.children.length; i++) {
+                  resolvedArgs.push(this.visit(node.children[i], value));
+              }
+              return this.runtime.callFunction(node.name, resolvedArgs);
+            case "ExpressionReference":
+              var refNode = node.children[0];
+              // Tag the node with a specific attribute so the type
+              // checker verify the type.
+              refNode.jmespathType = TOK_EXPREF;
+              return refNode;
+            default:
+              throw new Error("Unknown node type: " + node.type);
+          }
+      },
+
+      computeSliceParams: function(arrayLength, sliceParams) {
+        var start = sliceParams[0];
+        var stop = sliceParams[1];
+        var step = sliceParams[2];
+        var computed = [null, null, null];
+        if (step === null) {
+          step = 1;
+        } else if (step === 0) {
+          var error = new Error("Invalid slice, step cannot be 0");
+          error.name = "RuntimeError";
+          throw error;
+        }
+        var stepValueNegative = step < 0 ? true : false;
+
+        if (start === null) {
+            start = stepValueNegative ? arrayLength - 1 : 0;
+        } else {
+            start = this.capSliceRange(arrayLength, start, step);
+        }
+
+        if (stop === null) {
+            stop = stepValueNegative ? -1 : arrayLength;
+        } else {
+            stop = this.capSliceRange(arrayLength, stop, step);
+        }
+        computed[0] = start;
+        computed[1] = stop;
+        computed[2] = step;
+        return computed;
+      },
+
+      capSliceRange: function(arrayLength, actualValue, step) {
+          if (actualValue < 0) {
+              actualValue += arrayLength;
+              if (actualValue < 0) {
+                  actualValue = step < 0 ? -1 : 0;
+              }
+          } else if (actualValue >= arrayLength) {
+              actualValue = step < 0 ? arrayLength - 1 : arrayLength;
+          }
+          return actualValue;
+      }
+
+  };
+
+  function Runtime(interpreter) {
+    this._interpreter = interpreter;
+    this.functionTable = {
+        // name: [function, <signature>]
+        // The <signature> can be:
+        //
+        // {
+        //   args: [[type1, type2], [type1, type2]],
+        //   variadic: true|false
+        // }
+        //
+        // Each arg in the arg list is a list of valid types
+        // (if the function is overloaded and supports multiple
+        // types.  If the type is "any" then no type checking
+        // occurs on the argument.  Variadic is optional
+        // and if not provided is assumed to be false.
+        abs: {_func: this._functionAbs, _signature: [{types: [TYPE_NUMBER]}]},
+        avg: {_func: this._functionAvg, _signature: [{types: [TYPE_ARRAY_NUMBER]}]},
+        ceil: {_func: this._functionCeil, _signature: [{types: [TYPE_NUMBER]}]},
+        contains: {
+            _func: this._functionContains,
+            _signature: [{types: [TYPE_STRING, TYPE_ARRAY]},
+                        {types: [TYPE_ANY]}]},
+        "ends_with": {
+            _func: this._functionEndsWith,
+            _signature: [{types: [TYPE_STRING]}, {types: [TYPE_STRING]}]},
+        floor: {_func: this._functionFloor, _signature: [{types: [TYPE_NUMBER]}]},
+        length: {
+            _func: this._functionLength,
+            _signature: [{types: [TYPE_STRING, TYPE_ARRAY, TYPE_OBJECT]}]},
+        map: {
+            _func: this._functionMap,
+            _signature: [{types: [TYPE_EXPREF]}, {types: [TYPE_ARRAY]}]},
+        max: {
+            _func: this._functionMax,
+            _signature: [{types: [TYPE_ARRAY_NUMBER, TYPE_ARRAY_STRING]}]},
+        "merge": {
+            _func: this._functionMerge,
+            _signature: [{types: [TYPE_OBJECT], variadic: true}]
+        },
+        "max_by": {
+          _func: this._functionMaxBy,
+          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
+        },
+        sum: {_func: this._functionSum, _signature: [{types: [TYPE_ARRAY_NUMBER]}]},
+        "starts_with": {
+            _func: this._functionStartsWith,
+            _signature: [{types: [TYPE_STRING]}, {types: [TYPE_STRING]}]},
+        min: {
+            _func: this._functionMin,
+            _signature: [{types: [TYPE_ARRAY_NUMBER, TYPE_ARRAY_STRING]}]},
+        "min_by": {
+          _func: this._functionMinBy,
+          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
+        },
+        type: {_func: this._functionType, _signature: [{types: [TYPE_ANY]}]},
+        keys: {_func: this._functionKeys, _signature: [{types: [TYPE_OBJECT]}]},
+        values: {_func: this._functionValues, _signature: [{types: [TYPE_OBJECT]}]},
+        sort: {_func: this._functionSort, _signature: [{types: [TYPE_ARRAY_STRING, TYPE_ARRAY_NUMBER]}]},
+        "sort_by": {
+          _func: this._functionSortBy,
+          _signature: [{types: [TYPE_ARRAY]}, {types: [TYPE_EXPREF]}]
+        },
+        join: {
+            _func: this._functionJoin,
+            _signature: [
+                {types: [TYPE_STRING]},
+                {types: [TYPE_ARRAY_STRING]}
+            ]
+        },
+        reverse: {
+            _func: this._functionReverse,
+            _signature: [{types: [TYPE_STRING, TYPE_ARRAY]}]},
+        "to_array": {_func: this._functionToArray, _signature: [{types: [TYPE_ANY]}]},
+        "to_string": {_func: this._functionToString, _signature: [{types: [TYPE_ANY]}]},
+        "to_number": {_func: this._functionToNumber, _signature: [{types: [TYPE_ANY]}]},
+        "not_null": {
+            _func: this._functionNotNull,
+            _signature: [{types: [TYPE_ANY], variadic: true}]
+        }
+    };
+  }
+
+  Runtime.prototype = {
+    callFunction: function(name, resolvedArgs) {
+      var functionEntry = this.functionTable[name];
+      if (functionEntry === undefined) {
+          throw new Error("Unknown function: " + name + "()");
+      }
+      this._validateArgs(name, resolvedArgs, functionEntry._signature);
+      return functionEntry._func.call(this, resolvedArgs);
+    },
+
+    _validateArgs: function(name, args, signature) {
+        // Validating the args requires validating
+        // the correct arity and the correct type of each arg.
+        // If the last argument is declared as variadic, then we need
+        // a minimum number of args to be required.  Otherwise it has to
+        // be an exact amount.
+        var pluralized;
+        if (signature[signature.length - 1].variadic) {
+            if (args.length < signature.length) {
+                pluralized = signature.length === 1 ? " argument" : " arguments";
+                throw new Error("ArgumentError: " + name + "() " +
+                                "takes at least" + signature.length + pluralized +
+                                " but received " + args.length);
+            }
+        } else if (args.length !== signature.length) {
+            pluralized = signature.length === 1 ? " argument" : " arguments";
+            throw new Error("ArgumentError: " + name + "() " +
+                            "takes " + signature.length + pluralized +
+                            " but received " + args.length);
+        }
+        var currentSpec;
+        var actualType;
+        var typeMatched;
+        for (var i = 0; i < signature.length; i++) {
+            typeMatched = false;
+            currentSpec = signature[i].types;
+            actualType = this._getTypeName(args[i]);
+            for (var j = 0; j < currentSpec.length; j++) {
+                if (this._typeMatches(actualType, currentSpec[j], args[i])) {
+                    typeMatched = true;
+                    break;
+                }
+            }
+            if (!typeMatched) {
+                throw new Error("TypeError: " + name + "() " +
+                                "expected argument " + (i + 1) +
+                                " to be type " + currentSpec +
+                                " but received type " + actualType +
+                                " instead.");
+            }
+        }
+    },
+
+    _typeMatches: function(actual, expected, argValue) {
+        if (expected === TYPE_ANY) {
+            return true;
+        }
+        if (expected === TYPE_ARRAY_STRING ||
+            expected === TYPE_ARRAY_NUMBER ||
+            expected === TYPE_ARRAY) {
+            // The expected type can either just be array,
+            // or it can require a specific subtype (array of numbers).
+            //
+            // The simplest case is if "array" with no subtype is specified.
+            if (expected === TYPE_ARRAY) {
+                return actual === TYPE_ARRAY;
+            } else if (actual === TYPE_ARRAY) {
+                // Otherwise we need to check subtypes.
+                // I think this has potential to be improved.
+                var subtype;
+                if (expected === TYPE_ARRAY_NUMBER) {
+                  subtype = TYPE_NUMBER;
+                } else if (expected === TYPE_ARRAY_STRING) {
+                  subtype = TYPE_STRING;
+                }
+                for (var i = 0; i < argValue.length; i++) {
+                    if (!this._typeMatches(
+                            this._getTypeName(argValue[i]), subtype,
+                                             argValue[i])) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        } else {
+            return actual === expected;
+        }
+    },
+    _getTypeName: function(obj) {
+        switch (Object.prototype.toString.call(obj)) {
+            case "[object String]":
+              return TYPE_STRING;
+            case "[object Number]":
+              return TYPE_NUMBER;
+            case "[object Array]":
+              return TYPE_ARRAY;
+            case "[object Boolean]":
+              return TYPE_BOOLEAN;
+            case "[object Null]":
+              return TYPE_NULL;
+            case "[object Object]":
+              // Check if it's an expref.  If it has, it's been
+              // tagged with a jmespathType attr of 'Expref';
+              if (obj.jmespathType === TOK_EXPREF) {
+                return TYPE_EXPREF;
+              } else {
+                return TYPE_OBJECT;
+              }
+        }
+    },
+
+    _functionStartsWith: function(resolvedArgs) {
+        return resolvedArgs[0].lastIndexOf(resolvedArgs[1]) === 0;
+    },
+
+    _functionEndsWith: function(resolvedArgs) {
+        var searchStr = resolvedArgs[0];
+        var suffix = resolvedArgs[1];
+        return searchStr.indexOf(suffix, searchStr.length - suffix.length) !== -1;
+    },
+
+    _functionReverse: function(resolvedArgs) {
+        var typeName = this._getTypeName(resolvedArgs[0]);
+        if (typeName === TYPE_STRING) {
+          var originalStr = resolvedArgs[0];
+          var reversedStr = "";
+          for (var i = originalStr.length - 1; i >= 0; i--) {
+              reversedStr += originalStr[i];
+          }
+          return reversedStr;
+        } else {
+          var reversedArray = resolvedArgs[0].slice(0);
+          reversedArray.reverse();
+          return reversedArray;
+        }
+    },
+
+    _functionAbs: function(resolvedArgs) {
+      return Math.abs(resolvedArgs[0]);
+    },
+
+    _functionCeil: function(resolvedArgs) {
+        return Math.ceil(resolvedArgs[0]);
+    },
+
+    _functionAvg: function(resolvedArgs) {
+        var sum = 0;
+        var inputArray = resolvedArgs[0];
+        for (var i = 0; i < inputArray.length; i++) {
+            sum += inputArray[i];
+        }
+        return sum / inputArray.length;
+    },
+
+    _functionContains: function(resolvedArgs) {
+        return resolvedArgs[0].indexOf(resolvedArgs[1]) >= 0;
+    },
+
+    _functionFloor: function(resolvedArgs) {
+        return Math.floor(resolvedArgs[0]);
+    },
+
+    _functionLength: function(resolvedArgs) {
+       if (!isObject(resolvedArgs[0])) {
+         return resolvedArgs[0].length;
+       } else {
+         // As far as I can tell, there's no way to get the length
+         // of an object without O(n) iteration through the object.
+         return Object.keys(resolvedArgs[0]).length;
+       }
+    },
+
+    _functionMap: function(resolvedArgs) {
+      var mapped = [];
+      var interpreter = this._interpreter;
+      var exprefNode = resolvedArgs[0];
+      var elements = resolvedArgs[1];
+      for (var i = 0; i < elements.length; i++) {
+          mapped.push(interpreter.visit(exprefNode, elements[i]));
+      }
+      return mapped;
+    },
+
+    _functionMerge: function(resolvedArgs) {
+      var merged = {};
+      for (var i = 0; i < resolvedArgs.length; i++) {
+        var current = resolvedArgs[i];
+        for (var key in current) {
+          merged[key] = current[key];
+        }
+      }
+      return merged;
+    },
+
+    _functionMax: function(resolvedArgs) {
+      if (resolvedArgs[0].length > 0) {
+        var typeName = this._getTypeName(resolvedArgs[0][0]);
+        if (typeName === TYPE_NUMBER) {
+          return Math.max.apply(Math, resolvedArgs[0]);
+        } else {
+          var elements = resolvedArgs[0];
+          var maxElement = elements[0];
+          for (var i = 1; i < elements.length; i++) {
+              if (maxElement.localeCompare(elements[i]) < 0) {
+                  maxElement = elements[i];
+              }
+          }
+          return maxElement;
+        }
+      } else {
+          return null;
+      }
+    },
+
+    _functionMin: function(resolvedArgs) {
+      if (resolvedArgs[0].length > 0) {
+        var typeName = this._getTypeName(resolvedArgs[0][0]);
+        if (typeName === TYPE_NUMBER) {
+          return Math.min.apply(Math, resolvedArgs[0]);
+        } else {
+          var elements = resolvedArgs[0];
+          var minElement = elements[0];
+          for (var i = 1; i < elements.length; i++) {
+              if (elements[i].localeCompare(minElement) < 0) {
+                  minElement = elements[i];
+              }
+          }
+          return minElement;
+        }
+      } else {
+        return null;
+      }
+    },
+
+    _functionSum: function(resolvedArgs) {
+      var sum = 0;
+      var listToSum = resolvedArgs[0];
+      for (var i = 0; i < listToSum.length; i++) {
+        sum += listToSum[i];
+      }
+      return sum;
+    },
+
+    _functionType: function(resolvedArgs) {
+        switch (this._getTypeName(resolvedArgs[0])) {
+          case TYPE_NUMBER:
+            return "number";
+          case TYPE_STRING:
+            return "string";
+          case TYPE_ARRAY:
+            return "array";
+          case TYPE_OBJECT:
+            return "object";
+          case TYPE_BOOLEAN:
+            return "boolean";
+          case TYPE_EXPREF:
+            return "expref";
+          case TYPE_NULL:
+            return "null";
+        }
+    },
+
+    _functionKeys: function(resolvedArgs) {
+        return Object.keys(resolvedArgs[0]);
+    },
+
+    _functionValues: function(resolvedArgs) {
+        var obj = resolvedArgs[0];
+        var keys = Object.keys(obj);
+        var values = [];
+        for (var i = 0; i < keys.length; i++) {
+            values.push(obj[keys[i]]);
+        }
+        return values;
+    },
+
+    _functionJoin: function(resolvedArgs) {
+        var joinChar = resolvedArgs[0];
+        var listJoin = resolvedArgs[1];
+        return listJoin.join(joinChar);
+    },
+
+    _functionToArray: function(resolvedArgs) {
+        if (this._getTypeName(resolvedArgs[0]) === TYPE_ARRAY) {
+            return resolvedArgs[0];
+        } else {
+            return [resolvedArgs[0]];
+        }
+    },
+
+    _functionToString: function(resolvedArgs) {
+        if (this._getTypeName(resolvedArgs[0]) === TYPE_STRING) {
+            return resolvedArgs[0];
+        } else {
+            return JSON.stringify(resolvedArgs[0]);
+        }
+    },
+
+    _functionToNumber: function(resolvedArgs) {
+        var typeName = this._getTypeName(resolvedArgs[0]);
+        var convertedValue;
+        if (typeName === TYPE_NUMBER) {
+            return resolvedArgs[0];
+        } else if (typeName === TYPE_STRING) {
+            convertedValue = +resolvedArgs[0];
+            if (!isNaN(convertedValue)) {
+                return convertedValue;
+            }
+        }
+        return null;
+    },
+
+    _functionNotNull: function(resolvedArgs) {
+        for (var i = 0; i < resolvedArgs.length; i++) {
+            if (this._getTypeName(resolvedArgs[i]) !== TYPE_NULL) {
+                return resolvedArgs[i];
+            }
+        }
+        return null;
+    },
+
+    _functionSort: function(resolvedArgs) {
+        var sortedArray = resolvedArgs[0].slice(0);
+        sortedArray.sort();
+        return sortedArray;
+    },
+
+    _functionSortBy: function(resolvedArgs) {
+        var sortedArray = resolvedArgs[0].slice(0);
+        if (sortedArray.length === 0) {
+            return sortedArray;
+        }
+        var interpreter = this._interpreter;
+        var exprefNode = resolvedArgs[1];
+        var requiredType = this._getTypeName(
+            interpreter.visit(exprefNode, sortedArray[0]));
+        if ([TYPE_NUMBER, TYPE_STRING].indexOf(requiredType) < 0) {
+            throw new Error("TypeError");
+        }
+        var that = this;
+        // In order to get a stable sort out of an unstable
+        // sort algorithm, we decorate/sort/undecorate (DSU)
+        // by creating a new list of [index, element] pairs.
+        // In the cmp function, if the evaluated elements are
+        // equal, then the index will be used as the tiebreaker.
+        // After the decorated list has been sorted, it will be
+        // undecorated to extract the original elements.
+        var decorated = [];
+        for (var i = 0; i < sortedArray.length; i++) {
+          decorated.push([i, sortedArray[i]]);
+        }
+        decorated.sort(function(a, b) {
+          var exprA = interpreter.visit(exprefNode, a[1]);
+          var exprB = interpreter.visit(exprefNode, b[1]);
+          if (that._getTypeName(exprA) !== requiredType) {
+              throw new Error(
+                  "TypeError: expected " + requiredType + ", received " +
+                  that._getTypeName(exprA));
+          } else if (that._getTypeName(exprB) !== requiredType) {
+              throw new Error(
+                  "TypeError: expected " + requiredType + ", received " +
+                  that._getTypeName(exprB));
+          }
+          if (exprA > exprB) {
+            return 1;
+          } else if (exprA < exprB) {
+            return -1;
+          } else {
+            // If they're equal compare the items by their
+            // order to maintain relative order of equal keys
+            // (i.e. to get a stable sort).
+            return a[0] - b[0];
+          }
+        });
+        // Undecorate: extract out the original list elements.
+        for (var j = 0; j < decorated.length; j++) {
+          sortedArray[j] = decorated[j][1];
+        }
+        return sortedArray;
+    },
+
+    _functionMaxBy: function(resolvedArgs) {
+      var exprefNode = resolvedArgs[1];
+      var resolvedArray = resolvedArgs[0];
+      var keyFunction = this.createKeyFunction(exprefNode, [TYPE_NUMBER, TYPE_STRING]);
+      var maxNumber = -Infinity;
+      var maxRecord;
+      var current;
+      for (var i = 0; i < resolvedArray.length; i++) {
+        current = keyFunction(resolvedArray[i]);
+        if (current > maxNumber) {
+          maxNumber = current;
+          maxRecord = resolvedArray[i];
+        }
+      }
+      return maxRecord;
+    },
+
+    _functionMinBy: function(resolvedArgs) {
+      var exprefNode = resolvedArgs[1];
+      var resolvedArray = resolvedArgs[0];
+      var keyFunction = this.createKeyFunction(exprefNode, [TYPE_NUMBER, TYPE_STRING]);
+      var minNumber = Infinity;
+      var minRecord;
+      var current;
+      for (var i = 0; i < resolvedArray.length; i++) {
+        current = keyFunction(resolvedArray[i]);
+        if (current < minNumber) {
+          minNumber = current;
+          minRecord = resolvedArray[i];
+        }
+      }
+      return minRecord;
+    },
+
+    createKeyFunction: function(exprefNode, allowedTypes) {
+      var that = this;
+      var interpreter = this._interpreter;
+      var keyFunc = function(x) {
+        var current = interpreter.visit(exprefNode, x);
+        if (allowedTypes.indexOf(that._getTypeName(current)) < 0) {
+          var msg = "TypeError: expected one of " + allowedTypes +
+                    ", received " + that._getTypeName(current);
+          throw new Error(msg);
+        }
+        return current;
+      };
+      return keyFunc;
+    }
+
+  };
+
+  function compile(stream) {
+    var parser = new Parser();
+    var ast = parser.parse(stream);
+    return ast;
+  }
+
+  function tokenize(stream) {
+      var lexer = new Lexer();
+      return lexer.tokenize(stream);
+  }
+
+  function search(data, expression) {
+      var parser = new Parser();
+      // This needs to be improved.  Both the interpreter and runtime depend on
+      // each other.  The runtime needs the interpreter to support exprefs.
+      // There's likely a clean way to avoid the cyclic dependency.
+      var runtime = new Runtime();
+      var interpreter = new TreeInterpreter(runtime);
+      runtime._interpreter = interpreter;
+      var node = parser.parse(expression);
+      return interpreter.search(node, data);
+  }
+
+  exports.tokenize = tokenize;
+  exports.compile = compile;
+  exports.search = search;
+  exports.strictDeepEqual = strictDeepEqual;
+})( false ? this.jmespath = {} : exports);
+
 
 /***/ }),
 /* 45 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-var Buffer = __webpack_require__(44).Buffer;
-var intSize = 4;
-var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);
-var chrsz = 8;
-
-function toArray(buf, bigEndian) {
-  if ((buf.length % intSize) !== 0) {
-    var len = buf.length + (intSize - (buf.length % intSize));
-    buf = Buffer.concat([buf, zeroBuffer], len);
-  }
-
-  var arr = [];
-  var fn = bigEndian ? buf.readInt32BE : buf.readInt32LE;
-  for (var i = 0; i < buf.length; i += intSize) {
-    arr.push(fn.call(buf, i));
-  }
-  return arr;
-}
-
-function toBuffer(arr, size, bigEndian) {
-  var buf = new Buffer(size);
-  var fn = bigEndian ? buf.writeInt32BE : buf.writeInt32LE;
-  for (var i = 0; i < arr.length; i++) {
-    fn.call(buf, arr[i], i * 4, true);
-  }
-  return buf;
-}
-
-function hash(buf, fn, hashSize, bigEndian) {
-  if (!Buffer.isBuffer(buf)) buf = new Buffer(buf);
-  var arr = fn(toArray(buf, bigEndian), buf.length * chrsz);
-  return toBuffer(arr, hashSize, bigEndian);
-}
-
-module.exports = { hash: hash };
-
+/* (ignored) */
 
 /***/ }),
 /* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BigInteger__ = __webpack_require__(85);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7382,10 +7412,10 @@ module.exports = Collection;
 /***/ (function(module, exports, __webpack_require__) {
 
 var util = __webpack_require__(1);
-var Rest = __webpack_require__(16);
-var Json = __webpack_require__(27);
-var JsonBuilder = __webpack_require__(28);
-var JsonParser = __webpack_require__(29);
+var Rest = __webpack_require__(17);
+var Json = __webpack_require__(29);
+var JsonBuilder = __webpack_require__(30);
+var JsonParser = __webpack_require__(31);
 
 function populateBody(req) {
   var builder = new JsonBuilder();
@@ -7471,7 +7501,7 @@ module.exports = {
 
 var AWS = __webpack_require__(0);
 var util = __webpack_require__(1);
-var Rest = __webpack_require__(16);
+var Rest = __webpack_require__(17);
 
 function populateBody(req) {
   var input = req.service.api.operations[req.operation].input;
@@ -7572,7 +7602,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseAssignValue = __webpack_require__(52),
-    eq = __webpack_require__(19);
+    eq = __webpack_require__(20);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -7636,7 +7666,7 @@ module.exports = baseAssignValue;
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(7);
+var getNative = __webpack_require__(6);
 
 var defineProperty = (function() {
   try {
@@ -7658,7 +7688,7 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 module.exports = freeGlobal;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
 /* 55 */
@@ -7742,9 +7772,9 @@ module.exports = copyObject;
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var eq = __webpack_require__(19),
+var eq = __webpack_require__(20),
     isArrayLike = __webpack_require__(12),
-    isIndex = __webpack_require__(32),
+    isIndex = __webpack_require__(34),
     isObject = __webpack_require__(3);
 
 /**
@@ -7778,7 +7808,7 @@ module.exports = isIterateeCall;
 /* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isPrototype = __webpack_require__(33),
+var isPrototype = __webpack_require__(35),
     nativeKeys = __webpack_require__(126);
 
 /** Used for built-in method references. */
@@ -7886,7 +7916,7 @@ module.exports = baseKeys;
 /***/ (function(module, exports, __webpack_require__) {
 
 var DataView = __webpack_require__(133),
-    Map = __webpack_require__(38),
+    Map = __webpack_require__(40),
     Promise = __webpack_require__(134),
     Set = __webpack_require__(135),
     WeakMap = __webpack_require__(136),
@@ -7959,7 +7989,7 @@ module.exports = getTag;
 
   isObject = __webpack_require__(3);
 
-  isFunction = __webpack_require__(17);
+  isFunction = __webpack_require__(18);
 
   every = __webpack_require__(137);
 
@@ -8167,7 +8197,7 @@ module.exports = getTag;
 /* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(20),
+var ListCache = __webpack_require__(21),
     stackClear = __webpack_require__(153),
     stackDelete = __webpack_require__(154),
     stackGet = __webpack_require__(155),
@@ -8371,7 +8401,7 @@ module.exports = matchesStrictComparable;
 /***/ (function(module, exports, __webpack_require__) {
 
 var castPath = __webpack_require__(68),
-    toKey = __webpack_require__(24);
+    toKey = __webpack_require__(25);
 
 /**
  * The base implementation of `_.get` without support for default values.
@@ -8401,7 +8431,7 @@ module.exports = baseGet;
 /***/ (function(module, exports, __webpack_require__) {
 
 var isArray = __webpack_require__(4),
-    isKey = __webpack_require__(40),
+    isKey = __webpack_require__(42),
     stringToPath = __webpack_require__(190),
     toString = __webpack_require__(193);
 
@@ -9972,7 +10002,7 @@ if (!rng) {
 
 module.exports = rng;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
 /* 83 */
@@ -10875,7 +10905,7 @@ var CognitoAccessToken = function (_CognitoJwtToken) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -11072,7 +11102,7 @@ var CognitoRefreshToken = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk_global__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__BigInteger__ = __webpack_require__(85);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__AuthenticationHelper__ = __webpack_require__(46);
@@ -13212,7 +13242,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__);
 
-window.DigilentAuthJs = __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__["DigilentAuthJs"];
+if (typeof window !== 'undefined') {
+    window.DigilentAuthJs = __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__["DigilentAuthJs"];
+}
+else {
+    exports.DigilentAuthJs = __WEBPACK_IMPORTED_MODULE_0__dist_digilent_auth_js__["DigilentAuthJs"];
+}
 
 
 /***/ }),
@@ -13228,6 +13263,7 @@ var DigilentAuthJs = (function () {
      ********************************************************************************/
     function DigilentAuthJs() {
         this.authenticated = false;
+        this.identityPoolId = undefined;
     }
     /********************************************************************************
      * Initialize the AWS Cognito configuration parameters
@@ -13437,25 +13473,35 @@ var DigilentAuthJs = (function () {
     DigilentAuthJs.prototype.forgotPassword = function (username) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            var cognitoUser = new amazon_cognito_identity_js_1.CognitoUser({
+            _this.unauthenticatedUser = new amazon_cognito_identity_js_1.CognitoUser({
                 Username: username,
                 Pool: _this.poolData
             });
-            cognitoUser.forgotPassword({
-                onSuccess: function () {
-                    // successfully initiated reset password request                    
-                    resolve();
+            _this.unauthenticatedUser.forgotPassword({
+                onSuccess: function (resp) {
+                    // successfully initiated reset password request                           
+                    resolve(resp.CodeDeliveryDetails);
                 },
                 onFailure: function (err) {
-                    alert(err);
                     reject(err);
+                }
+            });
+        });
+    };
+    /********************************************************************************
+    * Reset the user's password.  Call forgot password before calling this function to generate the password reset verification code.
+    * @param verificationCode The password reset verification code.
+    * @param newPassowrd The desired new password.
+    ********************************************************************************/
+    DigilentAuthJs.prototype.resetPassword = function (verificationCode, newPassword) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.unauthenticatedUser.confirmPassword(verificationCode, newPassword, {
+                onSuccess: function () {
+                    resolve();
                 },
-                //Optional automatic callback
-                inputVerificationCode: function (data) {
-                    console.log('Code sent to: ', data);
-                    var verificationCode = prompt('Please input verification code ', '');
-                    var newPassword = prompt('Enter new password ', '');
-                    cognitoUser.confirmPassword(verificationCode, newPassword, this);
+                onFailure: function () {
+                    reject('Failed to reset password');
                 }
             });
         });
@@ -13535,7 +13581,7 @@ var DigilentAuthJs = (function () {
         });
     };
     /********************************************************************************
-    * Get the user name of an authenticated user.
+    * Get the username of an authenticated user.
     * @return The username of the authenticated user, or undefined if the user is not authenticated.
     ********************************************************************************/
     DigilentAuthJs.prototype.getUsername = function () {
@@ -13545,6 +13591,25 @@ var DigilentAuthJs = (function () {
         else {
             return undefined;
         }
+    };
+    /********************************************************************************
+    * Get the identityId of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    DigilentAuthJs.prototype.getIdentityId = function () {
+        if (this.authenticated) {
+            return AWS.config.credentials.identityId;
+        }
+        else {
+            return undefined;
+        }
+    };
+    /********************************************************************************
+    * Get the identityPoolId of an authenticated user.
+    * @return The username of the authenticated user, or undefined if the user is not authenticated.
+    ********************************************************************************/
+    DigilentAuthJs.prototype.getIdentityPoolId = function () {
+        return this.identityPoolId;
     };
     //---------------------------------------- Private ----------------------------------------
     /********************************************************************************
@@ -13751,7 +13816,7 @@ var AuthenticationDetails = function () {
 /* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
+var apply = Function.prototype.apply;
 
 // DOM APIs, for completeness
 
@@ -13802,17 +13867,9 @@ exports._unrefActive = exports.active = function(item) {
 
 // setimmediate attaches itself to the global object
 __webpack_require__(100);
-// On some exotic environments, it's not clear which object `setimmeidate` was
-// able to install onto.  Search each possibility in the same order as the
-// `setimmediate` library.
-exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
-                       (typeof global !== "undefined" && global.setImmediate) ||
-                       (this && this.setImmediate);
-exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
-                         (typeof global !== "undefined" && global.clearImmediate) ||
-                         (this && this.clearImmediate);
+exports.setImmediate = setImmediate;
+exports.clearImmediate = clearImmediate;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 100 */
@@ -14005,7 +14062,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
 
 /***/ }),
 /* 101 */
@@ -14214,7 +14271,7 @@ var assignValue = __webpack_require__(51),
     copyObject = __webpack_require__(56),
     createAssigner = __webpack_require__(111),
     isArrayLike = __webpack_require__(12),
-    isPrototype = __webpack_require__(33),
+    isPrototype = __webpack_require__(35),
     keys = __webpack_require__(13);
 
 /** Used for built-in method references. */
@@ -14274,7 +14331,7 @@ module.exports = assign;
 /* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isFunction = __webpack_require__(17),
+var isFunction = __webpack_require__(18),
     isMasked = __webpack_require__(108),
     isObject = __webpack_require__(3),
     toSource = __webpack_require__(55);
@@ -14327,7 +14384,7 @@ module.exports = baseIsNative;
 /* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(18);
+var Symbol = __webpack_require__(19);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -14507,7 +14564,7 @@ module.exports = createAssigner;
 /* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var identity = __webpack_require__(30),
+var identity = __webpack_require__(32),
     overRest = __webpack_require__(113),
     setToString = __webpack_require__(115);
 
@@ -14621,7 +14678,7 @@ module.exports = setToString;
 
 var constant = __webpack_require__(117),
     defineProperty = __webpack_require__(53),
-    identity = __webpack_require__(30);
+    identity = __webpack_require__(32);
 
 /**
  * The base implementation of `setToString` without support for hot loop shorting.
@@ -14723,11 +14780,11 @@ module.exports = shortOut;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseTimes = __webpack_require__(120),
-    isArguments = __webpack_require__(34),
+    isArguments = __webpack_require__(36),
     isArray = __webpack_require__(4),
-    isBuffer = __webpack_require__(35),
-    isIndex = __webpack_require__(32),
-    isTypedArray = __webpack_require__(37);
+    isBuffer = __webpack_require__(37),
+    isIndex = __webpack_require__(34),
+    isTypedArray = __webpack_require__(39);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -14852,7 +14909,7 @@ module.exports = stubFalse;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(11),
-    isLength = __webpack_require__(31),
+    isLength = __webpack_require__(33),
     isObjectLike = __webpack_require__(14);
 
 /** `Object#toString` result references. */
@@ -14960,7 +15017,7 @@ var nodeUtil = (function() {
 
 module.exports = nodeUtil;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38)(module)))
 
 /***/ }),
 /* 126 */
@@ -15311,12 +15368,12 @@ module.exports = baseCreate;
 
 var baseKeys = __webpack_require__(58),
     getTag = __webpack_require__(60),
-    isArguments = __webpack_require__(34),
+    isArguments = __webpack_require__(36),
     isArray = __webpack_require__(4),
     isArrayLike = __webpack_require__(12),
-    isBuffer = __webpack_require__(35),
-    isPrototype = __webpack_require__(33),
-    isTypedArray = __webpack_require__(37);
+    isBuffer = __webpack_require__(37),
+    isPrototype = __webpack_require__(35),
+    isTypedArray = __webpack_require__(39);
 
 /** `Object#toString` result references. */
 var mapTag = '[object Map]',
@@ -15392,7 +15449,7 @@ module.exports = isEmpty;
 /* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(7),
+var getNative = __webpack_require__(6),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15405,7 +15462,7 @@ module.exports = DataView;
 /* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(7),
+var getNative = __webpack_require__(6),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15418,7 +15475,7 @@ module.exports = Promise;
 /* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(7),
+var getNative = __webpack_require__(6),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15431,7 +15488,7 @@ module.exports = Set;
 /* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getNative = __webpack_require__(7),
+var getNative = __webpack_require__(6),
     root = __webpack_require__(5);
 
 /* Built-in method references that are verified to be native. */
@@ -15697,7 +15754,7 @@ module.exports = createBaseEach;
 
 var baseMatches = __webpack_require__(146),
     baseMatchesProperty = __webpack_require__(188),
-    identity = __webpack_require__(30),
+    identity = __webpack_require__(32),
     isArray = __webpack_require__(4),
     property = __webpack_require__(199);
 
@@ -15847,7 +15904,7 @@ module.exports = listCacheClear;
 /* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(21);
+var assocIndexOf = __webpack_require__(22);
 
 /** Used for built-in method references. */
 var arrayProto = Array.prototype;
@@ -15888,7 +15945,7 @@ module.exports = listCacheDelete;
 /* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(21);
+var assocIndexOf = __webpack_require__(22);
 
 /**
  * Gets the list cache value for `key`.
@@ -15913,7 +15970,7 @@ module.exports = listCacheGet;
 /* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(21);
+var assocIndexOf = __webpack_require__(22);
 
 /**
  * Checks if a list cache value for `key` exists.
@@ -15935,7 +15992,7 @@ module.exports = listCacheHas;
 /* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var assocIndexOf = __webpack_require__(21);
+var assocIndexOf = __webpack_require__(22);
 
 /**
  * Sets the list cache `key` to `value`.
@@ -15967,7 +16024,7 @@ module.exports = listCacheSet;
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(20);
+var ListCache = __webpack_require__(21);
 
 /**
  * Removes all key-value entries from the stack.
@@ -16052,9 +16109,9 @@ module.exports = stackHas;
 /* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ListCache = __webpack_require__(20),
-    Map = __webpack_require__(38),
-    MapCache = __webpack_require__(39);
+var ListCache = __webpack_require__(21),
+    Map = __webpack_require__(40),
+    MapCache = __webpack_require__(41);
 
 /** Used as the size to enable large array optimizations. */
 var LARGE_ARRAY_SIZE = 200;
@@ -16093,8 +16150,8 @@ module.exports = stackSet;
 /***/ (function(module, exports, __webpack_require__) {
 
 var Hash = __webpack_require__(159),
-    ListCache = __webpack_require__(20),
-    Map = __webpack_require__(38);
+    ListCache = __webpack_require__(21),
+    Map = __webpack_require__(40);
 
 /**
  * Removes all key-value entries from the map.
@@ -16157,7 +16214,7 @@ module.exports = Hash;
 /* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(22);
+var nativeCreate = __webpack_require__(23);
 
 /**
  * Removes all key-value entries from the hash.
@@ -16201,7 +16258,7 @@ module.exports = hashDelete;
 /* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(22);
+var nativeCreate = __webpack_require__(23);
 
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -16237,7 +16294,7 @@ module.exports = hashGet;
 /* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(22);
+var nativeCreate = __webpack_require__(23);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -16266,7 +16323,7 @@ module.exports = hashHas;
 /* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var nativeCreate = __webpack_require__(22);
+var nativeCreate = __webpack_require__(23);
 
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -16295,7 +16352,7 @@ module.exports = hashSet;
 /* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(23);
+var getMapData = __webpack_require__(24);
 
 /**
  * Removes `key` and its value from the map.
@@ -16340,7 +16397,7 @@ module.exports = isKeyable;
 /* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(23);
+var getMapData = __webpack_require__(24);
 
 /**
  * Gets the map value for `key`.
@@ -16362,7 +16419,7 @@ module.exports = mapCacheGet;
 /* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(23);
+var getMapData = __webpack_require__(24);
 
 /**
  * Checks if a map value for `key` exists.
@@ -16384,7 +16441,7 @@ module.exports = mapCacheHas;
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getMapData = __webpack_require__(23);
+var getMapData = __webpack_require__(24);
 
 /**
  * Sets the map `key` to `value`.
@@ -16418,8 +16475,8 @@ var Stack = __webpack_require__(62),
     equalObjects = __webpack_require__(180),
     getTag = __webpack_require__(60),
     isArray = __webpack_require__(4),
-    isBuffer = __webpack_require__(35),
-    isTypedArray = __webpack_require__(37);
+    isBuffer = __webpack_require__(37),
+    isTypedArray = __webpack_require__(39);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1;
@@ -16501,7 +16558,7 @@ module.exports = baseIsEqualDeep;
 /* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var MapCache = __webpack_require__(39),
+var MapCache = __webpack_require__(41),
     setCacheAdd = __webpack_require__(172),
     setCacheHas = __webpack_require__(173);
 
@@ -16627,9 +16684,9 @@ module.exports = cacheHas;
 /* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(18),
+var Symbol = __webpack_require__(19),
     Uint8Array = __webpack_require__(177),
-    eq = __webpack_require__(19),
+    eq = __webpack_require__(20),
     equalArrays = __webpack_require__(64),
     mapToArray = __webpack_require__(178),
     setToArray = __webpack_require__(179);
@@ -17103,10 +17160,10 @@ module.exports = getMatchData;
 var baseIsEqual = __webpack_require__(63),
     get = __webpack_require__(189),
     hasIn = __webpack_require__(196),
-    isKey = __webpack_require__(40),
+    isKey = __webpack_require__(42),
     isStrictComparable = __webpack_require__(65),
     matchesStrictComparable = __webpack_require__(66),
-    toKey = __webpack_require__(24);
+    toKey = __webpack_require__(25);
 
 /** Used to compose bitmasks for value comparisons. */
 var COMPARE_PARTIAL_FLAG = 1,
@@ -17181,7 +17238,8 @@ module.exports = get;
 var memoizeCapped = __webpack_require__(191);
 
 /** Used to match property names within property paths. */
-var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+var reLeadingDot = /^\./,
+    rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
 
 /** Used to match backslashes in property paths. */
 var reEscapeChar = /\\(\\)?/g;
@@ -17195,11 +17253,11 @@ var reEscapeChar = /\\(\\)?/g;
  */
 var stringToPath = memoizeCapped(function(string) {
   var result = [];
-  if (string.charCodeAt(0) === 46 /* . */) {
+  if (reLeadingDot.test(string)) {
     result.push('');
   }
-  string.replace(rePropName, function(match, number, quote, subString) {
-    result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
+  string.replace(rePropName, function(match, number, quote, string) {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
   });
   return result;
 });
@@ -17243,7 +17301,7 @@ module.exports = memoizeCapped;
 /* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var MapCache = __webpack_require__(39);
+var MapCache = __webpack_require__(41);
 
 /** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
@@ -17356,10 +17414,10 @@ module.exports = toString;
 /* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(18),
+var Symbol = __webpack_require__(19),
     arrayMap = __webpack_require__(195),
     isArray = __webpack_require__(4),
-    isSymbol = __webpack_require__(41);
+    isSymbol = __webpack_require__(43);
 
 /** Used as references for various `Number` constants. */
 var INFINITY = 1 / 0;
@@ -17486,11 +17544,11 @@ module.exports = baseHasIn;
 /***/ (function(module, exports, __webpack_require__) {
 
 var castPath = __webpack_require__(68),
-    isArguments = __webpack_require__(34),
+    isArguments = __webpack_require__(36),
     isArray = __webpack_require__(4),
-    isIndex = __webpack_require__(32),
-    isLength = __webpack_require__(31),
-    toKey = __webpack_require__(24);
+    isIndex = __webpack_require__(34),
+    isLength = __webpack_require__(33),
+    toKey = __webpack_require__(25);
 
 /**
  * Checks if `path` exists on `object`.
@@ -17532,8 +17590,8 @@ module.exports = hasPath;
 
 var baseProperty = __webpack_require__(200),
     basePropertyDeep = __webpack_require__(201),
-    isKey = __webpack_require__(40),
-    toKey = __webpack_require__(24);
+    isKey = __webpack_require__(42),
+    toKey = __webpack_require__(25);
 
 /**
  * Creates a function that returns the value at `path` of a given object.
@@ -18044,6 +18102,8 @@ function apiLoader(svc, version) {
 }
 
 /**
+ * @api private
+ *
  * This member of AWS.apiLoader is private, but changing it will necessitate a
  * change to ../scripts/services-table-generator.ts
  */
@@ -19839,14 +19899,14 @@ AWS.EventListeners = {
   }),
 
   Json: new SequentialExecutor().addNamedListeners(function(add) {
-    var svc = __webpack_require__(27);
+    var svc = __webpack_require__(29);
     add('BUILD', 'build', svc.buildRequest);
     add('EXTRACT_DATA', 'extractData', svc.extractData);
     add('EXTRACT_ERROR', 'extractError', svc.extractError);
   }),
 
   Rest: new SequentialExecutor().addNamedListeners(function(add) {
-    var svc = __webpack_require__(16);
+    var svc = __webpack_require__(17);
     add('BUILD', 'build', svc.buildRequest);
     add('EXTRACT_DATA', 'extractData', svc.extractData);
     add('EXTRACT_ERROR', 'extractError', svc.extractError);
@@ -20466,7 +20526,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(9)))
 
 /***/ }),
 /* 216 */
@@ -20516,7 +20576,7 @@ if (typeof Object.create === 'function') {
 var AcceptorStateMachine = __webpack_require__(219);
 var inherit = AWS.util.inherit;
 var domain = AWS.util.domain;
-var jmespath = __webpack_require__(42);
+var jmespath = __webpack_require__(44);
 
 /**
  * @api private
@@ -21374,7 +21434,7 @@ module.exports = AcceptorStateMachine;
 
 var AWS = __webpack_require__(0);
 var inherit = AWS.util.inherit;
-var jmespath = __webpack_require__(42);
+var jmespath = __webpack_require__(44);
 
 /**
  * This class encapsulates the response information
@@ -21596,7 +21656,7 @@ AWS.Response = inherit({
 
 var AWS = __webpack_require__(0);
 var inherit = AWS.util.inherit;
-var jmespath = __webpack_require__(42);
+var jmespath = __webpack_require__(44);
 
 /**
  * @api private
@@ -22796,7 +22856,7 @@ AWS.ParamValidator = AWS.util.inherit({
 /* 230 */
 /***/ (function(module, exports) {
 
-module.exports = {"acm":{"name":"ACM","cors":true},"apigateway":{"name":"APIGateway","cors":true},"applicationautoscaling":{"prefix":"application-autoscaling","name":"ApplicationAutoScaling","cors":true},"appstream":{"name":"AppStream"},"autoscaling":{"name":"AutoScaling","cors":true},"batch":{"name":"Batch"},"budgets":{"name":"Budgets"},"clouddirectory":{"name":"CloudDirectory"},"cloudformation":{"name":"CloudFormation","cors":true},"cloudfront":{"name":"CloudFront","versions":["2013-05-12*","2013-11-11*","2014-05-31*","2014-10-21*","2014-11-06*","2015-04-17*","2015-07-27*","2015-09-17*","2016-01-13*","2016-01-28*","2016-08-01*","2016-08-20*","2016-09-07*","2016-09-29*","2016-11-25*"],"cors":true},"cloudhsm":{"name":"CloudHSM","cors":true},"cloudsearch":{"name":"CloudSearch"},"cloudsearchdomain":{"name":"CloudSearchDomain"},"cloudtrail":{"name":"CloudTrail","cors":true},"cloudwatch":{"prefix":"monitoring","name":"CloudWatch","cors":true},"cloudwatchevents":{"prefix":"events","name":"CloudWatchEvents","versions":["2014-02-03*"],"cors":true},"cloudwatchlogs":{"prefix":"logs","name":"CloudWatchLogs","cors":true},"codebuild":{"name":"CodeBuild"},"codecommit":{"name":"CodeCommit","cors":true},"codedeploy":{"name":"CodeDeploy","cors":true},"codepipeline":{"name":"CodePipeline","cors":true},"cognitoidentity":{"prefix":"cognito-identity","name":"CognitoIdentity","cors":true},"cognitoidentityserviceprovider":{"prefix":"cognito-idp","name":"CognitoIdentityServiceProvider","cors":true},"cognitosync":{"prefix":"cognito-sync","name":"CognitoSync","cors":true},"configservice":{"prefix":"config","name":"ConfigService","cors":true},"cur":{"name":"CUR","cors":true},"datapipeline":{"name":"DataPipeline"},"devicefarm":{"name":"DeviceFarm","cors":true},"directconnect":{"name":"DirectConnect","cors":true},"directoryservice":{"prefix":"ds","name":"DirectoryService"},"discovery":{"name":"Discovery"},"dms":{"name":"DMS"},"dynamodb":{"name":"DynamoDB","cors":true},"dynamodbstreams":{"prefix":"streams.dynamodb","name":"DynamoDBStreams","cors":true},"ec2":{"name":"EC2","versions":["2013-06-15*","2013-10-15*","2014-02-01*","2014-05-01*","2014-06-15*","2014-09-01*","2014-10-01*","2015-03-01*","2015-04-15*","2015-10-01*","2016-04-01*","2016-09-15*"],"cors":true},"ecr":{"name":"ECR","cors":true},"ecs":{"name":"ECS","cors":true},"efs":{"prefix":"elasticfilesystem","name":"EFS","cors":true},"elasticache":{"name":"ElastiCache","versions":["2012-11-15*","2014-03-24*","2014-07-15*","2014-09-30*"],"cors":true},"elasticbeanstalk":{"name":"ElasticBeanstalk","cors":true},"elb":{"prefix":"elasticloadbalancing","name":"ELB","cors":true},"elbv2":{"prefix":"elasticloadbalancingv2","name":"ELBv2","cors":true},"emr":{"prefix":"elasticmapreduce","name":"EMR","cors":true},"es":{"name":"ES"},"elastictranscoder":{"name":"ElasticTranscoder","cors":true},"firehose":{"name":"Firehose","cors":true},"gamelift":{"name":"GameLift","cors":true},"glacier":{"name":"Glacier"},"health":{"name":"Health"},"iam":{"name":"IAM"},"importexport":{"name":"ImportExport"},"inspector":{"name":"Inspector","versions":["2015-08-18*"],"cors":true},"iot":{"name":"Iot","cors":true},"iotdata":{"prefix":"iot-data","name":"IotData","cors":true},"kinesis":{"name":"Kinesis","cors":true},"kinesisanalytics":{"name":"KinesisAnalytics"},"kms":{"name":"KMS","cors":true},"lambda":{"name":"Lambda","cors":true},"lexruntime":{"prefix":"runtime.lex","name":"LexRuntime","cors":true},"lightsail":{"name":"Lightsail"},"machinelearning":{"name":"MachineLearning","cors":true},"marketplacecommerceanalytics":{"name":"MarketplaceCommerceAnalytics","cors":true},"marketplacemetering":{"prefix":"meteringmarketplace","name":"MarketplaceMetering"},"mturk":{"prefix":"mturk-requester","name":"MTurk","cors":true},"mobileanalytics":{"name":"MobileAnalytics","cors":true},"opsworks":{"name":"OpsWorks","cors":true},"opsworkscm":{"name":"OpsWorksCM"},"organizations":{"name":"Organizations"},"pinpoint":{"name":"Pinpoint"},"polly":{"name":"Polly","cors":true},"rds":{"name":"RDS","versions":["2014-09-01*"],"cors":true},"redshift":{"name":"Redshift","cors":true},"rekognition":{"name":"Rekognition","cors":true},"resourcegroupstaggingapi":{"name":"ResourceGroupsTaggingAPI"},"route53":{"name":"Route53","cors":true},"route53domains":{"name":"Route53Domains","cors":true},"s3":{"name":"S3","dualstackAvailable":true,"cors":true},"servicecatalog":{"name":"ServiceCatalog","cors":true},"ses":{"prefix":"email","name":"SES","cors":true},"shield":{"name":"Shield"},"simpledb":{"prefix":"sdb","name":"SimpleDB"},"sms":{"name":"SMS"},"snowball":{"name":"Snowball"},"sns":{"name":"SNS","cors":true},"sqs":{"name":"SQS","cors":true},"ssm":{"name":"SSM","cors":true},"storagegateway":{"name":"StorageGateway","cors":true},"stepfunctions":{"prefix":"states","name":"StepFunctions"},"sts":{"name":"STS","cors":true},"support":{"name":"Support"},"swf":{"name":"SWF"},"xray":{"name":"XRay"},"waf":{"name":"WAF","cors":true},"wafregional":{"prefix":"waf-regional","name":"WAFRegional"},"workdocs":{"name":"WorkDocs","cors":true},"workspaces":{"name":"WorkSpaces"},"codestar":{"name":"CodeStar"},"lexmodelbuildingservice":{"prefix":"lex-models","name":"LexModelBuildingService","cors":true},"marketplaceentitlementservice":{"prefix":"entitlement.marketplace","name":"MarketplaceEntitlementService"},"athena":{"name":"Athena"},"greengrass":{"name":"Greengrass"},"dax":{"name":"DAX"},"migrationhub":{"prefix":"AWSMigrationHub","name":"MigrationHub"},"cloudhsmv2":{"name":"CloudHSMV2"},"glue":{"name":"Glue"},"mobile":{"name":"Mobile"},"pricing":{"name":"Pricing"},"costexplorer":{"prefix":"ce","name":"CostExplorer"},"mediaconvert":{"name":"MediaConvert"},"medialive":{"name":"MediaLive"},"mediapackage":{"name":"MediaPackage"},"mediastore":{"name":"MediaStore"},"mediastoredata":{"prefix":"mediastore-data","name":"MediaStoreData"},"appsync":{"name":"AppSync"},"guardduty":{"name":"GuardDuty"},"mq":{"name":"MQ"},"comprehend":{"name":"Comprehend"},"iotjobsdataplane":{"prefix":"iot-jobs-data","name":"IoTJobsDataPlane"},"kinesisvideoarchivedmedia":{"prefix":"kinesis-video-archived-media","name":"KinesisVideoArchivedMedia"},"kinesisvideomedia":{"prefix":"kinesis-video-media","name":"KinesisVideoMedia"},"kinesisvideo":{"name":"KinesisVideo"},"sagemakerruntime":{"prefix":"runtime.sagemaker","name":"SageMakerRuntime"},"sagemaker":{"name":"SageMaker"},"translate":{"name":"Translate"},"resourcegroups":{"prefix":"resource-groups","name":"ResourceGroups"},"alexaforbusiness":{"name":"AlexaForBusiness"},"cloud9":{"name":"Cloud9"},"serverlessapplicationrepository":{"prefix":"serverlessrepo","name":"ServerlessApplicationRepository"},"servicediscovery":{"name":"ServiceDiscovery"},"workmail":{"name":"WorkMail"}}
+module.exports = {"acm":{"name":"ACM","cors":true},"apigateway":{"name":"APIGateway","cors":true},"applicationautoscaling":{"prefix":"application-autoscaling","name":"ApplicationAutoScaling","cors":true},"appstream":{"name":"AppStream"},"autoscaling":{"name":"AutoScaling","cors":true},"batch":{"name":"Batch"},"budgets":{"name":"Budgets"},"clouddirectory":{"name":"CloudDirectory"},"cloudformation":{"name":"CloudFormation","cors":true},"cloudfront":{"name":"CloudFront","versions":["2013-05-12*","2013-11-11*","2014-05-31*","2014-10-21*","2014-11-06*","2015-04-17*","2015-07-27*","2015-09-17*","2016-01-13*","2016-01-28*","2016-08-01*","2016-08-20*","2016-09-07*","2016-09-29*","2016-11-25*"],"cors":true},"cloudhsm":{"name":"CloudHSM","cors":true},"cloudsearch":{"name":"CloudSearch"},"cloudsearchdomain":{"name":"CloudSearchDomain"},"cloudtrail":{"name":"CloudTrail","cors":true},"cloudwatch":{"prefix":"monitoring","name":"CloudWatch","cors":true},"cloudwatchevents":{"prefix":"events","name":"CloudWatchEvents","versions":["2014-02-03*"],"cors":true},"cloudwatchlogs":{"prefix":"logs","name":"CloudWatchLogs","cors":true},"codebuild":{"name":"CodeBuild"},"codecommit":{"name":"CodeCommit","cors":true},"codedeploy":{"name":"CodeDeploy","cors":true},"codepipeline":{"name":"CodePipeline","cors":true},"cognitoidentity":{"prefix":"cognito-identity","name":"CognitoIdentity","cors":true},"cognitoidentityserviceprovider":{"prefix":"cognito-idp","name":"CognitoIdentityServiceProvider","cors":true},"cognitosync":{"prefix":"cognito-sync","name":"CognitoSync","cors":true},"configservice":{"prefix":"config","name":"ConfigService","cors":true},"cur":{"name":"CUR","cors":true},"datapipeline":{"name":"DataPipeline"},"devicefarm":{"name":"DeviceFarm","cors":true},"directconnect":{"name":"DirectConnect","cors":true},"directoryservice":{"prefix":"ds","name":"DirectoryService"},"discovery":{"name":"Discovery"},"dms":{"name":"DMS"},"dynamodb":{"name":"DynamoDB","cors":true},"dynamodbstreams":{"prefix":"streams.dynamodb","name":"DynamoDBStreams","cors":true},"ec2":{"name":"EC2","versions":["2013-06-15*","2013-10-15*","2014-02-01*","2014-05-01*","2014-06-15*","2014-09-01*","2014-10-01*","2015-03-01*","2015-04-15*","2015-10-01*","2016-04-01*","2016-09-15*"],"cors":true},"ecr":{"name":"ECR","cors":true},"ecs":{"name":"ECS","cors":true},"efs":{"prefix":"elasticfilesystem","name":"EFS","cors":true},"elasticache":{"name":"ElastiCache","versions":["2012-11-15*","2014-03-24*","2014-07-15*","2014-09-30*"],"cors":true},"elasticbeanstalk":{"name":"ElasticBeanstalk","cors":true},"elb":{"prefix":"elasticloadbalancing","name":"ELB","cors":true},"elbv2":{"prefix":"elasticloadbalancingv2","name":"ELBv2","cors":true},"emr":{"prefix":"elasticmapreduce","name":"EMR","cors":true},"es":{"name":"ES"},"elastictranscoder":{"name":"ElasticTranscoder","cors":true},"firehose":{"name":"Firehose","cors":true},"gamelift":{"name":"GameLift","cors":true},"glacier":{"name":"Glacier"},"health":{"name":"Health"},"iam":{"name":"IAM"},"importexport":{"name":"ImportExport"},"inspector":{"name":"Inspector","versions":["2015-08-18*"],"cors":true},"iot":{"name":"Iot","cors":true},"iotdata":{"prefix":"iot-data","name":"IotData","cors":true},"kinesis":{"name":"Kinesis","cors":true},"kinesisanalytics":{"name":"KinesisAnalytics"},"kms":{"name":"KMS","cors":true},"lambda":{"name":"Lambda","cors":true},"lexruntime":{"prefix":"runtime.lex","name":"LexRuntime","cors":true},"lightsail":{"name":"Lightsail"},"machinelearning":{"name":"MachineLearning","cors":true},"marketplacecommerceanalytics":{"name":"MarketplaceCommerceAnalytics","cors":true},"marketplacemetering":{"prefix":"meteringmarketplace","name":"MarketplaceMetering"},"mturk":{"prefix":"mturk-requester","name":"MTurk","cors":true},"mobileanalytics":{"name":"MobileAnalytics","cors":true},"opsworks":{"name":"OpsWorks","cors":true},"opsworkscm":{"name":"OpsWorksCM"},"organizations":{"name":"Organizations"},"pinpoint":{"name":"Pinpoint"},"polly":{"name":"Polly","cors":true},"rds":{"name":"RDS","versions":["2014-09-01*"],"cors":true},"redshift":{"name":"Redshift","cors":true},"rekognition":{"name":"Rekognition","cors":true},"resourcegroupstaggingapi":{"name":"ResourceGroupsTaggingAPI"},"route53":{"name":"Route53","cors":true},"route53domains":{"name":"Route53Domains","cors":true},"s3":{"name":"S3","dualstackAvailable":true,"cors":true},"servicecatalog":{"name":"ServiceCatalog","cors":true},"ses":{"prefix":"email","name":"SES","cors":true},"shield":{"name":"Shield"},"simpledb":{"prefix":"sdb","name":"SimpleDB"},"sms":{"name":"SMS"},"snowball":{"name":"Snowball"},"sns":{"name":"SNS","cors":true},"sqs":{"name":"SQS","cors":true},"ssm":{"name":"SSM","cors":true},"storagegateway":{"name":"StorageGateway","cors":true},"stepfunctions":{"prefix":"states","name":"StepFunctions"},"sts":{"name":"STS","cors":true},"support":{"name":"Support"},"swf":{"name":"SWF"},"xray":{"name":"XRay"},"waf":{"name":"WAF","cors":true},"wafregional":{"prefix":"waf-regional","name":"WAFRegional"},"workdocs":{"name":"WorkDocs","cors":true},"workspaces":{"name":"WorkSpaces"},"codestar":{"name":"CodeStar"},"lexmodelbuildingservice":{"prefix":"lex-models","name":"LexModelBuildingService","cors":true},"marketplaceentitlementservice":{"prefix":"entitlement.marketplace","name":"MarketplaceEntitlementService"},"athena":{"name":"Athena"},"greengrass":{"name":"Greengrass"},"dax":{"name":"DAX"},"migrationhub":{"prefix":"AWSMigrationHub","name":"MigrationHub"},"cloudhsmv2":{"name":"CloudHSMV2"},"glue":{"name":"Glue"},"mobile":{"name":"Mobile"},"pricing":{"name":"Pricing"},"costexplorer":{"prefix":"ce","name":"CostExplorer"},"mediaconvert":{"name":"MediaConvert"},"medialive":{"name":"MediaLive"},"mediapackage":{"name":"MediaPackage"},"mediastore":{"name":"MediaStore"},"mediastoredata":{"prefix":"mediastore-data","name":"MediaStoreData"},"appsync":{"name":"AppSync"},"guardduty":{"name":"GuardDuty"},"mq":{"name":"MQ"},"comprehend":{"name":"Comprehend"},"iotjobsdataplane":{"prefix":"iot-jobs-data","name":"IoTJobsDataPlane"},"kinesisvideoarchivedmedia":{"prefix":"kinesis-video-archived-media","name":"KinesisVideoArchivedMedia"},"kinesisvideomedia":{"prefix":"kinesis-video-media","name":"KinesisVideoMedia"},"kinesisvideo":{"name":"KinesisVideo"},"sagemakerruntime":{"prefix":"runtime.sagemaker","name":"SageMakerRuntime"},"sagemaker":{"name":"SageMaker"},"translate":{"name":"Translate"},"resourcegroups":{"prefix":"resource-groups","name":"ResourceGroups"},"alexaforbusiness":{"name":"AlexaForBusiness"},"cloud9":{"name":"Cloud9"},"serverlessapplicationrepository":{"prefix":"serverlessrepo","name":"ServerlessApplicationRepository"},"servicediscovery":{"name":"ServiceDiscovery"},"workmail":{"name":"WorkMail"},"autoscalingplans":{"prefix":"autoscaling-plans","name":"AutoScalingPlans"},"transcribeservice":{"prefix":"transcribe","name":"TranscribeService"}}
 
 /***/ }),
 /* 231 */
@@ -22957,107 +23017,112 @@ module.exports = v4;
 /* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Buffer = __webpack_require__(44).Buffer
-var sha = __webpack_require__(238)
-var sha256 = __webpack_require__(239)
-var rng = __webpack_require__(240)
-var md5 = __webpack_require__(241)
+var Hmac = __webpack_require__(235);
+var Md5 = __webpack_require__(239);
+var Sha1 = __webpack_require__(240);
+var Sha256 = __webpack_require__(241);
 
-var algorithms = {
-  sha1: sha,
-  sha256: sha256,
-  md5: md5
-}
+module.exports = exports = {
+    createHash: function createHash(alg) {
+      alg = alg.toLowerCase();
+      if (alg === 'md5') {
+        return new Md5();
+      } else if (alg === 'sha256') {
+        return new Sha256();
+      } else if (alg === 'sha1') {
+        return new Sha1();
+      }
 
-var blocksize = 64
-var zeroBuffer = new Buffer(blocksize); zeroBuffer.fill(0)
-function hmac(fn, key, data) {
-  if(!Buffer.isBuffer(key)) key = new Buffer(key)
-  if(!Buffer.isBuffer(data)) data = new Buffer(data)
-
-  if(key.length > blocksize) {
-    key = fn(key)
-  } else if(key.length < blocksize) {
-    key = Buffer.concat([key, zeroBuffer], blocksize)
-  }
-
-  var ipad = new Buffer(blocksize), opad = new Buffer(blocksize)
-  for(var i = 0; i < blocksize; i++) {
-    ipad[i] = key[i] ^ 0x36
-    opad[i] = key[i] ^ 0x5C
-  }
-
-  var hash = fn(Buffer.concat([ipad, data]))
-  return fn(Buffer.concat([opad, hash]))
-}
-
-function hash(alg, key) {
-  alg = alg || 'sha1'
-  var fn = algorithms[alg]
-  var bufs = []
-  var length = 0
-  if(!fn) error('algorithm:', alg, 'is not yet supported')
-  return {
-    update: function (data) {
-      if(!Buffer.isBuffer(data)) data = new Buffer(data)
-        
-      bufs.push(data)
-      length += data.length
-      return this
+      throw new Error('Hash algorithm ' + alg + ' is not supported in the browser SDK');
     },
-    digest: function (enc) {
-      var buf = Buffer.concat(bufs)
-      var r = key ? hmac(fn, key, buf) : fn(buf)
-      bufs = null
-      return enc ? r.toString(enc) : r
+    createHmac: function createHmac(alg, key) {
+      alg = alg.toLowerCase();
+      if (alg === 'md5') {
+        return new Hmac(Md5, key);
+      } else if (alg === 'sha256') {
+        return new Hmac(Sha256, key);
+      } else if (alg === 'sha1') {
+        return new Hmac(Sha1, key);
+      }
+
+      throw new Error('HMAC algorithm ' + alg + ' is not supported in the browser SDK');
+    },
+    createSign: function() {
+      throw new Error('createSign is not implemented in the browser');
     }
   }
-}
-
-function error () {
-  var m = [].slice.call(arguments).join(' ')
-  throw new Error([
-    m,
-    'we accept pull requests',
-    'http://github.com/dominictarr/crypto-browserify'
-    ].join('\n'))
-}
-
-exports.createHash = function (alg) { return hash(alg) }
-exports.createHmac = function (alg, key) { return hash(alg, key) }
-exports.randomBytes = function(size, callback) {
-  if (callback && callback.call) {
-    try {
-      callback.call(this, undefined, new Buffer(rng(size)))
-    } catch (err) { callback(err) }
-  } else {
-    return new Buffer(rng(size))
-  }
-}
-
-function each(a, f) {
-  for(var i in a)
-    f(a[i], i)
-}
-
-// the least I can do is make error messages for the rest of the node.js/crypto api.
-each(['createCredentials'
-, 'createCipher'
-, 'createCipheriv'
-, 'createDecipher'
-, 'createDecipheriv'
-, 'createSign'
-, 'createVerify'
-, 'createDiffieHellman'
-, 'pbkdf2'], function (name) {
-  exports[name] = function () {
-    error('sorry,', name, 'is not implemented yet')
-  }
-})
 
 
 /***/ }),
 /* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var hashUtils = __webpack_require__(26);
+
+/**
+ * @api private
+ */
+function Hmac(hashCtor, secret) {
+    this.hash = new hashCtor();
+    this.outer = new hashCtor();
+
+    var inner = bufferFromSecret(hashCtor, secret);
+    var outer = new Uint8Array(hashCtor.BLOCK_SIZE);
+    outer.set(inner);
+
+    for (var i = 0; i < hashCtor.BLOCK_SIZE; i++) {
+        inner[i] ^= 0x36;
+        outer[i] ^= 0x5c;
+    }
+
+    this.hash.update(inner);
+    this.outer.update(outer);
+
+    // Zero out the copied key buffer.
+    for (var i = 0; i < inner.byteLength; i++) {
+        inner[i] = 0;
+    }
+}
+
+module.exports = exports = Hmac;
+
+Hmac.prototype.update = function (toHash) {
+    if (hashUtils.isEmptyData(toHash) || this.error) {
+        return this;
+    }
+
+    try {
+        this.hash.update(hashUtils.convertToBuffer(toHash));
+    } catch (e) {
+        this.error = e;
+    }
+
+    return this;
+};
+
+Hmac.prototype.digest = function (encoding) {
+    if (!this.outer.finished) {
+        this.outer.update(this.hash.digest());
+    }
+
+    return this.outer.digest(encoding);
+}
+
+function bufferFromSecret(hashCtor, secret) {
+    var input = hashUtils.convertToBuffer(secret);
+    if (input.byteLength > hashCtor.BLOCK_SIZE) {
+        var bufferHash = new hashCtor;
+        bufferHash.update(input);
+        input = bufferHash.digest();
+    }
+    var buffer = new Uint8Array(hashCtor.BLOCK_SIZE);
+    buffer.set(input);
+    return buffer;
+}
+
+
+/***/ }),
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23077,8 +23142,6 @@ for (var i = 0, len = code.length; i < len; ++i) {
   revLookup[code.charCodeAt(i)] = i
 }
 
-// Support decoding URL-safe base64 strings, as Node.js does.
-// See: https://en.wikipedia.org/wiki/Base64#URL_applications
 revLookup['-'.charCodeAt(0)] = 62
 revLookup['_'.charCodeAt(0)] = 63
 
@@ -23140,7 +23203,7 @@ function encodeChunk (uint8, start, end) {
   var tmp
   var output = []
   for (var i = start; i < end; i += 3) {
-    tmp = ((uint8[i] << 16) & 0xFF0000) + ((uint8[i + 1] << 8) & 0xFF00) + (uint8[i + 2] & 0xFF)
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
     output.push(tripletToBase64(tmp))
   }
   return output.join('')
@@ -23180,7 +23243,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -23270,7 +23333,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 237 */
+/* 238 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -23281,400 +23344,598 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 238 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
- * in FIPS PUB 180-1
- * Version 2.1a Copyright Paul Johnston 2000 - 2002.
- * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
- * Distributed under the BSD License
- * See http://pajhome.org.uk/crypt/md5 for details.
- */
-
-var helpers = __webpack_require__(45);
-
-/*
- * Calculate the SHA-1 of an array of big-endian words, and a bit length
- */
-function core_sha1(x, len)
-{
-  /* append padding */
-  x[len >> 5] |= 0x80 << (24 - len % 32);
-  x[((len + 64 >> 9) << 4) + 15] = len;
-
-  var w = Array(80);
-  var a =  1732584193;
-  var b = -271733879;
-  var c = -1732584194;
-  var d =  271733878;
-  var e = -1009589776;
-
-  for(var i = 0; i < x.length; i += 16)
-  {
-    var olda = a;
-    var oldb = b;
-    var oldc = c;
-    var oldd = d;
-    var olde = e;
-
-    for(var j = 0; j < 80; j++)
-    {
-      if(j < 16) w[j] = x[i + j];
-      else w[j] = rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
-      var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)),
-                       safe_add(safe_add(e, w[j]), sha1_kt(j)));
-      e = d;
-      d = c;
-      c = rol(b, 30);
-      b = a;
-      a = t;
-    }
-
-    a = safe_add(a, olda);
-    b = safe_add(b, oldb);
-    c = safe_add(c, oldc);
-    d = safe_add(d, oldd);
-    e = safe_add(e, olde);
-  }
-  return Array(a, b, c, d, e);
-
-}
-
-/*
- * Perform the appropriate triplet combination function for the current
- * iteration
- */
-function sha1_ft(t, b, c, d)
-{
-  if(t < 20) return (b & c) | ((~b) & d);
-  if(t < 40) return b ^ c ^ d;
-  if(t < 60) return (b & c) | (b & d) | (c & d);
-  return b ^ c ^ d;
-}
-
-/*
- * Determine the appropriate additive constant for the current iteration
- */
-function sha1_kt(t)
-{
-  return (t < 20) ?  1518500249 : (t < 40) ?  1859775393 :
-         (t < 60) ? -1894007588 : -899497514;
-}
-
-/*
- * Add integers, wrapping at 2^32. This uses 16-bit operations internally
- * to work around bugs in some JS interpreters.
- */
-function safe_add(x, y)
-{
-  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-  return (msw << 16) | (lsw & 0xFFFF);
-}
-
-/*
- * Bitwise rotate a 32-bit number to the left.
- */
-function rol(num, cnt)
-{
-  return (num << cnt) | (num >>> (32 - cnt));
-}
-
-module.exports = function sha1(buf) {
-  return helpers.hash(buf, core_sha1, 20, true);
-};
-
-
-/***/ }),
 /* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var hashUtils = __webpack_require__(26);
+var Buffer = __webpack_require__(15).Buffer;
+
+var BLOCK_SIZE = 64;
+
+var DIGEST_LENGTH = 16;
+
+var INIT = [
+    0x67452301,
+    0xefcdab89,
+    0x98badcfe,
+    0x10325476,
+];
 
 /**
- * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
- * in FIPS 180-2
- * Version 2.2-beta Copyright Angel Marin, Paul Johnston 2000 - 2009.
- * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
- *
+ * @api private
  */
+function Md5() {
+    this.state = [
+        0x67452301,
+        0xefcdab89,
+        0x98badcfe,
+        0x10325476,
+    ];
+    this.buffer = new DataView(new ArrayBuffer(BLOCK_SIZE));
+    this.bufferLength = 0;
+    this.bytesHashed = 0;
+    this.finished = false;
+}
 
-var helpers = __webpack_require__(45);
+module.exports = exports = Md5;
 
-var safe_add = function(x, y) {
-  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-  return (msw << 16) | (lsw & 0xFFFF);
-};
+Md5.BLOCK_SIZE = BLOCK_SIZE;
 
-var S = function(X, n) {
-  return (X >>> n) | (X << (32 - n));
-};
-
-var R = function(X, n) {
-  return (X >>> n);
-};
-
-var Ch = function(x, y, z) {
-  return ((x & y) ^ ((~x) & z));
-};
-
-var Maj = function(x, y, z) {
-  return ((x & y) ^ (x & z) ^ (y & z));
-};
-
-var Sigma0256 = function(x) {
-  return (S(x, 2) ^ S(x, 13) ^ S(x, 22));
-};
-
-var Sigma1256 = function(x) {
-  return (S(x, 6) ^ S(x, 11) ^ S(x, 25));
-};
-
-var Gamma0256 = function(x) {
-  return (S(x, 7) ^ S(x, 18) ^ R(x, 3));
-};
-
-var Gamma1256 = function(x) {
-  return (S(x, 17) ^ S(x, 19) ^ R(x, 10));
-};
-
-var core_sha256 = function(m, l) {
-  var K = new Array(0x428A2F98,0x71374491,0xB5C0FBCF,0xE9B5DBA5,0x3956C25B,0x59F111F1,0x923F82A4,0xAB1C5ED5,0xD807AA98,0x12835B01,0x243185BE,0x550C7DC3,0x72BE5D74,0x80DEB1FE,0x9BDC06A7,0xC19BF174,0xE49B69C1,0xEFBE4786,0xFC19DC6,0x240CA1CC,0x2DE92C6F,0x4A7484AA,0x5CB0A9DC,0x76F988DA,0x983E5152,0xA831C66D,0xB00327C8,0xBF597FC7,0xC6E00BF3,0xD5A79147,0x6CA6351,0x14292967,0x27B70A85,0x2E1B2138,0x4D2C6DFC,0x53380D13,0x650A7354,0x766A0ABB,0x81C2C92E,0x92722C85,0xA2BFE8A1,0xA81A664B,0xC24B8B70,0xC76C51A3,0xD192E819,0xD6990624,0xF40E3585,0x106AA070,0x19A4C116,0x1E376C08,0x2748774C,0x34B0BCB5,0x391C0CB3,0x4ED8AA4A,0x5B9CCA4F,0x682E6FF3,0x748F82EE,0x78A5636F,0x84C87814,0x8CC70208,0x90BEFFFA,0xA4506CEB,0xBEF9A3F7,0xC67178F2);
-  var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);
-    var W = new Array(64);
-    var a, b, c, d, e, f, g, h, i, j;
-    var T1, T2;
-  /* append padding */
-  m[l >> 5] |= 0x80 << (24 - l % 32);
-  m[((l + 64 >> 9) << 4) + 15] = l;
-  for (var i = 0; i < m.length; i += 16) {
-    a = HASH[0]; b = HASH[1]; c = HASH[2]; d = HASH[3]; e = HASH[4]; f = HASH[5]; g = HASH[6]; h = HASH[7];
-    for (var j = 0; j < 64; j++) {
-      if (j < 16) {
-        W[j] = m[j + i];
-      } else {
-        W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
-      }
-      T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
-      T2 = safe_add(Sigma0256(a), Maj(a, b, c));
-      h = g; g = f; f = e; e = safe_add(d, T1); d = c; c = b; b = a; a = safe_add(T1, T2);
+Md5.prototype.update = function (sourceData) {
+    if (hashUtils.isEmptyData(sourceData)) {
+        return this;
+    } else if (this.finished) {
+        throw new Error('Attempted to update an already finished hash.');
     }
-    HASH[0] = safe_add(a, HASH[0]); HASH[1] = safe_add(b, HASH[1]); HASH[2] = safe_add(c, HASH[2]); HASH[3] = safe_add(d, HASH[3]);
-    HASH[4] = safe_add(e, HASH[4]); HASH[5] = safe_add(f, HASH[5]); HASH[6] = safe_add(g, HASH[6]); HASH[7] = safe_add(h, HASH[7]);
-  }
-  return HASH;
+
+    var data = hashUtils.convertToBuffer(sourceData);
+    var position = 0;
+    var byteLength = data.byteLength;
+    this.bytesHashed += byteLength;
+    while (byteLength > 0) {
+        this.buffer.setUint8(this.bufferLength++, data[position++]);
+        byteLength--;
+        if (this.bufferLength === BLOCK_SIZE) {
+            this.hashBuffer();
+            this.bufferLength = 0;
+        }
+    }
+
+    return this;
 };
 
-module.exports = function sha256(buf) {
-  return helpers.hash(buf, core_sha256, 32, true);
+Md5.prototype.digest = function (encoding) {
+    if (!this.finished) {
+        var _a = this, buffer = _a.buffer, undecoratedLength = _a.bufferLength, bytesHashed = _a.bytesHashed;
+        var bitsHashed = bytesHashed * 8;
+        buffer.setUint8(this.bufferLength++, 128);
+        // Ensure the final block has enough room for the hashed length
+        if (undecoratedLength % BLOCK_SIZE >= BLOCK_SIZE - 8) {
+            for (var i = this.bufferLength; i < BLOCK_SIZE; i++) {
+                buffer.setUint8(i, 0);
+            }
+            this.hashBuffer();
+            this.bufferLength = 0;
+        }
+        for (var i = this.bufferLength; i < BLOCK_SIZE - 8; i++) {
+            buffer.setUint8(i, 0);
+        }
+        buffer.setUint32(BLOCK_SIZE - 8, bitsHashed >>> 0, true);
+        buffer.setUint32(BLOCK_SIZE - 4, Math.floor(bitsHashed / 0x100000000), true);
+        this.hashBuffer();
+        this.finished = true;
+    }
+    var out = new DataView(new ArrayBuffer(DIGEST_LENGTH));
+    for (var i = 0; i < 4; i++) {
+        out.setUint32(i * 4, this.state[i], true);
+    }
+    var buff = new Buffer(out.buffer, out.byteOffset, out.byteLength);
+    return encoding ? buff.toString(encoding) : buff;
 };
+
+Md5.prototype.hashBuffer = function () {
+    var _a = this, buffer = _a.buffer, state = _a.state;
+    var a = state[0], b = state[1], c = state[2], d = state[3];
+    a = ff(a, b, c, d, buffer.getUint32(0, true), 7, 0xd76aa478);
+    d = ff(d, a, b, c, buffer.getUint32(4, true), 12, 0xe8c7b756);
+    c = ff(c, d, a, b, buffer.getUint32(8, true), 17, 0x242070db);
+    b = ff(b, c, d, a, buffer.getUint32(12, true), 22, 0xc1bdceee);
+    a = ff(a, b, c, d, buffer.getUint32(16, true), 7, 0xf57c0faf);
+    d = ff(d, a, b, c, buffer.getUint32(20, true), 12, 0x4787c62a);
+    c = ff(c, d, a, b, buffer.getUint32(24, true), 17, 0xa8304613);
+    b = ff(b, c, d, a, buffer.getUint32(28, true), 22, 0xfd469501);
+    a = ff(a, b, c, d, buffer.getUint32(32, true), 7, 0x698098d8);
+    d = ff(d, a, b, c, buffer.getUint32(36, true), 12, 0x8b44f7af);
+    c = ff(c, d, a, b, buffer.getUint32(40, true), 17, 0xffff5bb1);
+    b = ff(b, c, d, a, buffer.getUint32(44, true), 22, 0x895cd7be);
+    a = ff(a, b, c, d, buffer.getUint32(48, true), 7, 0x6b901122);
+    d = ff(d, a, b, c, buffer.getUint32(52, true), 12, 0xfd987193);
+    c = ff(c, d, a, b, buffer.getUint32(56, true), 17, 0xa679438e);
+    b = ff(b, c, d, a, buffer.getUint32(60, true), 22, 0x49b40821);
+    a = gg(a, b, c, d, buffer.getUint32(4, true), 5, 0xf61e2562);
+    d = gg(d, a, b, c, buffer.getUint32(24, true), 9, 0xc040b340);
+    c = gg(c, d, a, b, buffer.getUint32(44, true), 14, 0x265e5a51);
+    b = gg(b, c, d, a, buffer.getUint32(0, true), 20, 0xe9b6c7aa);
+    a = gg(a, b, c, d, buffer.getUint32(20, true), 5, 0xd62f105d);
+    d = gg(d, a, b, c, buffer.getUint32(40, true), 9, 0x02441453);
+    c = gg(c, d, a, b, buffer.getUint32(60, true), 14, 0xd8a1e681);
+    b = gg(b, c, d, a, buffer.getUint32(16, true), 20, 0xe7d3fbc8);
+    a = gg(a, b, c, d, buffer.getUint32(36, true), 5, 0x21e1cde6);
+    d = gg(d, a, b, c, buffer.getUint32(56, true), 9, 0xc33707d6);
+    c = gg(c, d, a, b, buffer.getUint32(12, true), 14, 0xf4d50d87);
+    b = gg(b, c, d, a, buffer.getUint32(32, true), 20, 0x455a14ed);
+    a = gg(a, b, c, d, buffer.getUint32(52, true), 5, 0xa9e3e905);
+    d = gg(d, a, b, c, buffer.getUint32(8, true), 9, 0xfcefa3f8);
+    c = gg(c, d, a, b, buffer.getUint32(28, true), 14, 0x676f02d9);
+    b = gg(b, c, d, a, buffer.getUint32(48, true), 20, 0x8d2a4c8a);
+    a = hh(a, b, c, d, buffer.getUint32(20, true), 4, 0xfffa3942);
+    d = hh(d, a, b, c, buffer.getUint32(32, true), 11, 0x8771f681);
+    c = hh(c, d, a, b, buffer.getUint32(44, true), 16, 0x6d9d6122);
+    b = hh(b, c, d, a, buffer.getUint32(56, true), 23, 0xfde5380c);
+    a = hh(a, b, c, d, buffer.getUint32(4, true), 4, 0xa4beea44);
+    d = hh(d, a, b, c, buffer.getUint32(16, true), 11, 0x4bdecfa9);
+    c = hh(c, d, a, b, buffer.getUint32(28, true), 16, 0xf6bb4b60);
+    b = hh(b, c, d, a, buffer.getUint32(40, true), 23, 0xbebfbc70);
+    a = hh(a, b, c, d, buffer.getUint32(52, true), 4, 0x289b7ec6);
+    d = hh(d, a, b, c, buffer.getUint32(0, true), 11, 0xeaa127fa);
+    c = hh(c, d, a, b, buffer.getUint32(12, true), 16, 0xd4ef3085);
+    b = hh(b, c, d, a, buffer.getUint32(24, true), 23, 0x04881d05);
+    a = hh(a, b, c, d, buffer.getUint32(36, true), 4, 0xd9d4d039);
+    d = hh(d, a, b, c, buffer.getUint32(48, true), 11, 0xe6db99e5);
+    c = hh(c, d, a, b, buffer.getUint32(60, true), 16, 0x1fa27cf8);
+    b = hh(b, c, d, a, buffer.getUint32(8, true), 23, 0xc4ac5665);
+    a = ii(a, b, c, d, buffer.getUint32(0, true), 6, 0xf4292244);
+    d = ii(d, a, b, c, buffer.getUint32(28, true), 10, 0x432aff97);
+    c = ii(c, d, a, b, buffer.getUint32(56, true), 15, 0xab9423a7);
+    b = ii(b, c, d, a, buffer.getUint32(20, true), 21, 0xfc93a039);
+    a = ii(a, b, c, d, buffer.getUint32(48, true), 6, 0x655b59c3);
+    d = ii(d, a, b, c, buffer.getUint32(12, true), 10, 0x8f0ccc92);
+    c = ii(c, d, a, b, buffer.getUint32(40, true), 15, 0xffeff47d);
+    b = ii(b, c, d, a, buffer.getUint32(4, true), 21, 0x85845dd1);
+    a = ii(a, b, c, d, buffer.getUint32(32, true), 6, 0x6fa87e4f);
+    d = ii(d, a, b, c, buffer.getUint32(60, true), 10, 0xfe2ce6e0);
+    c = ii(c, d, a, b, buffer.getUint32(24, true), 15, 0xa3014314);
+    b = ii(b, c, d, a, buffer.getUint32(52, true), 21, 0x4e0811a1);
+    a = ii(a, b, c, d, buffer.getUint32(16, true), 6, 0xf7537e82);
+    d = ii(d, a, b, c, buffer.getUint32(44, true), 10, 0xbd3af235);
+    c = ii(c, d, a, b, buffer.getUint32(8, true), 15, 0x2ad7d2bb);
+    b = ii(b, c, d, a, buffer.getUint32(36, true), 21, 0xeb86d391);
+    state[0] = (a + state[0]) & 0xFFFFFFFF;
+    state[1] = (b + state[1]) & 0xFFFFFFFF;
+    state[2] = (c + state[2]) & 0xFFFFFFFF;
+    state[3] = (d + state[3]) & 0xFFFFFFFF;
+};
+
+function cmn(q, a, b, x, s, t) {
+    a = (((a + q) & 0xFFFFFFFF) + ((x + t) & 0xFFFFFFFF)) & 0xFFFFFFFF;
+    return (((a << s) | (a >>> (32 - s))) + b) & 0xFFFFFFFF;
+}
+
+function ff(a, b, c, d, x, s, t) {
+    return cmn((b & c) | ((~b) & d), a, b, x, s, t);
+}
+
+function gg(a, b, c, d, x, s, t) {
+    return cmn((b & d) | (c & (~d)), a, b, x, s, t);
+}
+
+function hh(a, b, c, d, x, s, t) {
+    return cmn(b ^ c ^ d, a, b, x, s, t);
+}
+
+function ii(a, b, c, d, x, s, t) {
+    return cmn(c ^ (b | (~d)), a, b, x, s, t);
+}
 
 
 /***/ }),
 /* 240 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// Original code adapted from Robert Kieffer.
-// details at https://github.com/broofa/node-uuid
-(function() {
-  var _global = this;
+var Buffer = __webpack_require__(15).Buffer;
+var hashUtils = __webpack_require__(26);
 
-  var mathRNG, whatwgRNG;
+var BLOCK_SIZE = 64;
 
-  // NOTE: Math.random() does not guarantee "cryptographic quality"
-  mathRNG = function(size) {
-    var bytes = new Array(size);
-    var r;
+var DIGEST_LENGTH = 20;
 
-    for (var i = 0, r; i < size; i++) {
-      if ((i & 0x03) == 0) r = Math.random() * 0x100000000;
-      bytes[i] = r >>> ((i & 0x03) << 3) & 0xff;
+var KEY = new Uint32Array([
+    0x5a827999,
+    0x6ed9eba1,
+    0x8f1bbcdc | 0,
+    0xca62c1d6 | 0
+]);
+
+var INIT = [
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x510e527f,
+    0x9b05688c,
+    0x1f83d9ab,
+    0x5be0cd19,
+];
+
+var MAX_HASHABLE_LENGTH = Math.pow(2, 53) - 1;
+
+/**
+ * @api private
+ */
+function Sha1() {
+    this.h0 = 0x67452301;
+    this.h1 = 0xEFCDAB89;
+    this.h2 = 0x98BADCFE;
+    this.h3 = 0x10325476;
+    this.h4 = 0xC3D2E1F0;
+    // The first 64 bytes (16 words) is the data chunk
+    this.block = new Uint32Array(80);
+    this.offset = 0;
+    this.shift = 24;
+    this.totalLength = 0;
+}
+
+module.exports = exports = Sha1;
+
+Sha1.BLOCK_SIZE = BLOCK_SIZE;
+
+Sha1.prototype.update = function (data) {
+    if (this.finished) {
+        throw new Error('Attempted to update an already finished hash.');
     }
 
-    return bytes;
-  }
-
-  if (_global.crypto && crypto.getRandomValues) {
-    whatwgRNG = function(size) {
-      var bytes = new Uint8Array(size);
-      crypto.getRandomValues(bytes);
-      return bytes;
+    if (hashUtils.isEmptyData(data)) {
+        return this;
     }
-  }
 
-  module.exports = whatwgRNG || mathRNG;
+    data = hashUtils.convertToBuffer(data);
 
-}())
+    var length = data.length;
+    this.totalLength += length * 8;
+    for (var i = 0; i < length; i++) {
+        this.write(data[i]);
+    }
+
+    return this;
+};
+
+Sha1.prototype.write = function write(byte) {
+    this.block[this.offset] |= (byte & 0xff) << this.shift;
+    if (this.shift) {
+        this.shift -= 8;
+    } else {
+        this.offset++;
+        this.shift = 24;
+    }
+
+    if (this.offset === 16) this.processBlock();
+};
+
+Sha1.prototype.digest = function (encoding) {
+    // Pad
+    this.write(0x80);
+    if (this.offset > 14 || (this.offset === 14 && this.shift < 24)) {
+      this.processBlock();
+    }
+    this.offset = 14;
+    this.shift = 24;
+
+    // 64-bit length big-endian
+    this.write(0x00); // numbers this big aren't accurate in javascript anyway
+    this.write(0x00); // ..So just hard-code to zero.
+    this.write(this.totalLength > 0xffffffffff ? this.totalLength / 0x10000000000 : 0x00);
+    this.write(this.totalLength > 0xffffffff ? this.totalLength / 0x100000000 : 0x00);
+    for (var s = 24; s >= 0; s -= 8) {
+        this.write(this.totalLength >> s);
+    }
+    // The value in state is little-endian rather than big-endian, so flip
+    // each word into a new Uint8Array
+    var out = new Buffer(DIGEST_LENGTH);
+    var outView = new DataView(out.buffer);
+    outView.setUint32(0, this.h0, false);
+    outView.setUint32(4, this.h1, false);
+    outView.setUint32(8, this.h2, false);
+    outView.setUint32(12, this.h3, false);
+    outView.setUint32(16, this.h4, false);
+
+    return encoding ? out.toString(encoding) : out;
+};
+
+Sha1.prototype.processBlock = function processBlock() {
+    // Extend the sixteen 32-bit words into eighty 32-bit words:
+    for (var i = 16; i < 80; i++) {
+      var w = this.block[i - 3] ^ this.block[i - 8] ^ this.block[i - 14] ^ this.block[i - 16];
+      this.block[i] = (w << 1) | (w >>> 31);
+    }
+
+    // Initialize hash value for this chunk:
+    var a = this.h0;
+    var b = this.h1;
+    var c = this.h2;
+    var d = this.h3;
+    var e = this.h4;
+    var f, k;
+
+    // Main loop:
+    for (i = 0; i < 80; i++) {
+      if (i < 20) {
+        f = d ^ (b & (c ^ d));
+        k = 0x5A827999;
+      }
+      else if (i < 40) {
+        f = b ^ c ^ d;
+        k = 0x6ED9EBA1;
+      }
+      else if (i < 60) {
+        f = (b & c) | (d & (b | c));
+        k = 0x8F1BBCDC;
+      }
+      else {
+        f = b ^ c ^ d;
+        k = 0xCA62C1D6;
+      }
+      var temp = (a << 5 | a >>> 27) + f + e + k + (this.block[i]|0);
+      e = d;
+      d = c;
+      c = (b << 30 | b >>> 2);
+      b = a;
+      a = temp;
+    }
+
+    // Add this chunk's hash to result so far:
+    this.h0 = (this.h0 + a) | 0;
+    this.h1 = (this.h1 + b) | 0;
+    this.h2 = (this.h2 + c) | 0;
+    this.h3 = (this.h3 + d) | 0;
+    this.h4 = (this.h4 + e) | 0;
+
+    // The block is now reusable.
+    this.offset = 0;
+    for (i = 0; i < 16; i++) {
+        this.block[i] = 0;
+    }
+}
 
 
 /***/ }),
 /* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*
- * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
- * Digest Algorithm, as defined in RFC 1321.
- * Version 2.1 Copyright (C) Paul Johnston 1999 - 2002.
- * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
- * Distributed under the BSD License
- * See http://pajhome.org.uk/crypt/md5 for more info.
+var Buffer = __webpack_require__(15).Buffer;
+var hashUtils = __webpack_require__(26);
+
+var BLOCK_SIZE = 64;
+
+var DIGEST_LENGTH = 32;
+
+var KEY = new Uint32Array([
+    0x428a2f98,
+    0x71374491,
+    0xb5c0fbcf,
+    0xe9b5dba5,
+    0x3956c25b,
+    0x59f111f1,
+    0x923f82a4,
+    0xab1c5ed5,
+    0xd807aa98,
+    0x12835b01,
+    0x243185be,
+    0x550c7dc3,
+    0x72be5d74,
+    0x80deb1fe,
+    0x9bdc06a7,
+    0xc19bf174,
+    0xe49b69c1,
+    0xefbe4786,
+    0x0fc19dc6,
+    0x240ca1cc,
+    0x2de92c6f,
+    0x4a7484aa,
+    0x5cb0a9dc,
+    0x76f988da,
+    0x983e5152,
+    0xa831c66d,
+    0xb00327c8,
+    0xbf597fc7,
+    0xc6e00bf3,
+    0xd5a79147,
+    0x06ca6351,
+    0x14292967,
+    0x27b70a85,
+    0x2e1b2138,
+    0x4d2c6dfc,
+    0x53380d13,
+    0x650a7354,
+    0x766a0abb,
+    0x81c2c92e,
+    0x92722c85,
+    0xa2bfe8a1,
+    0xa81a664b,
+    0xc24b8b70,
+    0xc76c51a3,
+    0xd192e819,
+    0xd6990624,
+    0xf40e3585,
+    0x106aa070,
+    0x19a4c116,
+    0x1e376c08,
+    0x2748774c,
+    0x34b0bcb5,
+    0x391c0cb3,
+    0x4ed8aa4a,
+    0x5b9cca4f,
+    0x682e6ff3,
+    0x748f82ee,
+    0x78a5636f,
+    0x84c87814,
+    0x8cc70208,
+    0x90befffa,
+    0xa4506ceb,
+    0xbef9a3f7,
+    0xc67178f2
+]);
+
+var INIT = [
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x510e527f,
+    0x9b05688c,
+    0x1f83d9ab,
+    0x5be0cd19,
+];
+
+var MAX_HASHABLE_LENGTH = Math.pow(2, 53) - 1;
+
+/**
+ * @private
  */
-
-var helpers = __webpack_require__(45);
-
-/*
- * Perform a simple self-test to see if the VM is working
- */
-function md5_vm_test()
-{
-  return hex_md5("abc") == "900150983cd24fb0d6963f7d28e17f72";
+function Sha256() {
+    this.state = [
+        0x6a09e667,
+        0xbb67ae85,
+        0x3c6ef372,
+        0xa54ff53a,
+        0x510e527f,
+        0x9b05688c,
+        0x1f83d9ab,
+        0x5be0cd19,
+    ];
+    this.temp = new Int32Array(64);
+    this.buffer = new Uint8Array(64);
+    this.bufferLength = 0;
+    this.bytesHashed = 0;
+    /**
+     * @private
+     */
+    this.finished = false;
 }
 
-/*
- * Calculate the MD5 of an array of little-endian words, and a bit length
- */
-function core_md5(x, len)
-{
-  /* append padding */
-  x[len >> 5] |= 0x80 << ((len) % 32);
-  x[(((len + 64) >>> 9) << 4) + 14] = len;
+module.exports = exports = Sha256;
 
-  var a =  1732584193;
-  var b = -271733879;
-  var c = -1732584194;
-  var d =  271733878;
+Sha256.BLOCK_SIZE = BLOCK_SIZE;
 
-  for(var i = 0; i < x.length; i += 16)
-  {
-    var olda = a;
-    var oldb = b;
-    var oldc = c;
-    var oldd = d;
+Sha256.prototype.update = function (data) {
+    if (this.finished) {
+        throw new Error('Attempted to update an already finished hash.');
+    }
 
-    a = md5_ff(a, b, c, d, x[i+ 0], 7 , -680876936);
-    d = md5_ff(d, a, b, c, x[i+ 1], 12, -389564586);
-    c = md5_ff(c, d, a, b, x[i+ 2], 17,  606105819);
-    b = md5_ff(b, c, d, a, x[i+ 3], 22, -1044525330);
-    a = md5_ff(a, b, c, d, x[i+ 4], 7 , -176418897);
-    d = md5_ff(d, a, b, c, x[i+ 5], 12,  1200080426);
-    c = md5_ff(c, d, a, b, x[i+ 6], 17, -1473231341);
-    b = md5_ff(b, c, d, a, x[i+ 7], 22, -45705983);
-    a = md5_ff(a, b, c, d, x[i+ 8], 7 ,  1770035416);
-    d = md5_ff(d, a, b, c, x[i+ 9], 12, -1958414417);
-    c = md5_ff(c, d, a, b, x[i+10], 17, -42063);
-    b = md5_ff(b, c, d, a, x[i+11], 22, -1990404162);
-    a = md5_ff(a, b, c, d, x[i+12], 7 ,  1804603682);
-    d = md5_ff(d, a, b, c, x[i+13], 12, -40341101);
-    c = md5_ff(c, d, a, b, x[i+14], 17, -1502002290);
-    b = md5_ff(b, c, d, a, x[i+15], 22,  1236535329);
+    if (hashUtils.isEmptyData(data)) {
+        return this;
+    }
 
-    a = md5_gg(a, b, c, d, x[i+ 1], 5 , -165796510);
-    d = md5_gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
-    c = md5_gg(c, d, a, b, x[i+11], 14,  643717713);
-    b = md5_gg(b, c, d, a, x[i+ 0], 20, -373897302);
-    a = md5_gg(a, b, c, d, x[i+ 5], 5 , -701558691);
-    d = md5_gg(d, a, b, c, x[i+10], 9 ,  38016083);
-    c = md5_gg(c, d, a, b, x[i+15], 14, -660478335);
-    b = md5_gg(b, c, d, a, x[i+ 4], 20, -405537848);
-    a = md5_gg(a, b, c, d, x[i+ 9], 5 ,  568446438);
-    d = md5_gg(d, a, b, c, x[i+14], 9 , -1019803690);
-    c = md5_gg(c, d, a, b, x[i+ 3], 14, -187363961);
-    b = md5_gg(b, c, d, a, x[i+ 8], 20,  1163531501);
-    a = md5_gg(a, b, c, d, x[i+13], 5 , -1444681467);
-    d = md5_gg(d, a, b, c, x[i+ 2], 9 , -51403784);
-    c = md5_gg(c, d, a, b, x[i+ 7], 14,  1735328473);
-    b = md5_gg(b, c, d, a, x[i+12], 20, -1926607734);
+    data = hashUtils.convertToBuffer(data);
 
-    a = md5_hh(a, b, c, d, x[i+ 5], 4 , -378558);
-    d = md5_hh(d, a, b, c, x[i+ 8], 11, -2022574463);
-    c = md5_hh(c, d, a, b, x[i+11], 16,  1839030562);
-    b = md5_hh(b, c, d, a, x[i+14], 23, -35309556);
-    a = md5_hh(a, b, c, d, x[i+ 1], 4 , -1530992060);
-    d = md5_hh(d, a, b, c, x[i+ 4], 11,  1272893353);
-    c = md5_hh(c, d, a, b, x[i+ 7], 16, -155497632);
-    b = md5_hh(b, c, d, a, x[i+10], 23, -1094730640);
-    a = md5_hh(a, b, c, d, x[i+13], 4 ,  681279174);
-    d = md5_hh(d, a, b, c, x[i+ 0], 11, -358537222);
-    c = md5_hh(c, d, a, b, x[i+ 3], 16, -722521979);
-    b = md5_hh(b, c, d, a, x[i+ 6], 23,  76029189);
-    a = md5_hh(a, b, c, d, x[i+ 9], 4 , -640364487);
-    d = md5_hh(d, a, b, c, x[i+12], 11, -421815835);
-    c = md5_hh(c, d, a, b, x[i+15], 16,  530742520);
-    b = md5_hh(b, c, d, a, x[i+ 2], 23, -995338651);
+    var position = 0;
+    var byteLength = data.byteLength;
+    this.bytesHashed += byteLength;
+    if (this.bytesHashed * 8 > MAX_HASHABLE_LENGTH) {
+        throw new Error('Cannot hash more than 2^53 - 1 bits');
+    }
 
-    a = md5_ii(a, b, c, d, x[i+ 0], 6 , -198630844);
-    d = md5_ii(d, a, b, c, x[i+ 7], 10,  1126891415);
-    c = md5_ii(c, d, a, b, x[i+14], 15, -1416354905);
-    b = md5_ii(b, c, d, a, x[i+ 5], 21, -57434055);
-    a = md5_ii(a, b, c, d, x[i+12], 6 ,  1700485571);
-    d = md5_ii(d, a, b, c, x[i+ 3], 10, -1894986606);
-    c = md5_ii(c, d, a, b, x[i+10], 15, -1051523);
-    b = md5_ii(b, c, d, a, x[i+ 1], 21, -2054922799);
-    a = md5_ii(a, b, c, d, x[i+ 8], 6 ,  1873313359);
-    d = md5_ii(d, a, b, c, x[i+15], 10, -30611744);
-    c = md5_ii(c, d, a, b, x[i+ 6], 15, -1560198380);
-    b = md5_ii(b, c, d, a, x[i+13], 21,  1309151649);
-    a = md5_ii(a, b, c, d, x[i+ 4], 6 , -145523070);
-    d = md5_ii(d, a, b, c, x[i+11], 10, -1120210379);
-    c = md5_ii(c, d, a, b, x[i+ 2], 15,  718787259);
-    b = md5_ii(b, c, d, a, x[i+ 9], 21, -343485551);
+    while (byteLength > 0) {
+        this.buffer[this.bufferLength++] = data[position++];
+        byteLength--;
+        if (this.bufferLength === BLOCK_SIZE) {
+            this.hashBuffer();
+            this.bufferLength = 0;
+        }
+    }
 
-    a = safe_add(a, olda);
-    b = safe_add(b, oldb);
-    c = safe_add(c, oldc);
-    d = safe_add(d, oldd);
-  }
-  return Array(a, b, c, d);
+    return this;
+};
 
-}
+Sha256.prototype.digest = function (encoding) {
+    if (!this.finished) {
+        var bitsHashed = this.bytesHashed * 8;
+        var bufferView = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
+        var undecoratedLength = this.bufferLength;
+        bufferView.setUint8(this.bufferLength++, 0x80);
+        // Ensure the final block has enough room for the hashed length
+        if (undecoratedLength % BLOCK_SIZE >= BLOCK_SIZE - 8) {
+            for (var i = this.bufferLength; i < BLOCK_SIZE; i++) {
+                bufferView.setUint8(i, 0);
+            }
+            this.hashBuffer();
+            this.bufferLength = 0;
+        }
+        for (var i = this.bufferLength; i < BLOCK_SIZE - 8; i++) {
+            bufferView.setUint8(i, 0);
+        }
+        bufferView.setUint32(BLOCK_SIZE - 8, Math.floor(bitsHashed / 0x100000000), true);
+        bufferView.setUint32(BLOCK_SIZE - 4, bitsHashed);
+        this.hashBuffer();
+        this.finished = true;
+    }
+    // The value in state is little-endian rather than big-endian, so flip
+    // each word into a new Uint8Array
+    var out = new Buffer(DIGEST_LENGTH);
+    for (var i = 0; i < 8; i++) {
+        out[i * 4] = (this.state[i] >>> 24) & 0xff;
+        out[i * 4 + 1] = (this.state[i] >>> 16) & 0xff;
+        out[i * 4 + 2] = (this.state[i] >>> 8) & 0xff;
+        out[i * 4 + 3] = (this.state[i] >>> 0) & 0xff;
+    }
+    return encoding ? out.toString(encoding) : out;
+};
 
-/*
- * These functions implement the four basic operations the algorithm uses.
- */
-function md5_cmn(q, a, b, x, s, t)
-{
-  return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s),b);
-}
-function md5_ff(a, b, c, d, x, s, t)
-{
-  return md5_cmn((b & c) | ((~b) & d), a, b, x, s, t);
-}
-function md5_gg(a, b, c, d, x, s, t)
-{
-  return md5_cmn((b & d) | (c & (~d)), a, b, x, s, t);
-}
-function md5_hh(a, b, c, d, x, s, t)
-{
-  return md5_cmn(b ^ c ^ d, a, b, x, s, t);
-}
-function md5_ii(a, b, c, d, x, s, t)
-{
-  return md5_cmn(c ^ (b | (~d)), a, b, x, s, t);
-}
-
-/*
- * Add integers, wrapping at 2^32. This uses 16-bit operations internally
- * to work around bugs in some JS interpreters.
- */
-function safe_add(x, y)
-{
-  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-  return (msw << 16) | (lsw & 0xFFFF);
-}
-
-/*
- * Bitwise rotate a 32-bit number to the left.
- */
-function bit_rol(num, cnt)
-{
-  return (num << cnt) | (num >>> (32 - cnt));
-}
-
-module.exports = function md5(buf) {
-  return helpers.hash(buf, core_md5, 16);
+Sha256.prototype.hashBuffer = function () {
+    var _a = this,
+        buffer = _a.buffer,
+        state = _a.state;
+    var state0 = state[0],
+        state1 = state[1],
+        state2 = state[2],
+        state3 = state[3],
+        state4 = state[4],
+        state5 = state[5],
+        state6 = state[6],
+        state7 = state[7];
+    for (var i = 0; i < BLOCK_SIZE; i++) {
+        if (i < 16) {
+            this.temp[i] = (((buffer[i * 4] & 0xff) << 24) |
+                ((buffer[(i * 4) + 1] & 0xff) << 16) |
+                ((buffer[(i * 4) + 2] & 0xff) << 8) |
+                (buffer[(i * 4) + 3] & 0xff));
+        }
+        else {
+            var u = this.temp[i - 2];
+            var t1_1 = (u >>> 17 | u << 15) ^
+                (u >>> 19 | u << 13) ^
+                (u >>> 10);
+            u = this.temp[i - 15];
+            var t2_1 = (u >>> 7 | u << 25) ^
+                (u >>> 18 | u << 14) ^
+                (u >>> 3);
+            this.temp[i] = (t1_1 + this.temp[i - 7] | 0) +
+                (t2_1 + this.temp[i - 16] | 0);
+        }
+        var t1 = (((((state4 >>> 6 | state4 << 26) ^
+            (state4 >>> 11 | state4 << 21) ^
+            (state4 >>> 25 | state4 << 7))
+            + ((state4 & state5) ^ (~state4 & state6))) | 0)
+            + ((state7 + ((KEY[i] + this.temp[i]) | 0)) | 0)) | 0;
+        var t2 = (((state0 >>> 2 | state0 << 30) ^
+            (state0 >>> 13 | state0 << 19) ^
+            (state0 >>> 22 | state0 << 10)) + ((state0 & state1) ^ (state0 & state2) ^ (state1 & state2))) | 0;
+        state7 = state6;
+        state6 = state5;
+        state5 = state4;
+        state4 = (state3 + t1) | 0;
+        state3 = state2;
+        state2 = state1;
+        state1 = state0;
+        state0 = (t1 + t2) | 0;
+    }
+    state[0] += state0;
+    state[1] += state1;
+    state[2] += state2;
+    state[3] += state3;
+    state[4] += state4;
+    state[5] += state5;
+    state[6] += state6;
+    state[7] += state7;
 };
 
 
@@ -24951,7 +25212,7 @@ Url.prototype.parseHost = function() {
 
 }(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)(module), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38)(module), __webpack_require__(7)))
 
 /***/ }),
 /* 244 */
@@ -25164,7 +25425,7 @@ var objectKeys = Object.keys || function (obj) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(25);
+var STS = __webpack_require__(27);
 
 /**
  * Represents temporary credentials retrieved from {AWS.STS}. Without any
@@ -25342,7 +25603,7 @@ AWS.util.update(AWS.STS.prototype, {
 /* 249 */
 /***/ (function(module, exports) {
 
-module.exports = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","protocol":"query","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","signatureVersion":"v4","uid":"sts-2011-06-15","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}}},"GetCallerIdentity":{"input":{"type":"structure","members":{}},"output":{"resultWrapper":"GetCallerIdentityResult","type":"structure","members":{"UserId":{},"Account":{},"Arn":{}}}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}}
+module.exports = {"version":"2.0","metadata":{"apiVersion":"2011-06-15","endpointPrefix":"sts","globalEndpoint":"sts.amazonaws.com","protocol":"query","serviceAbbreviation":"AWS STS","serviceFullName":"AWS Security Token Service","serviceId":"STS","signatureVersion":"v4","uid":"sts-2011-06-15","xmlNamespace":"https://sts.amazonaws.com/doc/2011-06-15/"},"operations":{"AssumeRole":{"input":{"type":"structure","required":["RoleArn","RoleSessionName"],"members":{"RoleArn":{},"RoleSessionName":{},"Policy":{},"DurationSeconds":{"type":"integer"},"ExternalId":{},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"AssumeRoleResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"}}}},"AssumeRoleWithSAML":{"input":{"type":"structure","required":["RoleArn","PrincipalArn","SAMLAssertion"],"members":{"RoleArn":{},"PrincipalArn":{},"SAMLAssertion":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithSAMLResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Subject":{},"SubjectType":{},"Issuer":{},"Audience":{},"NameQualifier":{}}}},"AssumeRoleWithWebIdentity":{"input":{"type":"structure","required":["RoleArn","RoleSessionName","WebIdentityToken"],"members":{"RoleArn":{},"RoleSessionName":{},"WebIdentityToken":{},"ProviderId":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"AssumeRoleWithWebIdentityResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"SubjectFromWebIdentityToken":{},"AssumedRoleUser":{"shape":"Sf"},"PackedPolicySize":{"type":"integer"},"Provider":{},"Audience":{}}}},"DecodeAuthorizationMessage":{"input":{"type":"structure","required":["EncodedMessage"],"members":{"EncodedMessage":{}}},"output":{"resultWrapper":"DecodeAuthorizationMessageResult","type":"structure","members":{"DecodedMessage":{}}}},"GetCallerIdentity":{"input":{"type":"structure","members":{}},"output":{"resultWrapper":"GetCallerIdentityResult","type":"structure","members":{"UserId":{},"Account":{},"Arn":{}}}},"GetFederationToken":{"input":{"type":"structure","required":["Name"],"members":{"Name":{},"Policy":{},"DurationSeconds":{"type":"integer"}}},"output":{"resultWrapper":"GetFederationTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"},"FederatedUser":{"type":"structure","required":["FederatedUserId","Arn"],"members":{"FederatedUserId":{},"Arn":{}}},"PackedPolicySize":{"type":"integer"}}}},"GetSessionToken":{"input":{"type":"structure","members":{"DurationSeconds":{"type":"integer"},"SerialNumber":{},"TokenCode":{}}},"output":{"resultWrapper":"GetSessionTokenResult","type":"structure","members":{"Credentials":{"shape":"Sa"}}}}},"shapes":{"Sa":{"type":"structure","required":["AccessKeyId","SecretAccessKey","SessionToken","Expiration"],"members":{"AccessKeyId":{},"SecretAccessKey":{},"SessionToken":{},"Expiration":{"type":"timestamp"}}},"Sf":{"type":"structure","required":["AssumedRoleId","Arn"],"members":{"AssumedRoleId":{},"Arn":{}}}}}
 
 /***/ }),
 /* 250 */
@@ -25355,7 +25616,7 @@ module.exports = {"pagination":{}}
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(25);
+var STS = __webpack_require__(27);
 
 /**
  * Represents credentials retrieved from STS Web Identity Federation support.
@@ -25472,7 +25733,7 @@ AWS.WebIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 
 var AWS = __webpack_require__(0);
 var CognitoIdentity = __webpack_require__(253);
-var STS = __webpack_require__(25);
+var STS = __webpack_require__(27);
 
 /**
  * Represents credentials retrieved from STS Web Identity Federation using
@@ -25853,7 +26114,7 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
 /* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(15);
+__webpack_require__(16);
 var AWS = __webpack_require__(0);
 var Service = AWS.Service;
 var apiLoader = AWS.apiLoader;
@@ -25912,7 +26173,7 @@ module.exports = {"pagination":{}}
 /***/ (function(module, exports, __webpack_require__) {
 
 var AWS = __webpack_require__(0);
-var STS = __webpack_require__(25);
+var STS = __webpack_require__(27);
 
 /**
  * Represents credentials retrieved from STS SAML support.
@@ -26857,7 +27118,7 @@ var CognitoUserPool = function () {
 /* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(15);
+__webpack_require__(16);
 var AWS = __webpack_require__(0);
 var Service = AWS.Service;
 var apiLoader = AWS.apiLoader;
@@ -26881,7 +27142,7 @@ module.exports = AWS.CognitoIdentityServiceProvider;
 /* 263 */
 /***/ (function(module, exports) {
 
-module.exports = {"version":"2.0","metadata":{"apiVersion":"2016-04-18","endpointPrefix":"cognito-idp","jsonVersion":"1.1","protocol":"json","serviceFullName":"Amazon Cognito Identity Provider","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityProviderService","uid":"cognito-idp-2016-04-18"},"operations":{"AddCustomAttributes":{"input":{"type":"structure","required":["UserPoolId","CustomAttributes"],"members":{"UserPoolId":{},"CustomAttributes":{"type":"list","member":{"shape":"S4"}}}},"output":{"type":"structure","members":{}}},"AdminAddUserToGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminConfirmSignUp":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminCreateUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"TemporaryPassword":{"shape":"Sm"},"ForceAliasCreation":{"type":"boolean"},"MessageAction":{},"DesiredDeliveryMediums":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"User":{"shape":"Ss"}}}},"AdminDeleteUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}}},"AdminDeleteUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributeNames"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributeNames":{"shape":"Sz"}}},"output":{"type":"structure","members":{}}},"AdminDisableProviderForUser":{"input":{"type":"structure","required":["UserPoolId","User"],"members":{"UserPoolId":{},"User":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminDisableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminEnableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminForgetDevice":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{}}}},"AdminGetDevice":{"input":{"type":"structure","required":["DeviceKey","UserPoolId","Username"],"members":{"DeviceKey":{},"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"AdminGetUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Username"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}}},"AdminInitiateAuth":{"input":{"type":"structure","required":["UserPoolId","ClientId","AuthFlow"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminLinkProviderForUser":{"input":{"type":"structure","required":["UserPoolId","DestinationUser","SourceUser"],"members":{"UserPoolId":{},"DestinationUser":{"shape":"S12"},"SourceUser":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminListDevices":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"AdminListGroupsForUser":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"Username":{"shape":"Sd"},"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"AdminListUserAuthEvents":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"AuthEvents":{"type":"list","member":{"type":"structure","members":{"EventId":{},"EventType":{},"CreationDate":{"type":"timestamp"},"EventResponse":{},"EventRisk":{"type":"structure","members":{"RiskDecision":{},"RiskLevel":{}}},"ChallengeResponses":{"type":"list","member":{"type":"structure","members":{"ChallengeName":{},"ChallengeResponse":{}}}},"EventContextData":{"type":"structure","members":{"IpAddress":{},"DeviceName":{},"Timezone":{},"City":{},"Country":{}}},"EventFeedback":{"type":"structure","required":["FeedbackValue","Provider"],"members":{"FeedbackValue":{},"Provider":{},"FeedbackDate":{"type":"timestamp"}}}}}},"NextToken":{}}}},"AdminRemoveUserFromGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminResetUserPassword":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminRespondToAuthChallenge":{"input":{"type":"structure","required":["UserPoolId","ClientId","ChallengeName"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ChallengeName":{},"ChallengeResponses":{"shape":"S2x"},"Session":{},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminSetUserMFAPreference":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"Username":{"shape":"Sd"},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"AdminSetUserSettings":{"input":{"type":"structure","required":["UserPoolId","Username","MFAOptions"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}}},"AdminUpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateDeviceStatus":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributes"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"}}},"output":{"type":"structure","members":{}}},"AdminUserGlobalSignOut":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AssociateSoftwareToken":{"input":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"Session":{}}},"output":{"type":"structure","members":{"SecretCode":{"type":"string","sensitive":true},"Session":{}}}},"ChangePassword":{"input":{"type":"structure","required":["PreviousPassword","ProposedPassword","AccessToken"],"members":{"PreviousPassword":{"shape":"Sm"},"ProposedPassword":{"shape":"Sm"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmDevice":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceSecretVerifierConfig":{"type":"structure","members":{"PasswordVerifier":{},"Salt":{}}},"DeviceName":{}}},"output":{"type":"structure","members":{"UserConfirmationNecessary":{"type":"boolean"}}}},"ConfirmForgotPassword":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"Password":{"shape":"Sm"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmSignUp":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"ForceAliasCreation":{"type":"boolean"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"CreateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"CreateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName","ProviderType","ProviderDetails"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"CreateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"CreateUserImportJob":{"input":{"type":"structure","required":["JobName","UserPoolId","CloudWatchLogsRoleArn"],"members":{"JobName":{},"UserPoolId":{},"CloudWatchLogsRoleArn":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"CreateUserPool":{"input":{"type":"structure","required":["PoolName"],"members":{"PoolName":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"Schema":{"shape":"S5h"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"CreateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientName"],"members":{"UserPoolId":{},"ClientName":{},"GenerateSecret":{"type":"boolean"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"CreateUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DeleteGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}}},"DeleteIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}}},"DeleteResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}}},"DeleteUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"authtype":"none"},"DeleteUserAttributes":{"input":{"type":"structure","required":["UserAttributeNames","AccessToken"],"members":{"UserAttributeNames":{"shape":"Sz"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"DeleteUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}}},"DeleteUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}}},"DeleteUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DescribeIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"DescribeResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"DescribeRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"DescribeUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"DescribeUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"DescribeUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"DescribeUserPoolDomain":{"input":{"type":"structure","required":["Domain"],"members":{"Domain":{}}},"output":{"type":"structure","members":{"DomainDescription":{"type":"structure","members":{"UserPoolId":{},"AWSAccountId":{},"Domain":{},"S3Bucket":{},"CloudFrontDistribution":{},"Version":{},"Status":{}}}}}},"ForgetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{}}}},"ForgotPassword":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetCSVHeader":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPoolId":{},"CSVHeader":{"type":"list","member":{}}}}},"GetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"DeviceKey":{},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"GetGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"GetIdentityProviderByIdentifier":{"input":{"type":"structure","required":["UserPoolId","IdpIdentifier"],"members":{"UserPoolId":{},"IdpIdentifier":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"GetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S81"}}}},"GetUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Username","UserAttributes"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}},"authtype":"none"},"GetUserAttributeVerificationCode":{"input":{"type":"structure","required":["AccessToken","AttributeName"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}}},"GlobalSignOut":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"InitiateAuth":{"input":{"type":"structure","required":["AuthFlow","ClientId"],"members":{"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"ClientId":{"shape":"S1i"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"ListDevices":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"ListGroups":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"ListIdentityProviders":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["Providers"],"members":{"Providers":{"type":"list","member":{"type":"structure","members":{"ProviderName":{},"ProviderType":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListResourceServers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["ResourceServers"],"members":{"ResourceServers":{"type":"list","member":{"shape":"S4f"}},"NextToken":{}}}},"ListUserImportJobs":{"input":{"type":"structure","required":["UserPoolId","MaxResults"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"UserImportJobs":{"type":"list","member":{"shape":"S4j"}},"PaginationToken":{}}}},"ListUserPoolClients":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"UserPoolClients":{"type":"list","member":{"type":"structure","members":{"ClientId":{"shape":"S1i"},"UserPoolId":{},"ClientName":{}}}},"NextToken":{}}}},"ListUserPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"UserPools":{"type":"list","member":{"type":"structure","members":{"Id":{},"Name":{},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListUsers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"AttributesToGet":{"type":"list","member":{}},"Limit":{"type":"integer"},"PaginationToken":{},"Filter":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9c"},"PaginationToken":{}}}},"ListUsersInGroup":{"input":{"type":"structure","required":["UserPoolId","GroupName"],"members":{"UserPoolId":{},"GroupName":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9c"},"NextToken":{}}}},"ResendConfirmationCode":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"RespondToAuthChallenge":{"input":{"type":"structure","required":["ClientId","ChallengeName"],"members":{"ClientId":{"shape":"S1i"},"ChallengeName":{},"Session":{},"ChallengeResponses":{"shape":"S2x"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"SetRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"SetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CSS":{},"ImageFile":{"type":"blob"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S81"}}}},"SetUserMFAPreference":{"input":{"type":"structure","required":["AccessToken"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"SetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8b"},"SoftwareTokenMfaConfiguration":{"shape":"S8c"},"MfaConfiguration":{}}}},"SetUserSettings":{"input":{"type":"structure","required":["AccessToken","MFAOptions"],"members":{"AccessToken":{"shape":"S1v"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"SignUp":{"input":{"type":"structure","required":["ClientId","Username","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"Password":{"shape":"Sm"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","required":["UserConfirmed","UserSub"],"members":{"UserConfirmed":{"type":"boolean"},"CodeDeliveryDetails":{"shape":"S7p"},"UserSub":{}}},"authtype":"none"},"StartUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"StopUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"UpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackToken","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackToken":{"shape":"S1v"},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"UpdateDeviceStatus":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"UpdateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"UpdateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"UpdateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"UpdateUserAttributes":{"input":{"type":"structure","required":["UserAttributes","AccessToken"],"members":{"UserAttributes":{"shape":"Si"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{"CodeDeliveryDetailsList":{"type":"list","member":{"shape":"S7p"}}}},"authtype":"none"},"UpdateUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{}}},"UpdateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ClientName":{},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"VerifySoftwareToken":{"input":{"type":"structure","required":["UserCode"],"members":{"AccessToken":{"shape":"S1v"},"Session":{},"UserCode":{},"FriendlyDeviceName":{}}},"output":{"type":"structure","members":{"Status":{},"Session":{}}}},"VerifyUserAttribute":{"input":{"type":"structure","required":["AccessToken","AttributeName","Code"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{},"Code":{}}},"output":{"type":"structure","members":{}},"authtype":"none"}},"shapes":{"S4":{"type":"structure","members":{"Name":{},"AttributeDataType":{},"DeveloperOnlyAttribute":{"type":"boolean"},"Mutable":{"type":"boolean"},"Required":{"type":"boolean"},"NumberAttributeConstraints":{"type":"structure","members":{"MinValue":{},"MaxValue":{}}},"StringAttributeConstraints":{"type":"structure","members":{"MinLength":{},"MaxLength":{}}}}},"Sd":{"type":"string","sensitive":true},"Si":{"type":"list","member":{"type":"structure","required":["Name"],"members":{"Name":{},"Value":{"type":"string","sensitive":true}}}},"Sm":{"type":"string","sensitive":true},"Ss":{"type":"structure","members":{"Username":{"shape":"Sd"},"Attributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"}}},"Sv":{"type":"list","member":{"type":"structure","members":{"DeliveryMedium":{},"AttributeName":{}}}},"Sz":{"type":"list","member":{}},"S12":{"type":"structure","members":{"ProviderName":{},"ProviderAttributeName":{},"ProviderAttributeValue":{}}},"S1d":{"type":"structure","members":{"DeviceKey":{},"DeviceAttributes":{"shape":"Si"},"DeviceCreateDate":{"type":"timestamp"},"DeviceLastModifiedDate":{"type":"timestamp"},"DeviceLastAuthenticatedDate":{"type":"timestamp"}}},"S1g":{"type":"list","member":{}},"S1i":{"type":"string","sensitive":true},"S1k":{"type":"map","key":{},"value":{}},"S1l":{"type":"map","key":{},"value":{}},"S1m":{"type":"structure","members":{"AnalyticsEndpointId":{}}},"S1n":{"type":"structure","required":["IpAddress","ServerName","ServerPath","HttpHeaders"],"members":{"IpAddress":{},"ServerName":{},"ServerPath":{},"HttpHeaders":{"type":"list","member":{"type":"structure","members":{"headerName":{},"headerValue":{}}}},"EncodedData":{}}},"S1t":{"type":"map","key":{},"value":{}},"S1u":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"ExpiresIn":{"type":"integer"},"TokenType":{},"RefreshToken":{"shape":"S1v"},"IdToken":{"shape":"S1v"},"NewDeviceMetadata":{"type":"structure","members":{"DeviceKey":{},"DeviceGroupKey":{}}}}},"S1v":{"type":"string","sensitive":true},"S24":{"type":"list","member":{"shape":"S1d"}},"S28":{"type":"list","member":{"shape":"S29"}},"S29":{"type":"structure","members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S2x":{"type":"map","key":{},"value":{}},"S30":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S31":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S3p":{"type":"string","sensitive":true},"S3r":{"type":"structure","members":{"EncodedData":{}}},"S40":{"type":"map","key":{},"value":{}},"S41":{"type":"map","key":{},"value":{}},"S43":{"type":"list","member":{}},"S46":{"type":"structure","members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S4a":{"type":"list","member":{"type":"structure","required":["ScopeName","ScopeDescription"],"members":{"ScopeName":{},"ScopeDescription":{}}}},"S4f":{"type":"structure","members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"S4j":{"type":"structure","members":{"JobName":{},"JobId":{},"UserPoolId":{},"PreSignedUrl":{},"CreationDate":{"type":"timestamp"},"StartDate":{"type":"timestamp"},"CompletionDate":{"type":"timestamp"},"Status":{},"CloudWatchLogsRoleArn":{},"ImportedUsers":{"type":"long"},"SkippedUsers":{"type":"long"},"FailedUsers":{"type":"long"},"CompletionMessage":{}}},"S4r":{"type":"structure","members":{"PasswordPolicy":{"type":"structure","members":{"MinimumLength":{"type":"integer"},"RequireUppercase":{"type":"boolean"},"RequireLowercase":{"type":"boolean"},"RequireNumbers":{"type":"boolean"},"RequireSymbols":{"type":"boolean"}}}}},"S4u":{"type":"structure","members":{"PreSignUp":{},"CustomMessage":{},"PostConfirmation":{},"PreAuthentication":{},"PostAuthentication":{},"DefineAuthChallenge":{},"CreateAuthChallenge":{},"VerifyAuthChallengeResponse":{},"PreTokenGeneration":{}}},"S4v":{"type":"list","member":{}},"S4x":{"type":"list","member":{}},"S4z":{"type":"list","member":{}},"S54":{"type":"structure","members":{"SmsMessage":{},"EmailMessage":{},"EmailSubject":{},"EmailMessageByLink":{},"EmailSubjectByLink":{},"DefaultEmailOption":{}}},"S59":{"type":"structure","members":{"ChallengeRequiredOnNewDevice":{"type":"boolean"},"DeviceOnlyRememberedOnUserPrompt":{"type":"boolean"}}},"S5a":{"type":"structure","members":{"SourceArn":{},"ReplyToEmailAddress":{}}},"S5c":{"type":"structure","required":["SnsCallerArn"],"members":{"SnsCallerArn":{},"ExternalId":{}}},"S5d":{"type":"map","key":{},"value":{}},"S5e":{"type":"structure","members":{"AllowAdminCreateUserOnly":{"type":"boolean"},"UnusedAccountValidityDays":{"type":"integer"},"InviteMessageTemplate":{"type":"structure","members":{"SMSMessage":{},"EmailMessage":{},"EmailSubject":{}}}}},"S5h":{"type":"list","member":{"shape":"S4"}},"S5i":{"type":"structure","required":["AdvancedSecurityMode"],"members":{"AdvancedSecurityMode":{}}},"S5l":{"type":"structure","members":{"Id":{},"Name":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"SchemaAttributes":{"shape":"S5h"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EstimatedNumberOfUsers":{"type":"integer"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"SmsConfigurationFailure":{},"EmailConfigurationFailure":{},"Domain":{},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"S5s":{"type":"list","member":{}},"S5u":{"type":"list","member":{}},"S5w":{"type":"list","member":{}},"S5x":{"type":"list","member":{}},"S5z":{"type":"list","member":{}},"S60":{"type":"list","member":{}},"S62":{"type":"list","member":{}},"S64":{"type":"structure","required":["ApplicationId","RoleArn","ExternalId"],"members":{"ApplicationId":{},"RoleArn":{},"ExternalId":{},"UserDataShared":{"type":"boolean"}}},"S67":{"type":"structure","members":{"UserPoolId":{},"ClientName":{},"ClientId":{"shape":"S1i"},"ClientSecret":{"type":"string","sensitive":true},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"S6r":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"},"LastModifiedDate":{"type":"timestamp"}}},"S6s":{"type":"structure","required":["Actions"],"members":{"EventFilter":{"type":"list","member":{}},"Actions":{"type":"structure","required":["EventAction"],"members":{"EventAction":{}}}}},"S6x":{"type":"structure","required":["Actions"],"members":{"NotifyConfiguration":{"type":"structure","required":["SourceArn"],"members":{"From":{},"ReplyTo":{},"SourceArn":{},"BlockEmail":{"shape":"S6z"},"NoActionEmail":{"shape":"S6z"},"MfaEmail":{"shape":"S6z"}}},"Actions":{"type":"structure","members":{"LowAction":{"shape":"S73"},"MediumAction":{"shape":"S73"},"HighAction":{"shape":"S73"}}}}},"S6z":{"type":"structure","required":["Subject"],"members":{"Subject":{},"HtmlBody":{},"TextBody":{}}},"S73":{"type":"structure","required":["Notify","EventAction"],"members":{"Notify":{"type":"boolean"},"EventAction":{}}},"S76":{"type":"structure","members":{"BlockedIPRangeList":{"type":"list","member":{}},"SkippedIPRangeList":{"type":"list","member":{}}}},"S7p":{"type":"structure","members":{"Destination":{},"DeliveryMedium":{},"AttributeName":{}}},"S81":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ImageUrl":{},"CSS":{},"CSSVersion":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S8b":{"type":"structure","members":{"SmsAuthenticationMessage":{},"SmsConfiguration":{"shape":"S5c"}}},"S8c":{"type":"structure","members":{"Enabled":{"type":"boolean"}}},"S9c":{"type":"list","member":{"shape":"Ss"}}}}
+module.exports = {"version":"2.0","metadata":{"apiVersion":"2016-04-18","endpointPrefix":"cognito-idp","jsonVersion":"1.1","protocol":"json","serviceFullName":"Amazon Cognito Identity Provider","signatureVersion":"v4","targetPrefix":"AWSCognitoIdentityProviderService","uid":"cognito-idp-2016-04-18"},"operations":{"AddCustomAttributes":{"input":{"type":"structure","required":["UserPoolId","CustomAttributes"],"members":{"UserPoolId":{},"CustomAttributes":{"type":"list","member":{"shape":"S4"}}}},"output":{"type":"structure","members":{}}},"AdminAddUserToGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminConfirmSignUp":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminCreateUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"TemporaryPassword":{"shape":"Sm"},"ForceAliasCreation":{"type":"boolean"},"MessageAction":{},"DesiredDeliveryMediums":{"type":"list","member":{}}}},"output":{"type":"structure","members":{"User":{"shape":"Ss"}}}},"AdminDeleteUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}}},"AdminDeleteUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributeNames"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributeNames":{"shape":"Sz"}}},"output":{"type":"structure","members":{}}},"AdminDisableProviderForUser":{"input":{"type":"structure","required":["UserPoolId","User"],"members":{"UserPoolId":{},"User":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminDisableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminEnableUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminForgetDevice":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{}}}},"AdminGetDevice":{"input":{"type":"structure","required":["DeviceKey","UserPoolId","Username"],"members":{"DeviceKey":{},"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"AdminGetUser":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","required":["Username"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}}},"AdminInitiateAuth":{"input":{"type":"structure","required":["UserPoolId","ClientId","AuthFlow"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminLinkProviderForUser":{"input":{"type":"structure","required":["UserPoolId","DestinationUser","SourceUser"],"members":{"UserPoolId":{},"DestinationUser":{"shape":"S12"},"SourceUser":{"shape":"S12"}}},"output":{"type":"structure","members":{}}},"AdminListDevices":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"AdminListGroupsForUser":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"Username":{"shape":"Sd"},"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"AdminListUserAuthEvents":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"AuthEvents":{"type":"list","member":{"type":"structure","members":{"EventId":{},"EventType":{},"CreationDate":{"type":"timestamp"},"EventResponse":{},"EventRisk":{"type":"structure","members":{"RiskDecision":{},"RiskLevel":{}}},"ChallengeResponses":{"type":"list","member":{"type":"structure","members":{"ChallengeName":{},"ChallengeResponse":{}}}},"EventContextData":{"type":"structure","members":{"IpAddress":{},"DeviceName":{},"Timezone":{},"City":{},"Country":{}}},"EventFeedback":{"type":"structure","required":["FeedbackValue","Provider"],"members":{"FeedbackValue":{},"Provider":{},"FeedbackDate":{"type":"timestamp"}}}}}},"NextToken":{}}}},"AdminRemoveUserFromGroup":{"input":{"type":"structure","required":["UserPoolId","Username","GroupName"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"GroupName":{}}}},"AdminResetUserPassword":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AdminRespondToAuthChallenge":{"input":{"type":"structure","required":["UserPoolId","ClientId","ChallengeName"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ChallengeName":{},"ChallengeResponses":{"shape":"S2x"},"Session":{},"AnalyticsMetadata":{"shape":"S1m"},"ContextData":{"shape":"S1n"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"AdminSetUserMFAPreference":{"input":{"type":"structure","required":["Username","UserPoolId"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"Username":{"shape":"Sd"},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"AdminSetUserSettings":{"input":{"type":"structure","required":["UserPoolId","Username","MFAOptions"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}}},"AdminUpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateDeviceStatus":{"input":{"type":"structure","required":["UserPoolId","Username","DeviceKey"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"AdminUpdateUserAttributes":{"input":{"type":"structure","required":["UserPoolId","Username","UserAttributes"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"}}},"output":{"type":"structure","members":{}}},"AdminUserGlobalSignOut":{"input":{"type":"structure","required":["UserPoolId","Username"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"}}},"output":{"type":"structure","members":{}}},"AssociateSoftwareToken":{"input":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"Session":{}}},"output":{"type":"structure","members":{"SecretCode":{"type":"string","sensitive":true},"Session":{}}}},"ChangePassword":{"input":{"type":"structure","required":["PreviousPassword","ProposedPassword","AccessToken"],"members":{"PreviousPassword":{"shape":"Sm"},"ProposedPassword":{"shape":"Sm"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmDevice":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceSecretVerifierConfig":{"type":"structure","members":{"PasswordVerifier":{},"Salt":{}}},"DeviceName":{}}},"output":{"type":"structure","members":{"UserConfirmationNecessary":{"type":"boolean"}}}},"ConfirmForgotPassword":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"Password":{"shape":"Sm"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"ConfirmSignUp":{"input":{"type":"structure","required":["ClientId","Username","ConfirmationCode"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"ConfirmationCode":{},"ForceAliasCreation":{"type":"boolean"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"CreateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"CreateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName","ProviderType","ProviderDetails"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"CreateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"CreateUserImportJob":{"input":{"type":"structure","required":["JobName","UserPoolId","CloudWatchLogsRoleArn"],"members":{"JobName":{},"UserPoolId":{},"CloudWatchLogsRoleArn":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"CreateUserPool":{"input":{"type":"structure","required":["PoolName"],"members":{"PoolName":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"Schema":{"shape":"S5h"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"CreateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientName"],"members":{"UserPoolId":{},"ClientName":{},"GenerateSecret":{"type":"boolean"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"CreateUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DeleteGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}}},"DeleteIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}}},"DeleteResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}}},"DeleteUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"authtype":"none"},"DeleteUserAttributes":{"input":{"type":"structure","required":["UserAttributeNames","AccessToken"],"members":{"UserAttributeNames":{"shape":"Sz"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"DeleteUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}}},"DeleteUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}}},"DeleteUserPoolDomain":{"input":{"type":"structure","required":["Domain","UserPoolId"],"members":{"Domain":{},"UserPoolId":{}}},"output":{"type":"structure","members":{}}},"DescribeIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"DescribeResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier"],"members":{"UserPoolId":{},"Identifier":{}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"DescribeRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"DescribeUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"DescribeUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPool":{"shape":"S5l"}}}},"DescribeUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"DescribeUserPoolDomain":{"input":{"type":"structure","required":["Domain"],"members":{"Domain":{}}},"output":{"type":"structure","members":{"DomainDescription":{"type":"structure","members":{"UserPoolId":{},"AWSAccountId":{},"Domain":{},"S3Bucket":{},"CloudFrontDistribution":{},"Version":{},"Status":{}}}}}},"ForgetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{}}}},"ForgotPassword":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetCSVHeader":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"UserPoolId":{},"CSVHeader":{"type":"list","member":{}}}}},"GetDevice":{"input":{"type":"structure","required":["DeviceKey"],"members":{"DeviceKey":{},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Device"],"members":{"Device":{"shape":"S1d"}}}},"GetGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"GetIdentityProviderByIdentifier":{"input":{"type":"structure","required":["UserPoolId","IdpIdentifier"],"members":{"UserPoolId":{},"IdpIdentifier":{}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"GetSigningCertificate":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"Certificate":{}}}},"GetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S83"}}}},"GetUser":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","required":["Username","UserAttributes"],"members":{"Username":{"shape":"Sd"},"UserAttributes":{"shape":"Si"},"MFAOptions":{"shape":"Sv"},"PreferredMfaSetting":{},"UserMFASettingList":{"shape":"S1g"}}},"authtype":"none"},"GetUserAttributeVerificationCode":{"input":{"type":"structure","required":["AccessToken","AttributeName"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"GetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8d"},"SoftwareTokenMfaConfiguration":{"shape":"S8e"},"MfaConfiguration":{}}}},"GlobalSignOut":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"InitiateAuth":{"input":{"type":"structure","required":["AuthFlow","ClientId"],"members":{"AuthFlow":{},"AuthParameters":{"shape":"S1k"},"ClientMetadata":{"shape":"S1l"},"ClientId":{"shape":"S1i"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"ListDevices":{"input":{"type":"structure","required":["AccessToken"],"members":{"AccessToken":{"shape":"S1v"},"Limit":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"Devices":{"shape":"S24"},"PaginationToken":{}}}},"ListGroups":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Groups":{"shape":"S28"},"NextToken":{}}}},"ListIdentityProviders":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["Providers"],"members":{"Providers":{"type":"list","member":{"type":"structure","members":{"ProviderName":{},"ProviderType":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListResourceServers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","required":["ResourceServers"],"members":{"ResourceServers":{"type":"list","member":{"shape":"S4f"}},"NextToken":{}}}},"ListUserImportJobs":{"input":{"type":"structure","required":["UserPoolId","MaxResults"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"PaginationToken":{}}},"output":{"type":"structure","members":{"UserImportJobs":{"type":"list","member":{"shape":"S4j"}},"PaginationToken":{}}}},"ListUserPoolClients":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"MaxResults":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"UserPoolClients":{"type":"list","member":{"type":"structure","members":{"ClientId":{"shape":"S1i"},"UserPoolId":{},"ClientName":{}}}},"NextToken":{}}}},"ListUserPools":{"input":{"type":"structure","required":["MaxResults"],"members":{"NextToken":{},"MaxResults":{"type":"integer"}}},"output":{"type":"structure","members":{"UserPools":{"type":"list","member":{"type":"structure","members":{"Id":{},"Name":{},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}}},"NextToken":{}}}},"ListUsers":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"AttributesToGet":{"type":"list","member":{}},"Limit":{"type":"integer"},"PaginationToken":{},"Filter":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9e"},"PaginationToken":{}}}},"ListUsersInGroup":{"input":{"type":"structure","required":["UserPoolId","GroupName"],"members":{"UserPoolId":{},"GroupName":{},"Limit":{"type":"integer"},"NextToken":{}}},"output":{"type":"structure","members":{"Users":{"shape":"S9e"},"NextToken":{}}}},"ResendConfirmationCode":{"input":{"type":"structure","required":["ClientId","Username"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"UserContextData":{"shape":"S3r"},"Username":{"shape":"Sd"},"AnalyticsMetadata":{"shape":"S1m"}}},"output":{"type":"structure","members":{"CodeDeliveryDetails":{"shape":"S7p"}}},"authtype":"none"},"RespondToAuthChallenge":{"input":{"type":"structure","required":["ClientId","ChallengeName"],"members":{"ClientId":{"shape":"S1i"},"ChallengeName":{},"Session":{},"ChallengeResponses":{"shape":"S2x"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","members":{"ChallengeName":{},"Session":{},"ChallengeParameters":{"shape":"S1t"},"AuthenticationResult":{"shape":"S1u"}}}},"SetRiskConfiguration":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"}}},"output":{"type":"structure","required":["RiskConfiguration"],"members":{"RiskConfiguration":{"shape":"S6r"}}}},"SetUICustomization":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CSS":{},"ImageFile":{"type":"blob"}}},"output":{"type":"structure","required":["UICustomization"],"members":{"UICustomization":{"shape":"S83"}}}},"SetUserMFAPreference":{"input":{"type":"structure","required":["AccessToken"],"members":{"SMSMfaSettings":{"shape":"S30"},"SoftwareTokenMfaSettings":{"shape":"S31"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{}}},"SetUserPoolMfaConfig":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"SmsMfaConfiguration":{"shape":"S8d"},"SoftwareTokenMfaConfiguration":{"shape":"S8e"},"MfaConfiguration":{}}},"output":{"type":"structure","members":{"SmsMfaConfiguration":{"shape":"S8d"},"SoftwareTokenMfaConfiguration":{"shape":"S8e"},"MfaConfiguration":{}}}},"SetUserSettings":{"input":{"type":"structure","required":["AccessToken","MFAOptions"],"members":{"AccessToken":{"shape":"S1v"},"MFAOptions":{"shape":"Sv"}}},"output":{"type":"structure","members":{}},"authtype":"none"},"SignUp":{"input":{"type":"structure","required":["ClientId","Username","Password"],"members":{"ClientId":{"shape":"S1i"},"SecretHash":{"shape":"S3p"},"Username":{"shape":"Sd"},"Password":{"shape":"Sm"},"UserAttributes":{"shape":"Si"},"ValidationData":{"shape":"Si"},"AnalyticsMetadata":{"shape":"S1m"},"UserContextData":{"shape":"S3r"}}},"output":{"type":"structure","required":["UserConfirmed","UserSub"],"members":{"UserConfirmed":{"type":"boolean"},"CodeDeliveryDetails":{"shape":"S7p"},"UserSub":{}}},"authtype":"none"},"StartUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"StopUserImportJob":{"input":{"type":"structure","required":["UserPoolId","JobId"],"members":{"UserPoolId":{},"JobId":{}}},"output":{"type":"structure","members":{"UserImportJob":{"shape":"S4j"}}}},"UpdateAuthEventFeedback":{"input":{"type":"structure","required":["UserPoolId","Username","EventId","FeedbackToken","FeedbackValue"],"members":{"UserPoolId":{},"Username":{"shape":"Sd"},"EventId":{},"FeedbackToken":{"shape":"S1v"},"FeedbackValue":{}}},"output":{"type":"structure","members":{}}},"UpdateDeviceStatus":{"input":{"type":"structure","required":["AccessToken","DeviceKey"],"members":{"AccessToken":{"shape":"S1v"},"DeviceKey":{},"DeviceRememberedStatus":{}}},"output":{"type":"structure","members":{}}},"UpdateGroup":{"input":{"type":"structure","required":["GroupName","UserPoolId"],"members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"}}},"output":{"type":"structure","members":{"Group":{"shape":"S29"}}}},"UpdateIdentityProvider":{"input":{"type":"structure","required":["UserPoolId","ProviderName"],"members":{"UserPoolId":{},"ProviderName":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"}}},"output":{"type":"structure","required":["IdentityProvider"],"members":{"IdentityProvider":{"shape":"S46"}}}},"UpdateResourceServer":{"input":{"type":"structure","required":["UserPoolId","Identifier","Name"],"members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"output":{"type":"structure","required":["ResourceServer"],"members":{"ResourceServer":{"shape":"S4f"}}}},"UpdateUserAttributes":{"input":{"type":"structure","required":["UserAttributes","AccessToken"],"members":{"UserAttributes":{"shape":"Si"},"AccessToken":{"shape":"S1v"}}},"output":{"type":"structure","members":{"CodeDeliveryDetailsList":{"type":"list","member":{"shape":"S7p"}}}},"authtype":"none"},"UpdateUserPool":{"input":{"type":"structure","required":["UserPoolId"],"members":{"UserPoolId":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"AutoVerifiedAttributes":{"shape":"S4v"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"output":{"type":"structure","members":{}}},"UpdateUserPoolClient":{"input":{"type":"structure","required":["UserPoolId","ClientId"],"members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ClientName":{},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"output":{"type":"structure","members":{"UserPoolClient":{"shape":"S67"}}}},"VerifySoftwareToken":{"input":{"type":"structure","required":["UserCode"],"members":{"AccessToken":{"shape":"S1v"},"Session":{},"UserCode":{},"FriendlyDeviceName":{}}},"output":{"type":"structure","members":{"Status":{},"Session":{}}}},"VerifyUserAttribute":{"input":{"type":"structure","required":["AccessToken","AttributeName","Code"],"members":{"AccessToken":{"shape":"S1v"},"AttributeName":{},"Code":{}}},"output":{"type":"structure","members":{}},"authtype":"none"}},"shapes":{"S4":{"type":"structure","members":{"Name":{},"AttributeDataType":{},"DeveloperOnlyAttribute":{"type":"boolean"},"Mutable":{"type":"boolean"},"Required":{"type":"boolean"},"NumberAttributeConstraints":{"type":"structure","members":{"MinValue":{},"MaxValue":{}}},"StringAttributeConstraints":{"type":"structure","members":{"MinLength":{},"MaxLength":{}}}}},"Sd":{"type":"string","sensitive":true},"Si":{"type":"list","member":{"type":"structure","required":["Name"],"members":{"Name":{},"Value":{"type":"string","sensitive":true}}}},"Sm":{"type":"string","sensitive":true},"Ss":{"type":"structure","members":{"Username":{"shape":"Sd"},"Attributes":{"shape":"Si"},"UserCreateDate":{"type":"timestamp"},"UserLastModifiedDate":{"type":"timestamp"},"Enabled":{"type":"boolean"},"UserStatus":{},"MFAOptions":{"shape":"Sv"}}},"Sv":{"type":"list","member":{"type":"structure","members":{"DeliveryMedium":{},"AttributeName":{}}}},"Sz":{"type":"list","member":{}},"S12":{"type":"structure","members":{"ProviderName":{},"ProviderAttributeName":{},"ProviderAttributeValue":{}}},"S1d":{"type":"structure","members":{"DeviceKey":{},"DeviceAttributes":{"shape":"Si"},"DeviceCreateDate":{"type":"timestamp"},"DeviceLastModifiedDate":{"type":"timestamp"},"DeviceLastAuthenticatedDate":{"type":"timestamp"}}},"S1g":{"type":"list","member":{}},"S1i":{"type":"string","sensitive":true},"S1k":{"type":"map","key":{},"value":{}},"S1l":{"type":"map","key":{},"value":{}},"S1m":{"type":"structure","members":{"AnalyticsEndpointId":{}}},"S1n":{"type":"structure","required":["IpAddress","ServerName","ServerPath","HttpHeaders"],"members":{"IpAddress":{},"ServerName":{},"ServerPath":{},"HttpHeaders":{"type":"list","member":{"type":"structure","members":{"headerName":{},"headerValue":{}}}},"EncodedData":{}}},"S1t":{"type":"map","key":{},"value":{}},"S1u":{"type":"structure","members":{"AccessToken":{"shape":"S1v"},"ExpiresIn":{"type":"integer"},"TokenType":{},"RefreshToken":{"shape":"S1v"},"IdToken":{"shape":"S1v"},"NewDeviceMetadata":{"type":"structure","members":{"DeviceKey":{},"DeviceGroupKey":{}}}}},"S1v":{"type":"string","sensitive":true},"S24":{"type":"list","member":{"shape":"S1d"}},"S28":{"type":"list","member":{"shape":"S29"}},"S29":{"type":"structure","members":{"GroupName":{},"UserPoolId":{},"Description":{},"RoleArn":{},"Precedence":{"type":"integer"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S2x":{"type":"map","key":{},"value":{}},"S30":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S31":{"type":"structure","members":{"Enabled":{"type":"boolean"},"PreferredMfa":{"type":"boolean"}}},"S3p":{"type":"string","sensitive":true},"S3r":{"type":"structure","members":{"EncodedData":{}}},"S40":{"type":"map","key":{},"value":{}},"S41":{"type":"map","key":{},"value":{}},"S43":{"type":"list","member":{}},"S46":{"type":"structure","members":{"UserPoolId":{},"ProviderName":{},"ProviderType":{},"ProviderDetails":{"shape":"S40"},"AttributeMapping":{"shape":"S41"},"IdpIdentifiers":{"shape":"S43"},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S4a":{"type":"list","member":{"type":"structure","required":["ScopeName","ScopeDescription"],"members":{"ScopeName":{},"ScopeDescription":{}}}},"S4f":{"type":"structure","members":{"UserPoolId":{},"Identifier":{},"Name":{},"Scopes":{"shape":"S4a"}}},"S4j":{"type":"structure","members":{"JobName":{},"JobId":{},"UserPoolId":{},"PreSignedUrl":{},"CreationDate":{"type":"timestamp"},"StartDate":{"type":"timestamp"},"CompletionDate":{"type":"timestamp"},"Status":{},"CloudWatchLogsRoleArn":{},"ImportedUsers":{"type":"long"},"SkippedUsers":{"type":"long"},"FailedUsers":{"type":"long"},"CompletionMessage":{}}},"S4r":{"type":"structure","members":{"PasswordPolicy":{"type":"structure","members":{"MinimumLength":{"type":"integer"},"RequireUppercase":{"type":"boolean"},"RequireLowercase":{"type":"boolean"},"RequireNumbers":{"type":"boolean"},"RequireSymbols":{"type":"boolean"}}}}},"S4u":{"type":"structure","members":{"PreSignUp":{},"CustomMessage":{},"PostConfirmation":{},"PreAuthentication":{},"PostAuthentication":{},"DefineAuthChallenge":{},"CreateAuthChallenge":{},"VerifyAuthChallengeResponse":{},"PreTokenGeneration":{},"UserMigration":{}}},"S4v":{"type":"list","member":{}},"S4x":{"type":"list","member":{}},"S4z":{"type":"list","member":{}},"S54":{"type":"structure","members":{"SmsMessage":{},"EmailMessage":{},"EmailSubject":{},"EmailMessageByLink":{},"EmailSubjectByLink":{},"DefaultEmailOption":{}}},"S59":{"type":"structure","members":{"ChallengeRequiredOnNewDevice":{"type":"boolean"},"DeviceOnlyRememberedOnUserPrompt":{"type":"boolean"}}},"S5a":{"type":"structure","members":{"SourceArn":{},"ReplyToEmailAddress":{}}},"S5c":{"type":"structure","required":["SnsCallerArn"],"members":{"SnsCallerArn":{},"ExternalId":{}}},"S5d":{"type":"map","key":{},"value":{}},"S5e":{"type":"structure","members":{"AllowAdminCreateUserOnly":{"type":"boolean"},"UnusedAccountValidityDays":{"type":"integer"},"InviteMessageTemplate":{"type":"structure","members":{"SMSMessage":{},"EmailMessage":{},"EmailSubject":{}}}}},"S5h":{"type":"list","member":{"shape":"S4"}},"S5i":{"type":"structure","required":["AdvancedSecurityMode"],"members":{"AdvancedSecurityMode":{}}},"S5l":{"type":"structure","members":{"Id":{},"Name":{},"Policies":{"shape":"S4r"},"LambdaConfig":{"shape":"S4u"},"Status":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"SchemaAttributes":{"shape":"S5h"},"AutoVerifiedAttributes":{"shape":"S4v"},"AliasAttributes":{"shape":"S4x"},"UsernameAttributes":{"shape":"S4z"},"SmsVerificationMessage":{},"EmailVerificationMessage":{},"EmailVerificationSubject":{},"VerificationMessageTemplate":{"shape":"S54"},"SmsAuthenticationMessage":{},"MfaConfiguration":{},"DeviceConfiguration":{"shape":"S59"},"EstimatedNumberOfUsers":{"type":"integer"},"EmailConfiguration":{"shape":"S5a"},"SmsConfiguration":{"shape":"S5c"},"UserPoolTags":{"shape":"S5d"},"SmsConfigurationFailure":{},"EmailConfigurationFailure":{},"Domain":{},"AdminCreateUserConfig":{"shape":"S5e"},"UserPoolAddOns":{"shape":"S5i"}}},"S5s":{"type":"list","member":{}},"S5u":{"type":"list","member":{}},"S5w":{"type":"list","member":{}},"S5x":{"type":"list","member":{}},"S5z":{"type":"list","member":{}},"S60":{"type":"list","member":{}},"S62":{"type":"list","member":{}},"S64":{"type":"structure","required":["ApplicationId","RoleArn","ExternalId"],"members":{"ApplicationId":{},"RoleArn":{},"ExternalId":{},"UserDataShared":{"type":"boolean"}}},"S67":{"type":"structure","members":{"UserPoolId":{},"ClientName":{},"ClientId":{"shape":"S1i"},"ClientSecret":{"type":"string","sensitive":true},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"},"RefreshTokenValidity":{"type":"integer"},"ReadAttributes":{"shape":"S5s"},"WriteAttributes":{"shape":"S5s"},"ExplicitAuthFlows":{"shape":"S5u"},"SupportedIdentityProviders":{"shape":"S5w"},"CallbackURLs":{"shape":"S5x"},"LogoutURLs":{"shape":"S5z"},"DefaultRedirectURI":{},"AllowedOAuthFlows":{"shape":"S60"},"AllowedOAuthScopes":{"shape":"S62"},"AllowedOAuthFlowsUserPoolClient":{"type":"boolean"},"AnalyticsConfiguration":{"shape":"S64"}}},"S6r":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"CompromisedCredentialsRiskConfiguration":{"shape":"S6s"},"AccountTakeoverRiskConfiguration":{"shape":"S6x"},"RiskExceptionConfiguration":{"shape":"S76"},"LastModifiedDate":{"type":"timestamp"}}},"S6s":{"type":"structure","required":["Actions"],"members":{"EventFilter":{"type":"list","member":{}},"Actions":{"type":"structure","required":["EventAction"],"members":{"EventAction":{}}}}},"S6x":{"type":"structure","required":["Actions"],"members":{"NotifyConfiguration":{"type":"structure","required":["SourceArn"],"members":{"From":{},"ReplyTo":{},"SourceArn":{},"BlockEmail":{"shape":"S6z"},"NoActionEmail":{"shape":"S6z"},"MfaEmail":{"shape":"S6z"}}},"Actions":{"type":"structure","members":{"LowAction":{"shape":"S73"},"MediumAction":{"shape":"S73"},"HighAction":{"shape":"S73"}}}}},"S6z":{"type":"structure","required":["Subject"],"members":{"Subject":{},"HtmlBody":{},"TextBody":{}}},"S73":{"type":"structure","required":["Notify","EventAction"],"members":{"Notify":{"type":"boolean"},"EventAction":{}}},"S76":{"type":"structure","members":{"BlockedIPRangeList":{"type":"list","member":{}},"SkippedIPRangeList":{"type":"list","member":{}}}},"S7p":{"type":"structure","members":{"Destination":{},"DeliveryMedium":{},"AttributeName":{}}},"S83":{"type":"structure","members":{"UserPoolId":{},"ClientId":{"shape":"S1i"},"ImageUrl":{},"CSS":{},"CSSVersion":{},"LastModifiedDate":{"type":"timestamp"},"CreationDate":{"type":"timestamp"}}},"S8d":{"type":"structure","members":{"SmsAuthenticationMessage":{},"SmsConfiguration":{"shape":"S5c"}}},"S8e":{"type":"structure","members":{"Enabled":{"type":"boolean"}}},"S9e":{"type":"list","member":{"shape":"Ss"}}}}
 
 /***/ }),
 /* 264 */

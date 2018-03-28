@@ -1,11 +1,11 @@
 {
   "name": "@digilent/digilent-auth-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Digilent wrapper module for user authentication using AWS Cognito",
   "main": "index.js",
   "scripts": {
     "test": "jasmine spec/core.js",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "clean": "rm -rf dist && rm -rf bundle",
     "docs": "typedoc --out ./docs ./src",
     "build": "npm run clean && tsc && webpack bundleHelper.js ./bundle/digilent-auth-js.js && npm run docs"
@@ -23,7 +23,6 @@
     "typedoc": "^0.9.0"
   },
   "dependencies": {
-    "amazon-cognito-identity-js": "^1.19.0",
-    "aws-sdk": "^2.104.0"
+    "amazon-cognito-identity-js": "^1.19.0"
   }
 }
