@@ -24,17 +24,27 @@ export class DigilentAuthJs {
      * @param clientId AWS Cognito user pool client id with access to the specified user pool.
      * @param region AWS Cognito user pool region.
      * @param identityPoolId AWS Cognito Identity Pool id.
+     * @param getUnauthCredentials If true this function will also retrieve unauthenticated AWS credentials.  Default is false.
+     * @return This function returns a promise that resolve on completion or rejects on error.  No data is returned in the resolve case.
      ********************************************************************************/
-    public initialize(userPoolId: string, clientId: string, region: string, identityPoolId: string) {
-        AWS.config.update({
-            region: region
+    public initialize(userPoolId: string, clientId: string, region: string, identityPoolId: string, getUnauthCredentials: boolean = false) {
+        return new Promise((resolve, reject) => {
+            AWS.config.update({
+                region: region
+            });
+            this.poolData = new CognitoUserPool({
+                UserPoolId: userPoolId, 
+                ClientId: clientId
+            });
+            this.region = region;
+            this.identityPoolId = identityPoolId;
+
+            if (getUnauthCredentials) {
+                return this.getUnauthCredentials();
+            } else {
+                return Promise.resolve();
+            }
         });
-        this.poolData = new CognitoUserPool({
-            UserPoolId: userPoolId,
-            ClientId: clientId
-        });
-        this.region = region;
-        this.identityPoolId = identityPoolId;
     }
 
     /********************************************************************************
@@ -374,9 +384,28 @@ export class DigilentAuthJs {
 
     //---------------------------------------- Private ----------------------------------------
 
+    /********************************************************************************
+    * This function retrieves unauthenticated AWS credentials for the user.    * 
+    * @return This function returns a Promise that resolves once the new credentials have been refreshed or rejects on error.
+    ********************************************************************************/
+    private getUnauthCredentials() {
+        return new Promise((resolve, reject) => {
+            AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: this.identityPoolId
+            });
+            AWS.config.credentials.get((err) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
 
     /********************************************************************************
-    * This function clears any cached credentials and retrieves new credentials for the authenticated user.
+    * This function clears any cached credentials and retrieves new credentials for the user.
     * @param jwtToken A valid JSON Web Token provided durng AWS authentication.
     * @return This function returns a Promise that resolves once the new credentials have been refreshed or rejects on error.
     ********************************************************************************/

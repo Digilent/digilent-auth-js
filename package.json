@@ -1,6 +1,6 @@
 {
   "name": "@digilent/digilent-auth-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Digilent wrapper module for user authentication using AWS Cognito",
   "main": "index.js",
   "scripts": {

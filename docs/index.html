@@ -107,6 +107,35 @@
 				<pre><code><span class="hljs-built_in">cd</span> digilent-auth-js
 </code></pre><p>Install dependencies</p>
 				<pre><code>npm <span class="hljs-keyword">install</span>
+</code></pre><h4 id="use-with-ionic">Use with Ionic</h4>
+				<p>Install AWS SDK </p>
+				<pre><code>npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save aws-sdk</span>
+<span class="hljs-string">`</span>
+</code></pre><p>Import AWS SDK into app.component.ts </p>
+				<pre><code><span class="hljs-meta"><span class="hljs-meta-keyword">import</span> 'aws-sdk';</span>
+</code></pre><p>Install DigilentAuthJs: </p>
+				<pre><code><span class="hljs-selector-tag">npm</span> <span class="hljs-selector-tag">install</span> <span class="hljs-selector-tag">--save</span> @<span class="hljs-keyword">digilent</span>/<span class="hljs-keyword">digilent</span>-<span class="hljs-keyword">auth</span>-<span class="hljs-keyword">js</span>
+</code></pre><p>Add DigilentAuthJs as a provide in app.module.ts</p>
+				<pre><code><span class="hljs-keyword">import</span> { DigilentAuthJs } <span class="hljs-keyword">from</span> <span class="hljs-string">'@digilent/digilent-auth-js'</span>;
+
+...
+
+providers: [    
+    DigilentAuthJs,
+    ...
+]
+</code></pre><p>Import DigilentAuthJs where needed and use dependency injection</p>
+				<pre><code>import <span class="hljs-comment">{DigilentLambdaJs}</span> <span class="hljs-keyword">from</span> <span class="hljs-string">'@digilent/digilent-lambda-js'</span>;
+
+...
+
+<span class="hljs-function"><span class="hljs-keyword">constructor</span><span class="hljs-params">(
+)</span><span class="hljs-comment">{
+  public digilentAuth: DigilentAuthJs,
+  ...
+}</span></span>
+</code></pre><p>Initialize with AWS credentials (it&#39;s recommended to do this early in app.component.ts)</p>
+				<pre><code><span class="hljs-selector-tag">this</span><span class="hljs-selector-class">.digilentAuth</span><span class="hljs-selector-class">.initialize</span>(<span class="hljs-selector-tag">USER_POOL_ID</span>, <span class="hljs-selector-tag">CLIENT_ID</span>, <span class="hljs-selector-tag">REGION</span>, <span class="hljs-selector-tag">IDENTITY_POOL_ID</span>);
 </code></pre><p><strong>Note</strong>: If node-gyp rebuild fails, try the following command:</p>
 				<pre><code><span class="hljs-comment">npm</span> <span class="hljs-comment">install</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">global</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">production</span> <span class="hljs-comment">windows</span><span class="hljs-literal">-</span><span class="hljs-comment">build</span><span class="hljs-literal">-</span><span class="hljs-comment">tools</span>
 </code></pre><p>Run the example by opening an index.html in the examples folder.</p>

@@ -13271,17 +13271,29 @@ var DigilentAuthJs = (function () {
      * @param clientId AWS Cognito user pool client id with access to the specified user pool.
      * @param region AWS Cognito user pool region.
      * @param identityPoolId AWS Cognito Identity Pool id.
+     * @param getUnauthCredentials If true this function will also retrieve unauthenticated AWS credentials.  Default is false.
+     * @return This function returns a promise that resolve on completion or rejects on error.  No data is returned in the resolve case.
      ********************************************************************************/
-    DigilentAuthJs.prototype.initialize = function (userPoolId, clientId, region, identityPoolId) {
-        AWS.config.update({
-            region: region
+    DigilentAuthJs.prototype.initialize = function (userPoolId, clientId, region, identityPoolId, getUnauthCredentials) {
+        var _this = this;
+        if (getUnauthCredentials === void 0) { getUnauthCredentials = false; }
+        return new Promise(function (resolve, reject) {
+            AWS.config.update({
+                region: region
+            });
+            _this.poolData = new amazon_cognito_identity_js_1.CognitoUserPool({
+                UserPoolId: userPoolId,
+                ClientId: clientId
+            });
+            _this.region = region;
+            _this.identityPoolId = identityPoolId;
+            if (getUnauthCredentials) {
+                return _this.getUnauthCredentials();
+            }
+            else {
+                return Promise.resolve();
+            }
         });
-        this.poolData = new amazon_cognito_identity_js_1.CognitoUserPool({
-            UserPoolId: userPoolId,
-            ClientId: clientId
-        });
-        this.region = region;
-        this.identityPoolId = identityPoolId;
     };
     /********************************************************************************
     * Authenticate the specified username with the specified password.
@@ -13613,7 +13625,27 @@ var DigilentAuthJs = (function () {
     };
     //---------------------------------------- Private ----------------------------------------
     /********************************************************************************
-    * This function clears any cached credentials and retrieves new credentials for the authenticated user.
+    * This function retrieves unauthenticated AWS credentials for the user.    *
+    * @return This function returns a Promise that resolves once the new credentials have been refreshed or rejects on error.
+    ********************************************************************************/
+    DigilentAuthJs.prototype.getUnauthCredentials = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: _this.identityPoolId
+            });
+            AWS.config.credentials.get(function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    };
+    /********************************************************************************
+    * This function clears any cached credentials and retrieves new credentials for the user.
     * @param jwtToken A valid JSON Web Token provided durng AWS authentication.
     * @return This function returns a Promise that resolves once the new credentials have been refreshed or rejects on error.
     ********************************************************************************/
